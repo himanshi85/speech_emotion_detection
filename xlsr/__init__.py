@@ -36,7 +36,9 @@ from xlsr.processor import (
     run_processor_verification,
     waveforms_to_model_inputs,
 )
-from xlsr.split_guard import ActorLeakageError, assert_no_actor_leakage, run_split_guard
+from xlsr.dataset import RAVDESSXLSRDataset, SERDataCollator
+from xlsr.metrics import compute_ser_metrics, save_confusion_matrix
+from xlsr.trainer import XLSRTrainer
 
 __all__ = [
     "MODEL_NAME",
@@ -79,4 +81,9 @@ __all__ = [
     "default_config",
     "load_config",
     "save_config",
+    "RAVDESSXLSRDataset",
+    "SERDataCollator",
+    "XLSRTrainer",
+    "compute_ser_metrics",
 ]
+

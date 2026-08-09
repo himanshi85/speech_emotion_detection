@@ -118,11 +118,20 @@ class Wav2Vec2XLSRForSER(nn.Module):
         attention_mask: Optional[torch.Tensor] = None,
         labels: Optional[torch.Tensor] = None,
     ) -> SequenceClassifierOutput:
-        outputs = self.encoder(
-            input_values=input_values,
-            attention_mask=attention_mask,
-            return_dict=True,
-        )
+        is_encoder_frozen = not any(p.requires_grad for p in self.encoder.parameters())
+        if is_encoder_frozen or not self.training:
+            with torch.no_grad():
+                outputs = self.encoder(
+                    input_values=input_values,
+                    attention_mask=attention_mask,
+                    return_dict=True,
+                )
+        else:
+            outputs = self.encoder(
+                input_values=input_values,
+                attention_mask=attention_mask,
+                return_dict=True,
+            )
         hidden_states = outputs.last_hidden_state  # (B, T, H)
 
         feat_mask = self._feature_vector_attention_mask(hidden_states, attention_mask)
