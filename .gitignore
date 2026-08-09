@@ -1,0 +1,23 @@
+# Secrets
+.env
+.env.local
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Model caches / outputs
+outputs/
+*.pt
+*.bin
+*.safetensors
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
+.dataset/
+dataset/

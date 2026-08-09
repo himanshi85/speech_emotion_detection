@@ -1,0 +1,3 @@
+filename,filepath,actor_id,emotion,audio_hash,split
+03-01-03-01-02-01-07.wav,audio/Actor_07/03-01-03-01-02-01-07.wav,7,happy,e3dafe1850bd09f3b10a5ca01de4949ad9fcfa216a8104170043bbd205f2fe21,train
+03-01-03-01-02-02-07.wav,audio/Actor_07/03-01-03-01-02-02-07.wav,7,happy,e3dafe1850bd09f3b10a5ca01de4949ad9fcfa216a8104170043bbd205f2fe21,train

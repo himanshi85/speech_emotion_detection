@@ -1,0 +1,30 @@
+Final Validation Checklist
+========================================
+[x] only_modality_03
+[x] only_vocal_channel_01
+[x] all_8_emotions
+[x] all_wav
+[x] all_mono
+[x] all_16khz
+[x] no_zero_duration
+[x] no_corrupted_audio
+[x] no_nan_inf
+[x] actor_info_preserved
+[x] actor_independent_split
+[x] no_actor_leakage
+[x] no_duplicate_paths
+[ ] no_duplicate_audio_hashes
+[x] metadata_matches_filenames
+[x] train_csv_ready
+[x] validation_csv_ready
+[x] test_csv_ready
+[x] all_emotions_in_train
+[x] all_emotions_in_validation
+[x] all_emotions_in_test
+[x] no_model_training_code
+
+Issues:
+  - Duplicate audio hashes (exact duplicates): 1
+  - hash=e3dafe1850bd... files=[03-01-03-01-02-01-07.wav, 03-01-03-01-02-02-07.wav]
+
+Note: Exact duplicate kept (RAVDESS Actor_07 happy statement_2 repetitions are byte-identical). Not discarded.

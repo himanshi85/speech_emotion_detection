@@ -1,0 +1,9 @@
+emotion,number_of_samples,percentage,total_duration
+neutral,96,6.6667,336.3048
+calm,192,13.3333,728.7982
+happy,192,13.3333,698.5349
+sad,192,13.3333,709.3461
+angry,192,13.3333,743.3134
+fearful,192,13.3333,686.2564
+disgust,192,13.3333,756.8269
+surprised,192,13.3333,669.6061

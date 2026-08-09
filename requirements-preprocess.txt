@@ -1,0 +1,5 @@
+# RAVDESS preprocessing dependencies (no deep learning models)
+numpy>=1.23,<2.0
+pandas>=1.5
+soundfile>=0.12
+scipy>=1.9

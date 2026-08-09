@@ -1,0 +1,68 @@
+2026-08-09 12:47:14,370 - INFO - RAVDESS preprocessing started
+2026-08-09 12:47:14,370 - INFO - Input: /Users/himanshipatel/Documents/Project/sem_3/Speech_audio_emotion/dataset/Audio_Speech_Actors_01-24
+2026-08-09 12:47:14,370 - INFO - Output: /Users/himanshipatel/Documents/Project/sem_3/Speech_audio_emotion/ravdess_preprocessed
+2026-08-09 12:47:14,370 - INFO - SEED=42
+2026-08-09 12:47:14,413 - INFO - Found 1440 WAV files
+2026-08-09 12:47:14,416 - INFO - Speech files selected: 1440
+2026-08-09 12:47:14,416 - INFO - Song files excluded: 0
+2026-08-09 12:47:14,416 - INFO - Video-only files excluded: 0
+2026-08-09 12:47:14,416 - INFO - Other excluded / parse failures: 0
+2026-08-09 12:47:14,856 - INFO - Processed 100 / 1440 files (ok=100, failed=0)
+2026-08-09 12:47:15,323 - INFO - Processed 200 / 1440 files (ok=200, failed=0)
+2026-08-09 12:47:15,747 - INFO - Processed 300 / 1440 files (ok=300, failed=0)
+2026-08-09 12:47:16,163 - INFO - Processed 400 / 1440 files (ok=400, failed=0)
+2026-08-09 12:47:16,550 - INFO - Processed 500 / 1440 files (ok=500, failed=0)
+2026-08-09 12:47:16,954 - INFO - Processed 600 / 1440 files (ok=600, failed=0)
+2026-08-09 12:47:17,343 - INFO - Processed 700 / 1440 files (ok=700, failed=0)
+2026-08-09 12:47:17,723 - INFO - Processed 800 / 1440 files (ok=800, failed=0)
+2026-08-09 12:47:18,122 - INFO - Processed 900 / 1440 files (ok=900, failed=0)
+2026-08-09 12:47:18,524 - INFO - Processed 1000 / 1440 files (ok=1000, failed=0)
+2026-08-09 12:47:18,933 - INFO - Processed 1100 / 1440 files (ok=1100, failed=0)
+2026-08-09 12:47:19,391 - INFO - Processed 1200 / 1440 files (ok=1200, failed=0)
+2026-08-09 12:47:19,843 - INFO - Processed 1300 / 1440 files (ok=1300, failed=0)
+2026-08-09 12:47:20,351 - INFO - Processed 1400 / 1440 files (ok=1400, failed=0)
+2026-08-09 12:47:20,545 - INFO - Processed 1440 / 1440 files (ok=1440, failed=0)
+2026-08-09 12:47:20,547 - INFO - Failed-file log written: /Users/himanshipatel/Documents/Project/sem_3/Speech_audio_emotion/ravdess_preprocessed/logs/failed_audio_files.csv (0 rows)
+2026-08-09 12:47:20,561 - INFO - Train: 960 files
+2026-08-09 12:47:20,563 - INFO - Validation: 240 files
+2026-08-09 12:47:20,564 - INFO - Test: 240 files
+2026-08-09 12:47:20,564 - INFO - Metadata written to /Users/himanshipatel/Documents/Project/sem_3/Speech_audio_emotion/ravdess_preprocessed/metadata
+2026-08-09 12:47:20,573 - INFO - Reports written to /Users/himanshipatel/Documents/Project/sem_3/Speech_audio_emotion/ravdess_preprocessed/reports
+2026-08-09 12:47:20,623 - INFO - 
+Final Validation Checklist
+========================================
+[x] only_modality_03
+[x] only_vocal_channel_01
+[x] all_8_emotions
+[x] all_wav
+[x] all_mono
+[x] all_16khz
+[x] no_zero_duration
+[x] no_corrupted_audio
+[x] no_nan_inf
+[x] actor_info_preserved
+[x] actor_independent_split
+[x] no_actor_leakage
+[x] no_duplicate_paths
+[ ] no_duplicate_audio_hashes
+[x] metadata_matches_filenames
+[x] train_csv_ready
+[x] validation_csv_ready
+[x] test_csv_ready
+[x] all_emotions_in_train
+[x] all_emotions_in_validation
+[x] all_emotions_in_test
+[x] no_model_training_code
+
+Issues:
+  - Duplicate audio hashes (exact duplicates): 1
+2026-08-09 12:47:20,623 - INFO - Successfully processed: 1440
+2026-08-09 12:47:20,623 - INFO - Failed: 0
+2026-08-09 12:47:20,623 - INFO - Files per emotion: {'neutral': 96, 'calm': 192, 'happy': 192, 'sad': 192, 'angry': 192, 'fearful': 192, 'disgust': 192, 'surprised': 192}
+2026-08-09 12:47:20,623 - INFO - Files per actor: {1: 60, 2: 60, 3: 60, 4: 60, 5: 60, 6: 60, 7: 60, 8: 60, 9: 60, 10: 60, 11: 60, 12: 60, 13: 60, 14: 60, 15: 60, 16: 60, 17: 60, 18: 60, 19: 60, 20: 60, 21: 60, 22: 60, 23: 60, 24: 60}
+2026-08-09 12:47:20,623 - INFO - Train: 960
+2026-08-09 12:47:20,623 - INFO - Validation: 240
+2026-08-09 12:47:20,623 - INFO - Test: 240
+2026-08-09 12:47:20,623 - INFO - Total processing time: 6.19 seconds
+2026-08-09 12:47:20,623 - WARNING - Failed validation checks: ['no_duplicate_audio_hashes']
+2026-08-09 12:47:20,624 - INFO - Done. Metadata rows: 1440
