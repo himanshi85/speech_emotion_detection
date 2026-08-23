@@ -198,7 +198,7 @@ class XLSRTrainer:
             labels = batch["labels"].to(self.device)
 
             if self.mixed_precision and scaler is not None:
-                with torch.cuda.amp.autocast():
+                with torch.amp.autocast("cuda"):
                     outputs = model(input_values=input_values, attention_mask=attention_mask, labels=labels)
                     loss = outputs.loss / self.grad_accum
                 scaler.scale(loss).backward()
@@ -219,13 +219,17 @@ class XLSRTrainer:
                 if self.mixed_precision and scaler is not None:
                     scaler.unscale_(optimizer)
                     torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+                    scale_before = scaler.get_scale()
                     scaler.step(optimizer)
                     scaler.update()
+                    scale_after = scaler.get_scale()
+                    if scale_before <= scale_after:
+                        scheduler.step()
                 else:
                     torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
                     optimizer.step()
+                    scheduler.step()
 
-                scheduler.step()
                 optimizer.zero_grad()
 
         avg_loss = total_loss / len(dataloader)
@@ -294,7 +298,7 @@ class XLSRTrainer:
         total_training_steps = num_update_steps_per_epoch * self.epochs
         optimizer, scheduler = self.create_optimizer_and_scheduler(model, total_training_steps)
 
-        scaler = torch.cuda.amp.GradScaler() if self.mixed_precision else None
+        scaler = torch.amp.GradScaler("cuda") if self.mixed_precision else None
 
         best_val_macro_f1 = -1.0
         patience_counter = 0

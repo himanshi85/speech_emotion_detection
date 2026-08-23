@@ -73,6 +73,11 @@ class Wav2Vec2XLSRForSER(nn.Module):
     def hidden_size(self) -> int:
         return int(self.encoder.config.hidden_size)
 
+    def freeze_feature_extractor(self) -> None:
+        if hasattr(self.encoder, "feature_extractor"):
+            self.encoder.feature_extractor._freeze_parameters()
+            logger.info("Convolutional feature extractor frozen (fine-tuning Transformer layers + head)")
+
     def freeze_encoder_parameters(self) -> None:
         for param in self.encoder.parameters():
             param.requires_grad = False
@@ -81,7 +86,10 @@ class Wav2Vec2XLSRForSER(nn.Module):
     def unfreeze_encoder_parameters(self) -> None:
         for param in self.encoder.parameters():
             param.requires_grad = True
-        logger.info("Encoder parameters unfrozen (full fine-tuning)")
+        # Always freeze low-level convolutional feature extractor by default during fine-tuning
+        if hasattr(self.encoder, "feature_extractor"):
+            self.encoder.feature_extractor._freeze_parameters()
+        logger.info("Encoder Transformer parameters unfrozen (Feature extractor kept frozen for stable fine-tuning)")
 
     def _feature_vector_attention_mask(
         self,

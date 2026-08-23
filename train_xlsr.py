@@ -54,6 +54,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--gradient_accumulation_steps", type=int, default=4, help="Gradient accumulation steps")
     parser.add_argument("--mixed_precision", action="store_true", default=True, help="Enable mixed precision training")
     parser.add_argument("--seed", type=int, default=42, help="Random seed for reproducibility")
+    parser.add_argument("--dropout", type=float, default=0.3, help="Dropout probability for classification head")
     parser.add_argument("--max_train_samples", type=int, default=None, help="Optional sample limit for quick dry-runs")
     return parser.parse_args()
 
@@ -95,6 +96,7 @@ def main() -> None:
         "classifier_learning_rate": args.classifier_lr,
         "gradient_accumulation_steps": args.gradient_accumulation_steps,
         "mixed_precision": args.mixed_precision,
+        "dropout": args.dropout,
         "seed": args.seed,
     })
     save_config(config, exp_dirs["config"])
