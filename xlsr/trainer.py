@@ -16,6 +16,7 @@ import pandas as pd
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
+from tqdm import tqdm
 from transformers import get_linear_schedule_with_warmup
 
 from xlsr.constants import MODEL_NAME, NUM_CLASSES, SAMPLE_RATE
@@ -174,16 +175,24 @@ class XLSRTrainer:
         optimizer: torch.optim.Optimizer,
         scheduler: Any,
         scaler: Optional[torch.cuda.amp.GradScaler] = None,
+        epoch: int = 1,
+        total_epochs: int = 1,
     ) -> Tuple[float, float, float]:
-        """Train model for one epoch with gradient accumulation and clipping."""
+        """Train model for one epoch with gradient accumulation, clipping, and progress bar."""
         model.train()
         total_loss = 0.0
         all_preds = []
         all_labels = []
 
         optimizer.zero_grad()
+        pbar = tqdm(
+            dataloader,
+            desc=f"Epoch {epoch:02d}/{total_epochs:02d} [Train]",
+            leave=False,
+            dynamic_ncols=True,
+        )
 
-        for step, batch in enumerate(dataloader):
+        for step, batch in enumerate(pbar):
             input_values = batch["input_values"].to(self.device)
             attention_mask = batch["attention_mask"].to(self.device)
             labels = batch["labels"].to(self.device)
@@ -198,10 +207,13 @@ class XLSRTrainer:
                 loss = outputs.loss / self.grad_accum
                 loss.backward()
 
-            total_loss += loss.item() * self.grad_accum
+            batch_loss = loss.item() * self.grad_accum
+            total_loss += batch_loss
             preds = torch.argmax(outputs.logits, dim=-1).cpu().numpy()
             all_preds.extend(preds)
             all_labels.extend(labels.cpu().numpy())
+
+            pbar.set_postfix({"loss": f"{batch_loss:.4f}"})
 
             if (step + 1) % self.grad_accum == 0 or (step + 1) == len(dataloader):
                 if self.mixed_precision and scaler is not None:
@@ -224,28 +236,33 @@ class XLSRTrainer:
         self,
         model: Wav2Vec2XLSRForSER,
         dataloader: DataLoader,
+        desc: str = "[Val]",
     ) -> Tuple[float, Dict[str, float], np.ndarray, np.ndarray, np.ndarray]:
-        """Evaluate model on validation or test set."""
+        """Evaluate model on validation or test set with progress bar."""
         model.eval()
         total_loss = 0.0
         all_preds = []
         all_labels = []
         all_probs = []
 
+        pbar = tqdm(dataloader, desc=desc, leave=False, dynamic_ncols=True)
         with torch.no_grad():
-            for batch in dataloader:
+            for batch in pbar:
                 input_values = batch["input_values"].to(self.device)
                 attention_mask = batch["attention_mask"].to(self.device)
                 labels = batch["labels"].to(self.device)
 
                 outputs = model(input_values=input_values, attention_mask=attention_mask, labels=labels)
-                total_loss += outputs.loss.item()
+                loss_val = outputs.loss.item()
+                total_loss += loss_val
                 probs = torch.softmax(outputs.logits, dim=-1).cpu().numpy()
                 preds = np.argmax(probs, axis=-1)
 
                 all_preds.extend(preds)
                 all_labels.extend(labels.cpu().numpy())
                 all_probs.extend(probs)
+
+                pbar.set_postfix({"val_loss": f"{loss_val:.4f}"})
 
         avg_loss = total_loss / len(dataloader)
         metrics = compute_ser_metrics(all_labels, all_preds)
@@ -290,9 +307,11 @@ class XLSRTrainer:
         for epoch in range(1, self.epochs + 1):
             epoch_start = time.time()
             train_loss, train_acc, train_f1 = self.train_epoch(
-                model, train_loader, optimizer, scheduler, scaler
+                model, train_loader, optimizer, scheduler, scaler, epoch=epoch, total_epochs=self.epochs
             )
-            val_loss, val_metrics, _, _, _ = self.evaluate(model, val_loader)
+            val_loss, val_metrics, _, _, _ = self.evaluate(
+                model, val_loader, desc=f"Epoch {epoch:02d}/{self.epochs:02d} [Val]"
+            )
             epoch_duration = time.time() - epoch_start
             epoch_times.append(epoch_duration)
 
@@ -309,20 +328,15 @@ class XLSRTrainer:
                 "val_war": val_metrics["war"],
             })
 
-            logger.info(
-                "Epoch %02d/%02d | Train Loss: %.4f | Val Loss: %.4f | Val Macro-F1: %.4f (Best: %.4f)",
-                epoch,
-                self.epochs,
-                train_loss,
-                val_loss,
-                val_metrics["macro_f1"],
-                max(best_val_macro_f1, val_metrics["macro_f1"]),
-            )
-            print(
-                f"Epoch {epoch:02d}/{self.epochs:02d} | Train Loss: {train_loss:.4f} | "
-                f"Val Loss: {val_loss:.4f} | Val Macro-F1: {val_metrics['macro_f1']:.4f} | "
+            log_msg = (
+                f"Epoch {epoch:02d}/{self.epochs:02d} | "
+                f"Train Loss: {train_loss:.4f} | Train Acc: {train_acc*100:.2f}% | "
+                f"Val Loss: {val_loss:.4f} | Val Acc (WAR): {val_metrics['accuracy']*100:.2f}% | "
+                f"Val UAR: {val_metrics['uar']*100:.2f}% | Val Macro-F1: {val_metrics['macro_f1']:.4f} | "
                 f"Time: {epoch_duration:.1f}s"
             )
+            logger.info(log_msg)
+            print(log_msg)
 
             # Early stopping check on Validation Macro-F1 (Section 21)
             if val_metrics["macro_f1"] > best_val_macro_f1:

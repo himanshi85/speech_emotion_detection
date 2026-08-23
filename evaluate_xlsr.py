@@ -55,7 +55,11 @@ def load_model_from_checkpoint(checkpoint_dir: Path, device: torch.device) -> Wa
     ckpt_file = checkpoint_dir / "model_checkpoint.pt"
 
     if not ckpt_file.exists():
-        raise FileNotFoundError(f"Checkpoint file missing: {ckpt_file}")
+        raise FileNotFoundError(
+            f"Checkpoint file missing: '{ckpt_file}'.\n"
+            "--> Training for this folder is currently in progress. "
+            "Please wait for Epoch 1 to finish saving 'model_checkpoint.pt' before running evaluation."
+        )
 
     state = torch.load(ckpt_file, map_location=device)
     config = state.get("config", {})

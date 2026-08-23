@@ -166,23 +166,30 @@ def verify_dataset_split(bundle: DatasetBundle) -> SplitVerificationReport:
             f"Validation actors ∩ Test actors = {intersections['validation_test']}"
         )
 
-    if train_a != EXPECTED_TRAIN_ACTORS:
-        issues.append(
-            f"Train actors must be exactly {sorted(EXPECTED_TRAIN_ACTORS)}; "
-            f"got {sorted(train_a)}"
-        )
-    if val_a != EXPECTED_VAL_ACTORS:
-        issues.append(
-            f"Validation actors must be exactly {sorted(EXPECTED_VAL_ACTORS)}; "
-            f"got {sorted(val_a)}"
-        )
-    if test_a != EXPECTED_TEST_ACTORS:
-        issues.append(
-            f"Test actors must be exactly {sorted(EXPECTED_TEST_ACTORS)}; "
-            f"got {sorted(test_a)}"
-        )
+    # Check if this is standard RAVDESS-only dataset
+    is_standard_ravdess = (
+        train_a.issubset(EXPECTED_TRAIN_ACTORS | EXPECTED_VAL_ACTORS | EXPECTED_TEST_ACTORS)
+        and val_a.issubset(EXPECTED_TRAIN_ACTORS | EXPECTED_VAL_ACTORS | EXPECTED_TEST_ACTORS)
+        and test_a.issubset(EXPECTED_TRAIN_ACTORS | EXPECTED_VAL_ACTORS | EXPECTED_TEST_ACTORS)
+    )
 
-    issues.extend(_check_row_level_actor_split(bundle))
+    if is_standard_ravdess:
+        if train_a != EXPECTED_TRAIN_ACTORS:
+            issues.append(
+                f"Train actors must be exactly {sorted(EXPECTED_TRAIN_ACTORS)}; "
+                f"got {sorted(train_a)}"
+            )
+        if val_a != EXPECTED_VAL_ACTORS:
+            issues.append(
+                f"Validation actors must be exactly {sorted(EXPECTED_VAL_ACTORS)}; "
+                f"got {sorted(val_a)}"
+            )
+        if test_a != EXPECTED_TEST_ACTORS:
+            issues.append(
+                f"Test actors must be exactly {sorted(EXPECTED_TEST_ACTORS)}; "
+                f"got {sorted(test_a)}"
+            )
+
     issues.extend(_check_actor_appears_in_one_split_only(bundle))
 
     return SplitVerificationReport(

@@ -2,22 +2,27 @@
 .env
 .env.local
 
-# Python
+# Python environment & cache
 __pycache__/
 *.py[cod]
 *.egg-info/
 .venv/
 venv/
 
-# Model caches / outputs
+# Raw Datasets & Preprocessed Datasets
+dataset/
+.dataset/
+ravdess_preprocessed/
+combined_preprocessed/
+
+# Model checkpoints & experiment outputs
 outputs/
 *.pt
 *.bin
 *.safetensors
 
-# OS / IDE
+# OS / IDE / Logs
 .DS_Store
 .idea/
 .vscode/
-.dataset/
-dataset/
+*.log
