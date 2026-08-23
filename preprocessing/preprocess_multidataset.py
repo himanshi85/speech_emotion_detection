@@ -180,31 +180,65 @@ def parse_savee(savee_dir: Path) -> List[Dict]:
     return records
 
 
-def assign_splits(records: List[Dict], seed: int = 42) -> List[Dict]:
+def assign_splits(records: List[Dict], seed: int = 42, split_by_actor: bool = True) -> List[Dict]:
     """
-    Assign 70% train, 15% val, 15% test splits across the dataset.
-    Uses stratified sampling per emotion to keep balanced distributions.
+    Assign train, val, test splits.
+    
+    If split_by_actor is True (default & recommended for SER):
+      - RAVDESS: Actors 1-16 -> Train | Actors 17-20 -> Val | Actors 21-24 -> Test
+      - SAVEE:   Actors 101,102 (DC,JE) -> Train | Actor 103 (JK) -> Val | Actor 104 (KL) -> Test
+      This ensures ZERO actor leakage between splits.
     """
     df = pd.DataFrame(records)
 
-    rng = np.random.RandomState(seed)
+    if split_by_actor:
+        # Actor-independent split mappings
+        ravdess_train = set(range(1, 17))
+        ravdess_val = set(range(17, 21))
+        ravdess_test = set(range(21, 25))
 
-    df["split"] = ""
-    for emotion, group in df.groupby("emotion"):
-        indices = group.index.tolist()
-        rng.shuffle(indices)
+        savee_train = {101, 102}  # DC, JE
+        savee_val = {103}         # JK
+        savee_test = {104}        # KL
 
-        n = len(indices)
-        n_train = int(round(0.70 * n))
-        n_val = int(round(0.15 * n))
+        df["split"] = ""
+        for idx, row in df.iterrows():
+            dataset = row["dataset_name"]
+            actor = row["actor_id"]
 
-        train_idx = indices[:n_train]
-        val_idx = indices[n_train : n_train + n_val]
-        test_idx = indices[n_train + n_val :]
+            if dataset == "ravdess":
+                if actor in ravdess_train:
+                    df.loc[idx, "split"] = "train"
+                elif actor in ravdess_val:
+                    df.loc[idx, "split"] = "validation"
+                elif actor in ravdess_test:
+                    df.loc[idx, "split"] = "test"
+            elif dataset == "savee":
+                if actor in savee_train:
+                    df.loc[idx, "split"] = "train"
+                elif actor in savee_val:
+                    df.loc[idx, "split"] = "validation"
+                elif actor in savee_test:
+                    df.loc[idx, "split"] = "test"
+    else:
+        # Sample-level random stratified split by emotion
+        rng = np.random.RandomState(seed)
+        df["split"] = ""
+        for emotion, group in df.groupby("emotion"):
+            indices = group.index.tolist()
+            rng.shuffle(indices)
 
-        df.loc[train_idx, "split"] = "train"
-        df.loc[val_idx, "split"] = "validation"
-        df.loc[test_idx, "split"] = "test"
+            n = len(indices)
+            n_train = int(round(0.70 * n))
+            n_val = int(round(0.15 * n))
+
+            train_idx = indices[:n_train]
+            val_idx = indices[n_train : n_train + n_val]
+            test_idx = indices[n_train + n_val :]
+
+            df.loc[train_idx, "split"] = "train"
+            df.loc[val_idx, "split"] = "validation"
+            df.loc[test_idx, "split"] = "test"
 
     return df.to_dict("records")
 
@@ -230,6 +264,7 @@ def main() -> None:
         help="Output directory for preprocessed dataset",
     )
     parser.add_argument("--seed", type=int, default=42, help="Random seed for split reproducibility")
+    parser.add_argument("--sample_level", action="store_true", help="Perform random sample-level split instead of actor-independent split")
     args = parser.parse_args()
 
     output_dir = Path(args.output_dir).resolve()
@@ -250,8 +285,8 @@ def main() -> None:
 
     logger.info("Total audio samples gathered: %d (RAVDESS: %d, SAVEE: %d)", len(all_records), len(ravdess_records), len(savee_records))
 
-    # 2. Assign 70% train / 15% val / 15% test splits
-    all_records = assign_splits(all_records, seed=args.seed)
+    # 2. Assign splits (Actor-Independent by default)
+    all_records = assign_splits(all_records, seed=args.seed, split_by_actor=not args.sample_level)
 
     # 3. Process & Resample Audio Files
     logger.info("Converting and resampling audio files to 16kHz mono PCM WAV...")

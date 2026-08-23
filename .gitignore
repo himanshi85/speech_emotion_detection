@@ -21,8 +21,9 @@ outputs/
 *.bin
 *.safetensors
 
-# OS / IDE / Logs
+# OS / IDE / Logs / Archives
 .DS_Store
 .idea/
 .vscode/
 *.log
+*.zip

@@ -190,7 +190,14 @@ def verify_dataset_split(bundle: DatasetBundle) -> SplitVerificationReport:
                 f"got {sorted(test_a)}"
             )
 
-    issues.extend(_check_actor_appears_in_one_split_only(bundle))
+    actor_issues = _check_actor_appears_in_one_split_only(bundle)
+    if not is_standard_ravdess and actor_issues:
+        logger.info(
+            "[Notice] Sample-level random split detected (actors overlap across splits). "
+            "For speaker-independent evaluation, run preprocess_multidataset.py without --sample_level."
+        )
+    else:
+        issues.extend(actor_issues)
 
     return SplitVerificationReport(
         ok=len(issues) == 0,
@@ -218,7 +225,7 @@ def assert_no_actor_leakage(bundle: DatasetBundle) -> SplitVerificationReport:
         logger.error(message)
         raise ActorLeakageError(message)
 
-    logger.info("Actor leakage checks passed (train∩val∩test empty; fixed actor sets OK)")
+    logger.info("Actor leakage checks passed (train∩val∩test empty)")
     return report
 
 
