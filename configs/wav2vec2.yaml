@@ -1,0 +1,13 @@
+model_key: wav2vec2
+display_name: Wav2Vec2
+hub_id: facebook/wav2vec2-base
+input_type: waveform
+
+batch_size: 4
+gradient_accumulation_steps: 4
+num_epochs: 25
+encoder_learning_rate: 1.0e-5
+classifier_learning_rate: 1.0e-4
+dropout: 0.3
+
+output_dir: outputs/wav2vec2

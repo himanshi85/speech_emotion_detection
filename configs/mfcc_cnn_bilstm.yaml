@@ -1,0 +1,12 @@
+model_key: mfcc_cnn_bilstm
+display_name: MFCC + CNN-BiLSTM
+input_type: mfcc
+
+batch_size: 32
+num_epochs: 80
+learning_rate: 1.0e-3
+lstm_hidden: 128
+lstm_layers: 2
+dropout: 0.3
+
+output_dir: outputs/mfcc_cnn_bilstm

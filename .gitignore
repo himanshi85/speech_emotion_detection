@@ -2,7 +2,7 @@
 .env
 .env.local
 
-# Python environment & cache
+# Python
 __pycache__/
 *.py[cod]
 *.egg-info/
@@ -25,5 +25,4 @@ outputs/
 .DS_Store
 .idea/
 .vscode/
-*.log
 *.zip

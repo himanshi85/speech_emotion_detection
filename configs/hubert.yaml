@@ -1,0 +1,13 @@
+model_key: hubert
+display_name: HuBERT
+hub_id: facebook/hubert-base-ls960
+input_type: waveform
+
+batch_size: 4
+gradient_accumulation_steps: 4
+num_epochs: 25
+encoder_learning_rate: 1.0e-5
+classifier_learning_rate: 1.0e-4
+dropout: 0.3
+
+output_dir: outputs/hubert

@@ -1,14 +1,5 @@
-# Speech Emotion Recognition (SER) Project Dependencies
-# --------------------------------------------------------
-python-dotenv>=1.0.0
-huggingface_hub>=0.20.0
-transformers>=4.36.0
-torch>=2.0.0
-soundfile>=0.12.0
-scipy>=1.9.0
-numpy>=1.23.0,<2.0.0
-pandas>=1.5.0
-PyYAML>=6.0
-tqdm>=4.65.0
-scikit-learn>=1.2.0
-matplotlib>=3.7.0
+# Wav2Vec2-XLS-R-300M SER
+-r requirements-xlsr.txt
+
+# Development / testing
+pytest>=7.0

@@ -1,0 +1,16 @@
+model_key: emotion2vec_plus
+display_name: emotion2vec+
+# True model: emotion2vec/emotion2vec_plus_base (~90M, FunASR)
+# Training uses Wav2Vec2-base backbone until FunASR fine-tuning is integrated
+hub_id: facebook/wav2vec2-base
+model_backend: transformer
+input_type: waveform
+
+batch_size: 4
+gradient_accumulation_steps: 4
+num_epochs: 25
+encoder_learning_rate: 1.0e-5
+classifier_learning_rate: 1.0e-4
+dropout: 0.3
+
+output_dir: outputs/emotion2vec_plus
