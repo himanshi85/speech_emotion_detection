@@ -40,19 +40,29 @@ def main() -> int:
     histories = {}
     per_class = []
 
+    candidate_dirs = []
     for key in ALL_MODEL_KEYS:
-        final_path = outputs_root / key / "metrics" / "final_results.csv"
+        d = outputs_root / key
+        if d.exists() and d not in candidate_dirs:
+            candidate_dirs.append(d)
+    if outputs_root.exists():
+        for sub in sorted(outputs_root.iterdir()):
+            if sub.is_dir() and sub not in candidate_dirs and (sub / "metrics" / "final_results.csv").exists():
+                candidate_dirs.append(sub)
+
+    for model_dir in candidate_dirs:
+        key = model_dir.name
+        final_path = model_dir / "metrics" / "final_results.csv"
         if not final_path.exists():
             continue
         df = pd.read_csv(final_path)
         rows.append(df.iloc[0].to_dict())
 
-        hist_path = outputs_root / key / "metrics" / "training_history.csv"
+        hist_path = model_dir / "metrics" / "training_history.csv"
         if hist_path.exists():
             histories[key] = pd.read_csv(hist_path)
 
-        # Detect class names from label_mapping.json if present
-        labels_json = outputs_root / key / "checkpoints" / "best_model" / "label_mapping.json"
+        labels_json = model_dir / "checkpoints" / "best_model" / "label_mapping.json"
         if labels_json.exists():
             import json
             lmap = json.loads(labels_json.read_text(encoding="utf-8"))
@@ -61,7 +71,7 @@ def main() -> int:
             class_names = CLASS_NAMES
 
         for split in ("train", "validation", "test"):
-            rep_path = outputs_root / key / "predictions" / split / "classification_report.csv"
+            rep_path = model_dir / "predictions" / split / "classification_report.csv"
             if rep_path.exists():
                 rep = pd.read_csv(rep_path)
                 for emotion in class_names:
@@ -107,24 +117,25 @@ def main() -> int:
     if per_class:
         pc_df = pd.DataFrame(per_class)
         test_pc = pc_df[pc_df["split"] == "test"]
-        pivot = test_pc.pivot(index="model", columns="emotion", values="f1_score")
+        pivot = test_pc.pivot_table(index=["model_key", "model"], columns="emotion", values="f1_score", aggfunc="first")
         pivot.to_csv(comparison_dir / "tables" / "per_class_f1_comparison.csv")
 
-        tvt = pc_df.groupby(["model", "split"])["f1_score"].mean().reset_index()
-        tvt_pivot = tvt.pivot(index="model", columns="split", values="f1_score")
+        tvt = pc_df.groupby(["model_key", "model", "split"])["f1_score"].mean().reset_index()
+        tvt_pivot = tvt.pivot_table(index=["model_key", "model"], columns="split", values="f1_score", aggfunc="first")
         tvt_pivot.to_csv(comparison_dir / "tables" / "train_val_test_macro_f1.csv")
 
-        for key in ALL_MODEL_KEYS:
+        for model_dir in candidate_dirs:
+            key = model_dir.name
             model_name = None
             for split in ("train", "validation", "test"):
-                rep_path = outputs_root / key / "predictions" / split / "classification_report.csv"
+                rep_path = model_dir / "predictions" / split / "classification_report.csv"
                 if not rep_path.exists():
                     continue
                 rep = pd.read_csv(rep_path)
                 wavg = rep[rep["emotion"] == "weighted avg"]
                 if len(wavg):
                     if model_name is None:
-                        final_path = outputs_root / key / "metrics" / "final_results.csv"
+                        final_path = model_dir / "metrics" / "final_results.csv"
                         model_name = (
                             pd.read_csv(final_path).iloc[0].get("model", key)
                             if final_path.exists()
@@ -140,7 +151,7 @@ def main() -> int:
                     )
         if accuracy_rows:
             acc_df = pd.DataFrame(accuracy_rows)
-            acc_pivot = acc_df.pivot(index="model", columns="split", values="accuracy")
+            acc_pivot = acc_df.pivot_table(index=["model_key", "model"], columns="split", values="accuracy", aggfunc="first")
             acc_pivot.to_csv(comparison_dir / "tables" / "train_val_test_accuracy.csv")
 
     # Val macro-F1 curves — all models

@@ -131,12 +131,14 @@ def build_model(cfg: Dict[str, Any]) -> BaseSERModel:
             hub_id = meta.get("fallback_hub_id", hub_id)
 
     trust = bool(cfg.get("trust_remote_code", meta.get("trust_remote_code", False)))
+    layer_pooling = str(cfg.get("layer_pooling", "last"))
     return TransformerSERModel(
         hub_id=hub_id,
         model_key=key,
         num_classes=num_classes,
         dropout=dropout,
         freeze_encoder=freeze,
+        layer_pooling=layer_pooling,
         token=token,
         trust_remote_code=trust,
     )

@@ -132,10 +132,13 @@ def parse_savee_filename(filename: str) -> Tuple[str, str, int] | None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Preprocess SAVEE speech emotion recognition dataset.")
+    default_savee = PROJECT_ROOT / "dataset" / "savee"
+    if not default_savee.exists():
+        default_savee = PROJECT_ROOT.parent / "speech_emotion_detection_drive" / "dataset" / "savee"
     parser.add_argument(
         "--raw_dir",
         type=str,
-        default=str(PROJECT_ROOT.parent / "speech_emotion_detection_drive" / "dataset" / "savee"),
+        default=str(default_savee),
         help="Directory containing raw SAVEE .wav audio files.",
     )
     parser.add_argument(

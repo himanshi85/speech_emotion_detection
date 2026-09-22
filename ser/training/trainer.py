@@ -162,6 +162,86 @@ def train_model(cfg: Dict[str, Any]) -> Dict[str, Any]:
     cfg["display_name"] = display_name
 
     model = build_model(cfg).to(device)
+
+    pretrained_ckpt = cfg.get("pretrained_checkpoint")
+    if pretrained_ckpt and Path(pretrained_ckpt).exists():
+        logger.info("Loading pretrained checkpoint for transfer learning from %s", pretrained_ckpt)
+        ckpt_obj = torch.load(pretrained_ckpt, map_location=device)
+        ckpt_state = ckpt_obj.get("model_state_dict", ckpt_obj) if isinstance(ckpt_obj, dict) else ckpt_obj
+        model_state = model.state_dict()
+        transferred = 0
+        for k, v in ckpt_state.items():
+            if k in model_state and model_state[k].shape == v.shape:
+                model_state[k] = v
+                transferred += 1
+            elif k.startswith("encoder.") and k in model_state:
+                if model_state[k].shape == v.shape:
+                    model_state[k] = v
+                    transferred += 1
+
+        # Cross-corpus emotion head mapping
+        source_mapping = None
+        if isinstance(ckpt_obj, dict) and "label_mapping" in ckpt_obj:
+            source_mapping = ckpt_obj["label_mapping"]
+        else:
+            source_label_json = Path(pretrained_ckpt).parent / "label_mapping.json"
+            if source_label_json.exists():
+                try:
+                    source_mapping = json.loads(source_label_json.read_text(encoding="utf-8"))
+                except Exception:
+                    pass
+
+        if source_mapping and "classifier.weight" in ckpt_state and "classifier.weight" in model_state:
+            source_w = ckpt_state["classifier.weight"]
+            source_b = ckpt_state.get("classifier.bias")
+            canonical_map = {
+                "neutral": "neutral",
+                "happy": "happy",
+                "happiness": "happy",
+                "sad": "sad",
+                "sadness": "sad",
+                "angry": "angry",
+                "anger": "angry",
+                "fear": "fear",
+                "fearful": "fear",
+                "disgust": "disgust",
+                "surprise": "surprise",
+                "surprised": "surprise",
+                "ps": "surprise",
+                "calm": "neutral",
+            }
+            mapped_pairs = []
+            unmapped_indices = []
+            for target_name, target_idx in label_mapping.items():
+                t_canon = canonical_map.get(str(target_name).lower(), str(target_name).lower())
+                matched_source_idx = None
+                matched_source_name = None
+                for s_name, s_idx in source_mapping.items():
+                    if canonical_map.get(str(s_name).lower(), str(s_name).lower()) == t_canon:
+                        matched_source_idx = int(s_idx)
+                        matched_source_name = str(s_name)
+                        break
+                if matched_source_idx is not None and matched_source_idx < source_w.size(0):
+                    model_state["classifier.weight"][int(target_idx)] = source_w[matched_source_idx]
+                    if source_b is not None and "classifier.bias" in model_state:
+                        model_state["classifier.bias"][int(target_idx)] = source_b[matched_source_idx]
+                    mapped_pairs.append(f"{matched_source_name}->{target_name}")
+                else:
+                    unmapped_indices.append(int(target_idx))
+
+            if mapped_pairs and unmapped_indices:
+                mean_w = source_w.mean(dim=0)
+                mean_b = source_b.mean(dim=0) if source_b is not None else None
+                for u_idx in unmapped_indices:
+                    model_state["classifier.weight"][u_idx] = mean_w
+                    if mean_b is not None and "classifier.bias" in model_state:
+                        model_state["classifier.bias"][u_idx] = mean_b
+
+            logger.info("Transferred classifier heads: %s (unmapped filled: %d)", mapped_pairs, len(unmapped_indices))
+
+        model.load_state_dict(model_state)
+        logger.info("Successfully transferred %d weights from pretrained checkpoint.", transferred)
+
     collator = build_collator(cfg)
     class_weights = None
     if cfg.get("class_weights", True):

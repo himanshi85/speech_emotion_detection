@@ -69,10 +69,30 @@ def get_model_probabilities(
             mapping = json.loads(lbl_file.read_text(encoding="utf-8"))
             overrides["num_classes"] = len(mapping)
 
-    cfg = load_model_config(model_key, overrides=overrides)
+    cfg = None
+    model_pt_path = ckpt_dir / "model.pt"
+    ckpt_dict = None
+    if model_pt_path.exists():
+        try:
+            ckpt_dict = torch.load(model_pt_path, map_location="cpu", weights_only=False)
+            if isinstance(ckpt_dict, dict) and "config" in ckpt_dict:
+                cfg = dict(ckpt_dict["config"])
+                cfg.update(overrides)
+        except Exception:
+            cfg = None
+
+    if cfg is None:
+        try:
+            cfg = load_model_config(model_key, overrides=overrides)
+        except Exception:
+            base_key = model_key.split("_")[0]
+            cfg = load_model_config(base_key, overrides=overrides)
 
     model = build_model(cfg).to(device)
-    load_checkpoint_model(ckpt_dir, model)
+    if ckpt_dict is not None and "model_state_dict" in ckpt_dict:
+        model.load_state_dict(ckpt_dict["model_state_dict"])
+    else:
+        load_checkpoint_model(ckpt_dir, model)
     model.eval()
 
     collator = build_collator(cfg)
@@ -133,6 +153,7 @@ def main() -> int:
         class_names = [id_to_emotion[i] for i in range(len(label_mapping))]
     else:
         class_names = list(CLASS_NAMES)
+        id_to_emotion = {i: name for i, name in enumerate(CLASS_NAMES)}
 
     weights = args.weights
     if weights is None:
@@ -150,14 +171,25 @@ def main() -> int:
         overrides = {}
         if args.data_dir:
             overrides["data_dir"] = str(Path(args.data_dir).resolve())
-        if args.outputs_root:
-            overrides["output_dir"] = str(Path(args.outputs_root).resolve() / model_key)
-        cfg = load_model_config(model_key, overrides=overrides)
-        ckpt_dir = Path(cfg["output_dir"]) / "checkpoints" / "best_model"
-        if not ckpt_dir.exists() and args.outputs_root:
+
+        model_path = Path(model_key)
+        if model_path.exists() and (model_path / "model.pt").exists():
+            ckpt_dir = model_path.resolve()
+        elif model_path.exists() and (model_path / "checkpoints" / "best_model" / "model.pt").exists():
+            ckpt_dir = (model_path / "checkpoints" / "best_model").resolve()
+        elif args.outputs_root:
             ckpt_dir = Path(args.outputs_root).resolve() / model_key / "checkpoints" / "best_model"
-        if not ckpt_dir.exists():
+        else:
             ckpt_dir = PROJECT_ROOT / "outputs" / "ravdess" / model_key / "checkpoints" / "best_model"
+
+        if not ckpt_dir.exists():
+            try:
+                base_key = model_key.split("_")[0]
+                cfg = load_model_config(base_key, overrides=overrides)
+                ckpt_dir = Path(cfg["output_dir"]) / "checkpoints" / "best_model"
+            except Exception:
+                pass
+
         if not ckpt_dir.exists():
             raise FileNotFoundError(f"Checkpoint not found for {model_key} at {ckpt_dir}")
 
