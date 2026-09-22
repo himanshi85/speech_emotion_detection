@@ -13,7 +13,11 @@ venv/
 dataset/
 .dataset/
 ravdess_preprocessed/
+cremad_preprocessed/
+savee_preprocessed/
+tess_preprocessed/
 combined_preprocessed/
+scratch/
 
 # Model checkpoints & experiment outputs
 outputs/
