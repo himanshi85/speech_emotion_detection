@@ -1,0 +1,5 @@
+# Wav2Vec2-XLS-R-300M SER
+-r requirements-xlsr.txt
+
+# Development / testing
+pytest>=7.0

@@ -1,0 +1,16 @@
+model_key: beats
+display_name: BEATs
+# Official BEATs uses Microsoft fbank+Transformer (not on HF Transformers).
+# Comparable acoustic SSL backbone: WavLM-base-plus
+hub_id: microsoft/wavlm-base-plus
+model_backend: transformer
+input_type: waveform
+
+batch_size: 4
+gradient_accumulation_steps: 4
+num_epochs: 25
+encoder_learning_rate: 5.0e-6
+classifier_learning_rate: 1.0e-4
+dropout: 0.3
+
+output_dir: outputs/ravdess/beats

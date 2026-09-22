@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "xlsr-ser"
+version = "0.1.0"
+description = "Wav2Vec2-XLS-R-300M Speech Emotion Recognition on RAVDESS"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "python-dotenv>=1.0.0",
+    "huggingface_hub>=0.20.0",
+    "transformers>=4.36.0",
+    "torch>=2.0.0",
+    "soundfile>=0.12",
+    "numpy>=1.23",
+    "pandas>=1.5",
+    "PyYAML>=6.0",
+    "tqdm>=4.65",
+    "scikit-learn>=1.2",
+    "matplotlib>=3.7",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[project.scripts]
+xlsr = "xlsr.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["xlsr*", "ser*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

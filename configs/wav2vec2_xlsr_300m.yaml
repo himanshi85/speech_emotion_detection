@@ -1,0 +1,14 @@
+model_key: wav2vec2_xlsr_300m
+display_name: Wav2Vec2-XLS-R-300M
+hub_id: facebook/wav2vec2-xls-r-300m
+input_type: waveform
+
+batch_size: 4
+gradient_accumulation_steps: 4
+num_epochs: 25
+encoder_learning_rate: 1.0e-5
+classifier_learning_rate: 1.0e-4
+dropout: 0.3
+freeze_encoder: false
+
+output_dir: outputs/ravdess/wav2vec2_xlsr_300m
