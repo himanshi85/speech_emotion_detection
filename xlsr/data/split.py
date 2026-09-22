@@ -152,6 +152,46 @@ def verify_dataset_split(bundle: DatasetBundle) -> SplitVerificationReport:
             sizes=bundle.sizes,
         )
 
+    is_combined = "combined" in bundle.data_dir.name.lower()
+    if is_combined:
+        # Non-TESS actors (< 3000) must have zero intersection across splits
+        crema_ravdess_savee_train = {a for a in train_a if a < 3000}
+        crema_ravdess_savee_val = {a for a in val_a if a < 3000}
+        crema_ravdess_savee_test = {a for a in test_a if a < 3000}
+        intersections = {
+            "train_validation": sorted(crema_ravdess_savee_train & crema_ravdess_savee_val),
+            "train_test": sorted(crema_ravdess_savee_train & crema_ravdess_savee_test),
+            "validation_test": sorted(crema_ravdess_savee_val & crema_ravdess_savee_test),
+        }
+        issues: List[str] = []
+        if intersections["train_validation"]:
+            issues.append(f"Train actors ∩ Validation actors = {intersections['train_validation']}")
+        if intersections["train_test"]:
+            issues.append(f"Train actors ∩ Test actors = {intersections['train_test']}")
+        if intersections["validation_test"]:
+            issues.append(f"Validation actors ∩ Test actors = {intersections['validation_test']}")
+
+        # Ensure zero file path / audio leakage
+        train_files = set(bundle.train["filepath"])
+        val_files = set(bundle.validation["filepath"])
+        test_files = set(bundle.test["filepath"])
+        if train_files & val_files:
+            issues.append(f"File leakage: Train ∩ Validation = {list(train_files & val_files)[:5]}")
+        if train_files & test_files:
+            issues.append(f"File leakage: Train ∩ Test = {list(train_files & test_files)[:5]}")
+        if val_files & test_files:
+            issues.append(f"File leakage: Validation ∩ Test = {list(val_files & test_files)[:5]}")
+
+        return SplitVerificationReport(
+            ok=len(issues) == 0,
+            train_actors=train_a,
+            validation_actors=val_a,
+            test_actors=test_a,
+            intersections=intersections,
+            issues=issues,
+            sizes=bundle.sizes,
+        )
+
     intersections = {
         "train_validation": sorted(train_a & val_a),
         "train_test": sorted(train_a & test_a),
