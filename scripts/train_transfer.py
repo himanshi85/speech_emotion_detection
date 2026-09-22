@@ -38,6 +38,7 @@ def main() -> int:
     parser.add_argument("--layer_pooling", type=str, default="weighted", choices=["weighted", "last"], help="Layer pooling strategy")
     parser.add_argument("--freeze_encoder", action="store_true", help="Freeze encoder weights to prevent overfitting on small target datasets")
     parser.add_argument("--lr", type=float, default=1e-5, help="Fine-tuning learning rate (default: 1e-5)")
+    parser.add_argument("--batch_size", type=int, default=None, help="Batch size override")
     parser.add_argument("--epochs", type=int, default=25, help="Number of fine-tuning epochs")
     parser.add_argument("--patience", type=int, default=6, help="Early stopping patience")
     args = parser.parse_args()
@@ -103,6 +104,8 @@ def main() -> int:
         "num_epochs": args.epochs,
         "early_stopping_patience": args.patience,
     }
+    if args.batch_size:
+        overrides["batch_size"] = args.batch_size
 
     cfg = load_model_config(args.model_key, overrides=overrides)
     cfg["display_name"] = f"{cfg.get('display_name', args.model_key)} (Transfer from {args.source_dataset.upper()})"
