@@ -1,4 +1,4 @@
-# RAVDESS preprocessing dependencies (no deep learning models)
+# Minimal audio preprocessing dependencies (or full requirements)
 numpy>=1.23,<2.0
 pandas>=1.5
 soundfile>=0.12

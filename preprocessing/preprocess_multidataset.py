@@ -28,7 +28,7 @@ from scipy import signal
 
 # Add project root to sys.path
 sys.path.insert(0, str(Path(__file__).parent.parent.resolve()))
-from xlsr.labels import EMOTION_TO_ID
+from xlsr.data.labels import EMOTION_TO_ID
 
 TARGET_SAMPLE_RATE = 16000
 TARGET_CHANNELS = 1

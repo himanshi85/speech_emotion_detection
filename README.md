@@ -151,7 +151,7 @@ speech_emotion_detection-develop-v2/
 │   ├── preprocess_combined.py   # Multi-corpus 4-dataset zero-leakage unifier
 │   └── preprocess_multidataset.py
 │
-├── ser/                         # Modular Core Python Framework
+├── ser/                         # Modular Core Speech Emotion Recognition Framework
 │   ├── core/                    # Registry, config loader, paths, seed determinism
 │   ├── data/                    # Dataset loaders, dynamic collators & class weighting
 │   ├── features/                # Acoustic signal extraction (MFCC, Delta, CMVN)
@@ -159,14 +159,25 @@ speech_emotion_detection-develop-v2/
 │   ├── training/                # Training engine (MPS/CUDA/CPU, AMP, Cosine Annealing, Early Stopping)
 │   └── evaluation/              # Metrics (Acc, UAR, WAR, Macro-F1), reports & heatmaps
 │
-├── scripts/                     # Command-Line Interfaces
+├── xlsr/                        # Multilingual XLS-R Package (Hierarchical Layout)
+│   ├── core/                    # Paths, constants, configuration
+│   ├── data/                    # Audio loading, datasets, labels, split guard
+│   ├── model/                   # XLS-R architecture, processor, pooling, Hub loader
+│   ├── training/                # Experiment directories, fine-tuning utilities, trainer & metrics
+│   ├── verify/                  # Pipeline verification modules
+│   └── cli.py                   # Unified CLI verification runner
+│
+├── scripts/                     # Unified Command-Line Interfaces (All Entrypoints)
 │   ├── train.py                 # Train a single model on any dataset from scratch
 │   ├── train_all.py             # Sequentially train all 8 models on any dataset
 │   ├── train_transfer.py        # Fine-tune pre-trained models with weighted layer pooling
+│   ├── train_xlsr.py            # Standalone XLS-R-300M training script
 │   ├── evaluate.py              # Evaluate any checkpoint on in-domain test splits
 │   ├── evaluate_ensemble.py     # Multi-model soft-voting ensemble
 │   ├── evaluate_cross_corpus.py # Cross-corpus zero-shot evaluation pipeline
+│   ├── evaluate_xlsr.py         # Standalone XLS-R-300M evaluation script
 │   ├── compare_results.py       # Aggregate benchmark tables, rankings & curve plots
+│   ├── check_models.py          # Model architecture and parameter validator
 │   ├── verify_metrics.py        # Comprehensive verification of metrics and artifacts
 │   ├── verify_training.py       # Sanity check for forward/backward passes
 │   └── verify_all.py            # End-to-end pipeline auditor
@@ -191,7 +202,9 @@ speech_emotion_detection-develop-v2/
 │
 ├── PROJECT_OVERVIEW.md          # Comprehensive research dashboard and logs
 ├── pyproject.toml               # Package build configuration & metadata
-├── requirements.txt             # Primary Python dependencies
+├── requirements.txt             # Consolidated primary Python dependencies
+├── requirements-preprocess.txt  # Lightweight audio preprocessing dependencies
+├── requirements-xlsr.txt        # XLS-R specific dependency redirect
 └── .gitignore                   # Comprehensive ignore rules for ML/audio artifacts
 ```
 

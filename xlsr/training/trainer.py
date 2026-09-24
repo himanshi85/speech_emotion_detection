@@ -19,29 +19,33 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 from transformers import get_linear_schedule_with_warmup
 
-from xlsr.constants import MODEL_NAME, NUM_CLASSES, SAMPLE_RATE
-from xlsr.dataset import RAVDESSXLSRDataset, SERDataCollator
-from xlsr.experiment_dirs import create_experiment_dirs
-from xlsr.labels import CLASS_NAMES, EMOTION_TO_ID, ID_TO_EMOTION
-from xlsr.metrics import compute_ser_metrics, plot_training_curves
-from xlsr.model import Wav2Vec2XLSRForSER, build_xlsr_ser_model
-from xlsr.processor import get_xlsr_processor
+from xlsr.core.constants import MODEL_NAME, SAMPLE_RATE
+from xlsr.data.dataset import RAVDESSXLSRDataset, SERDataCollator
+from xlsr.data.labels import CLASS_NAMES, EMOTION_TO_ID, ID_TO_EMOTION, NUM_CLASSES
+from xlsr.model.processor import get_xlsr_processor
+from xlsr.model.ser import Wav2Vec2XLSRForSER, build_xlsr_ser_model
+from xlsr.training.experiment import create_experiment_dirs
+from xlsr.training.metrics import compute_ser_metrics, plot_training_curves
 
 logger = logging.getLogger(__name__)
 
 
 def get_device() -> torch.device:
-    """Detect CUDA if available, otherwise return CPU device (Section 16)."""
+    """Detect CUDA/MPS if available, otherwise return CPU device."""
     if torch.cuda.is_available():
         device = torch.device("cuda")
         gpu_name = torch.cuda.get_device_name(0)
         gpu_mem = torch.cuda.get_device_properties(0).total_memory / (1024 ** 3)
         logger.info("Using GPU: %s (%.2f GB VRAM)", gpu_name, gpu_mem)
         print(f"Device: cuda | GPU: {gpu_name} | VRAM: {gpu_mem:.2f} GB")
+    elif hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
+        device = torch.device("mps")
+        logger.info("Using Apple Silicon MPS acceleration.")
+        print("Device: mps | Apple Silicon Acceleration")
     else:
         device = torch.device("cpu")
-        logger.info("CUDA unavailable. Running on CPU.")
-        print("Device: cpu | CUDA unavailable")
+        logger.info("Hardware acceleration unavailable. Running on CPU.")
+        print("Device: cpu | Acceleration unavailable")
     return device
 
 
@@ -268,9 +272,9 @@ class XLSRTrainer:
 
                 pbar.set_postfix({"val_loss": f"{loss_val:.4f}"})
 
-        avg_loss = total_loss / len(dataloader)
-        metrics = compute_ser_metrics(all_labels, all_preds)
-        return avg_loss, metrics, np.array(all_labels), np.array(all_preds), np.array(all_probs)
+            avg_loss = total_loss / len(dataloader)
+            metrics = compute_ser_metrics(all_labels, all_preds)
+            return avg_loss, metrics, np.array(all_labels), np.array(all_preds), np.array(all_probs)
 
     def run_training(
         self,

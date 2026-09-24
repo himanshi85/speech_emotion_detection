@@ -1,5 +1,26 @@
-# Wav2Vec2-XLS-R-300M SER
--r requirements-xlsr.txt
+# Speech Emotion Recognition (SER) Framework Dependencies
+# ========================================================
+# Core Deep Learning & Audio Processing
+torch>=2.0.0
+torchaudio>=2.0.0
+transformers>=4.36.0
+huggingface_hub>=0.20.0
+soundfile>=0.12
+scipy>=1.9
+numpy>=1.23,<2.0
 
-# Development / testing
+# Emotion Feature Extraction & Pretrained Models
+funasr>=1.4.0
+
+# Data, Config & Utilities
+pandas>=1.5
+PyYAML>=6.0
+python-dotenv>=1.0.0
+tqdm>=4.65
+
+# Evaluation & Metrics
+scikit-learn>=1.2
+matplotlib>=3.7
+
+# Development & Testing
 pytest>=7.0

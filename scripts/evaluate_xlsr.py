@@ -1,40 +1,40 @@
 """
 CLI Evaluation Script for Wav2Vec2-XLS-R-300M SER.
 
-Section 35:
-python evaluate_xlsr.py \
-    --checkpoint outputs/wav2vec2_xlsr_300m/checkpoints/best_model \
-    --test_csv ravdess_preprocessed/metadata/test.csv
+Usage:
+    python scripts/evaluate_xlsr.py \
+        --checkpoint outputs/wav2vec2_xlsr_300m/checkpoints/best_model \
+        --test_csv ravdess_preprocessed/metadata/test.csv
 """
 
 from __future__ import annotations
 
 import argparse
 import logging
-import time
 import sys
+import time
 from pathlib import Path
 
 # Ensure root directory is on sys.path
-sys.path.insert(0, str(Path(__file__).parent.resolve()))
+sys.path.insert(0, str(Path(__file__).parent.parent.resolve()))
 
 import pandas as pd
 import torch
 from torch.utils.data import DataLoader
 
-from xlsr.constants import MODEL_NAME, NUM_CLASSES
-from xlsr.dataset import RAVDESSXLSRDataset, SERDataCollator
-from xlsr.dataset_io import _load_split_csv
-from xlsr.experiment_dirs import create_experiment_dirs
-from xlsr.metrics import (
+from xlsr.core.constants import MODEL_NAME
+from xlsr.core.paths import DEFAULT_DATA_DIR, DEFAULT_OUTPUT_DIR
+from xlsr.data.dataset import RAVDESSXLSRDataset, SERDataCollator, _load_split_csv
+from xlsr.data.labels import NUM_CLASSES
+from xlsr.model.processor import get_xlsr_processor
+from xlsr.model.ser import Wav2Vec2XLSRForSER, build_xlsr_ser_model
+from xlsr.training.experiment import create_experiment_dirs
+from xlsr.training.metrics import (
     compute_ser_metrics,
     save_classification_report,
     save_confusion_matrix,
     save_test_predictions,
 )
-from xlsr.model import Wav2Vec2XLSRForSER, build_xlsr_ser_model
-from xlsr.paths import DEFAULT_DATA_DIR, DEFAULT_OUTPUT_DIR
-from xlsr.processor import get_xlsr_processor
 
 logger = logging.getLogger(__name__)
 
@@ -57,8 +57,7 @@ def load_model_from_checkpoint(checkpoint_dir: Path, device: torch.device) -> Wa
     if not ckpt_file.exists():
         raise FileNotFoundError(
             f"Checkpoint file missing: '{ckpt_file}'.\n"
-            "--> Training for this folder is currently in progress. "
-            "Please wait for Epoch 1 to finish saving 'model_checkpoint.pt' before running evaluation."
+            "--> Please verify the checkpoint directory contains model_checkpoint.pt."
         )
 
     state = torch.load(ckpt_file, map_location=device)
@@ -89,7 +88,13 @@ def main() -> None:
     )
     logger.info("Starting Test Evaluation")
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+    elif hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
+        device = torch.device("mps")
+    else:
+        device = torch.device("cpu")
+
     data_dir = Path(args.data_dir).resolve()
     test_csv_path = Path(args.test_csv).resolve() if args.test_csv else data_dir / "metadata" / "test.csv"
 
@@ -143,7 +148,7 @@ def main() -> None:
     # Save artifacts (Section 26, 27, 28)
     save_confusion_matrix(all_labels, all_preds, output_dir)
     save_classification_report(all_labels, all_preds, output_dir)
-    save_test_predictions(test_df, all_labels, all_preds, all_probs_arr, output_dir)
+    save_test_predictions(test_df["filename"].tolist(), all_labels, all_preds, all_probs_arr, output_dir)
 
     # Save computational metrics (Section 31)
     param_counts = model.count_parameters()
