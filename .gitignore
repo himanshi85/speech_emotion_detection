@@ -1,15 +1,35 @@
-# Secrets
+# Secrets & Local Environment
 .env
 .env.local
+.env.*.local
 
-# Python
+# Python & Build Artifacts
 __pycache__/
 *.py[cod]
+*$py.class
 *.egg-info/
+*.egg
+build/
+dist/
 .venv/
 venv/
+ENV/
+env/
 
-# Raw Datasets & Preprocessed Datasets
+# Testing, Coverage & Linters
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
+nosetests.xml
+coverage.xml
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Raw Datasets & Preprocessed Corpora
 dataset/
 .dataset/
 ravdess_preprocessed/
@@ -18,15 +38,40 @@ savee_preprocessed/
 tess_preprocessed/
 combined_preprocessed/
 scratch/
+*.wav
+*.mp3
+*.flac
+*.m4a
+*.ogg
 
-# Model checkpoints & experiment outputs
+# Model Checkpoints & Large Weights
 outputs/
 *.pt
+*.pth
 *.bin
 *.safetensors
+*.onnx
+*.ckpt
 
-# OS / IDE / Logs / Archives
+# Experiment Tracking & Logs
+wandb/
+runs/
+lightning_logs/
+*.log
+
+# OS & Editor Specific
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 .idea/
 .vscode/
+*.swp
+*.swo
+*~
 *.zip
+*.tar.gz
+*.tar

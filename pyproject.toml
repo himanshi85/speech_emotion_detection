@@ -3,9 +3,9 @@ requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "xlsr-ser"
-version = "0.1.0"
-description = "Wav2Vec2-XLS-R-300M Speech Emotion Recognition on RAVDESS"
+name = "speech-emotion-recognition"
+version = "0.3.0"
+description = "Multi-Corpus Speech Emotion Recognition (SER) Benchmarking Framework across RAVDESS, CREMA-D, SAVEE, TESS, and Unified Foundation Models"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
