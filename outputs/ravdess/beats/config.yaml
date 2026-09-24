@@ -1,6 +1,6 @@
 num_classes: 8
 sample_rate: 16000
-data_dir: /Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v2/ravdess_preprocessed
+data_dir: ravdess_preprocessed
 dropout: 0.3
 freeze_encoder: false
 class_weights: true
@@ -20,4 +20,4 @@ gradient_accumulation_steps: 4
 num_epochs: 80
 encoder_learning_rate: 5.0e-06
 classifier_learning_rate: 0.0001
-output_dir: /Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v2/outputs/beats
+output_dir: outputs/beats

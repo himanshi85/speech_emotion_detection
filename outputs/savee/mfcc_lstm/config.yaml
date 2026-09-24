@@ -1,6 +1,6 @@
 num_classes: 8
 sample_rate: 16000
-data_dir: /Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v2/savee_preprocessed
+data_dir: savee_preprocessed
 dropout: 0.3
 freeze_encoder: false
 class_weights: true
@@ -18,4 +18,4 @@ num_epochs: 40
 learning_rate: 0.001
 lstm_hidden: 256
 lstm_layers: 2
-output_dir: /Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v2/outputs/savee/mfcc_lstm
+output_dir: outputs/savee/mfcc_lstm

@@ -191,7 +191,7 @@ Layer 12 [ 9.2%] |========    <-- Final Phonetic Layer
 - **Prosodic Culmination (Layers 9-11)**: Carries the dominant emotion discrimination weight (~11.1% per layer).
 - **Phonetic Convergence (Layer 12)**: Specializes in discrete phonetic decoding (~9.2%), making intermediate representations significantly more informative for emotion recognition.
 
-A visual plot comparing layer weights across fine-tuning regimes is available at [outputs/comparison_layer_weights.png](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/comparison_layer_weights.png).
+A visual plot comparing layer weights across fine-tuning regimes is available at [outputs/comparison_layer_weights.png](outputs/comparison_layer_weights.png).
 
 ---
 

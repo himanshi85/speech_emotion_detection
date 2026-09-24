@@ -1,6 +1,6 @@
 num_classes: 8
 sample_rate: 16000
-data_dir: /Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v2/savee_preprocessed
+data_dir: savee_preprocessed
 dropout: 0.3
 freeze_encoder: false
 class_weights: true
@@ -19,4 +19,4 @@ gradient_accumulation_steps: 4
 num_epochs: 40
 encoder_learning_rate: 1.0e-05
 classifier_learning_rate: 0.0001
-output_dir: /Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v2/outputs/savee/hubert
+output_dir: outputs/savee/hubert

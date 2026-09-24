@@ -27,29 +27,29 @@ This document serves as the **single-source-of-truth research dashboard** for th
 ## 2. Direct Links to Reports, Tables and Plots
 
 ### Combined Comparative Reports (RAVDESS — Folder-Wise)
-- **[ranking_by_macro_f1.csv](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/ravdess/comparison/ranking_by_macro_f1.csv)**: Official leaderboard ranked by Macro-F1.
-- **[all_models_results.csv](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/ravdess/comparison/all_models_results.csv)**: Complete master table with all metrics side-by-side.
-- **[ranking_by_accuracy.csv](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/ravdess/comparison/ranking_by_accuracy.csv)**: Ranking sorted by raw accuracy.
-- **[model_parameter_report.txt](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/ravdess/comparison/model_parameter_report.txt)**: Architecture details, expected vs. actual parameters, and forward pass verification.
+- **[ranking_by_macro_f1.csv](outputs/ravdess/comparison/ranking_by_macro_f1.csv)**: Official leaderboard ranked by Macro-F1.
+- **[all_models_results.csv](outputs/ravdess/comparison/all_models_results.csv)**: Complete master table with all metrics side-by-side.
+- **[ranking_by_accuracy.csv](outputs/ravdess/comparison/ranking_by_accuracy.csv)**: Ranking sorted by raw accuracy.
+- **[model_parameter_report.txt](outputs/ravdess/comparison/model_parameter_report.txt)**: Architecture details, expected vs. actual parameters, and forward pass verification.
 
 ### Visual Comparison Plots (RAVDESS)
-- **[Test Macro-F1 Bar Chart](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/ravdess/comparison/curves/all_models_test_macro_f1_bar.png)**
-- **[Test Accuracy Bar Chart](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/ravdess/comparison/curves/all_models_test_accuracy_bar.png)**
-- **[Validation Macro-F1 Curve](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/ravdess/comparison/curves/all_models_val_macro_f1.png)**
-- **[Validation Accuracy Curve](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/ravdess/comparison/curves/all_models_val_accuracy.png)**
-- **[Validation Loss Curve](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/ravdess/comparison/curves/all_models_val_loss.png)**
-- **[Confusion Matrices Directory](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/ravdess/comparison/confusion_matrices/)** (Contains test confusion matrix PNGs for all 8 models)
+- **[Test Macro-F1 Bar Chart](outputs/ravdess/comparison/curves/all_models_test_macro_f1_bar.png)**
+- **[Test Accuracy Bar Chart](outputs/ravdess/comparison/curves/all_models_test_accuracy_bar.png)**
+- **[Validation Macro-F1 Curve](outputs/ravdess/comparison/curves/all_models_val_macro_f1.png)**
+- **[Validation Accuracy Curve](outputs/ravdess/comparison/curves/all_models_val_accuracy.png)**
+- **[Validation Loss Curve](outputs/ravdess/comparison/curves/all_models_val_loss.png)**
+- **[Confusion Matrices Directory](outputs/ravdess/comparison/confusion_matrices/)** (Contains test confusion matrix PNGs for all 8 models)
 
 ### Individual Model Checkpoints and Directories (RAVDESS)
-- **Ensemble (Top 3)**: [`outputs/ravdess/ensemble/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/ravdess/ensemble/)
-- **1. WavLM**: [`outputs/ravdess/wavlm/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/ravdess/wavlm/)
-- **2. Wav2Vec2**: [`outputs/ravdess/wav2vec2/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/ravdess/wav2vec2/)
-- **3. emotion2vec+**: [`outputs/ravdess/emotion2vec_plus/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/ravdess/emotion2vec_plus/)
-- **4. MFCC + CNN-BiLSTM**: [`outputs/ravdess/mfcc_cnn_bilstm/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/ravdess/mfcc_cnn_bilstm/)
-- **5. BEATs**: [`outputs/ravdess/beats/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/ravdess/beats/)
-- **6. MFCC + LSTM**: [`outputs/ravdess/mfcc_lstm/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/ravdess/mfcc_lstm/)
-- **7. HuBERT**: [`outputs/ravdess/hubert/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/ravdess/hubert/)
-- **8. Wav2Vec2-XLS-R-300M**: [`outputs/ravdess/wav2vec2_xlsr_300m/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/ravdess/wav2vec2_xlsr_300m/)
+- **Ensemble (Top 3)**: [`outputs/ravdess/ensemble/`](outputs/ravdess/ensemble/)
+- **1. WavLM**: [`outputs/ravdess/wavlm/`](outputs/ravdess/wavlm/)
+- **2. Wav2Vec2**: [`outputs/ravdess/wav2vec2/`](outputs/ravdess/wav2vec2/)
+- **3. emotion2vec+**: [`outputs/ravdess/emotion2vec_plus/`](outputs/ravdess/emotion2vec_plus/)
+- **4. MFCC + CNN-BiLSTM**: [`outputs/ravdess/mfcc_cnn_bilstm/`](outputs/ravdess/mfcc_cnn_bilstm/)
+- **5. BEATs**: [`outputs/ravdess/beats/`](outputs/ravdess/beats/)
+- **6. MFCC + LSTM**: [`outputs/ravdess/mfcc_lstm/`](outputs/ravdess/mfcc_lstm/)
+- **7. HuBERT**: [`outputs/ravdess/hubert/`](outputs/ravdess/hubert/)
+- **8. Wav2Vec2-XLS-R-300M**: [`outputs/ravdess/wav2vec2_xlsr_300m/`](outputs/ravdess/wav2vec2_xlsr_300m/)
 
 ---
 
@@ -72,7 +72,7 @@ This document serves as the **single-source-of-truth research dashboard** for th
 ## 4. Phase 2: CREMA-D 6-Class Benchmark
 
 - **Dataset**: Crowd-sourced Emotional Multimodal Actors Dataset (CREMA-D).
-- **Total Audio**: 7,442 standardized 16 kHz mono 16-bit PCM clips in [`data/cremad/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/data/cremad/).
+- **Total Audio**: 7,442 standardized 16 kHz mono 16-bit PCM clips in [`data/cremad/`](data/cremad/).
 - **Actors**: 91 diverse actors (IDs 1001 to 1091).
 - **6 Locked Emotion Classes**:
   - `0`: Neutral
@@ -91,22 +91,22 @@ This document serves as the **single-source-of-truth research dashboard** for th
 
 | Model Name | Key | Backbone | Best Epoch | Val Acc | Val Macro-F1 | Test Acc | Test Macro-F1 | Test UAR | Status | Output Directory |
 |---|---|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|---|
-| **Ensemble (Top 5)** | `ensemble` | HuBERT + Wav2Vec2 + emotion2vec+ + WavLM + CNN-BiLSTM | — | — | — | **75.57%** | **0.7594** | **75.61%** | **Completed** | [`outputs/cremad/ensemble/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/cremad/ensemble/) |
-| **HuBERT** | `hubert` | `facebook/hubert-base-ls960` | **Ep 8** | **60.80%** | **0.6100** | **71.98%** | **0.7209** | **72.03%** | **Completed** | [`outputs/cremad/hubert/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/cremad/hubert/) |
-| **Wav2Vec2** | `wav2vec2` | `facebook/wav2vec2-base` | **Ep 5** | **63.41%** | **0.6383** | **69.25%** | **0.6982** | **69.29%** | **Completed** | [`outputs/cremad/wav2vec2/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/cremad/wav2vec2/) |
-| **emotion2vec+** | `emotion2vec_plus` | `facebook/wav2vec2-base` | **Ep 5** | **63.41%** | **0.6383** | **69.25%** | **0.6982** | **69.29%** | **Completed** | [`outputs/cremad/emotion2vec_plus/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/cremad/emotion2vec_plus/) |
-| **WavLM** | `wavlm` | `microsoft/wavlm-base-plus` | **Ep 7** | **57.75%** | **0.5775** | **66.32%** | **0.6584** | **66.45%** | **Completed** | [`outputs/cremad/wavlm/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/cremad/wavlm/) |
-| **MFCC + CNN-BiLSTM** | `mfcc_cnn_bilstm` | MFCC(40) -> CNN -> BiLSTM -> Head | **Ep 13** | **53.48%** | **0.5395** | **63.30%** | **0.6392** | **63.24%** | **Completed** | [`outputs/cremad/mfcc_cnn_bilstm/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/cremad/mfcc_cnn_bilstm/) |
-| **BEATs** | `beats` | `microsoft/wavlm-base-plus` | **Ep 8** | **49.48%** | **0.4956** | **62.64%** | **0.6190** | **62.89%** | **Completed** | [`outputs/cremad/beats/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/cremad/beats/) |
-| **MFCC + LSTM** | `mfcc_lstm` | MFCC(40) -> 2-Layer LSTM -> Head | **Ep 17** | **52.53%** | **0.5163** | **59.62%** | **0.5999** | **59.69%** | **Completed** | [`outputs/cremad/mfcc_lstm/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/cremad/mfcc_lstm/) |
-| **Wav2Vec2-XLS-R-300M** | `wav2vec2_xlsr_300m` | `facebook/wav2vec2-xls-r-300m` (Frozen) | **Ep 3** | **17.07%** | **0.1263** | **24.43%** | **0.1346** | **23.85%** | **Completed** | [`outputs/cremad/wav2vec2_xlsr_300m/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/cremad/wav2vec2_xlsr_300m/) |
+| **Ensemble (Top 5)** | `ensemble` | HuBERT + Wav2Vec2 + emotion2vec+ + WavLM + CNN-BiLSTM | — | — | — | **75.57%** | **0.7594** | **75.61%** | **Completed** | [`outputs/cremad/ensemble/`](outputs/cremad/ensemble/) |
+| **HuBERT** | `hubert` | `facebook/hubert-base-ls960` | **Ep 8** | **60.80%** | **0.6100** | **71.98%** | **0.7209** | **72.03%** | **Completed** | [`outputs/cremad/hubert/`](outputs/cremad/hubert/) |
+| **Wav2Vec2** | `wav2vec2` | `facebook/wav2vec2-base` | **Ep 5** | **63.41%** | **0.6383** | **69.25%** | **0.6982** | **69.29%** | **Completed** | [`outputs/cremad/wav2vec2/`](outputs/cremad/wav2vec2/) |
+| **emotion2vec+** | `emotion2vec_plus` | `facebook/wav2vec2-base` | **Ep 5** | **63.41%** | **0.6383** | **69.25%** | **0.6982** | **69.29%** | **Completed** | [`outputs/cremad/emotion2vec_plus/`](outputs/cremad/emotion2vec_plus/) |
+| **WavLM** | `wavlm` | `microsoft/wavlm-base-plus` | **Ep 7** | **57.75%** | **0.5775** | **66.32%** | **0.6584** | **66.45%** | **Completed** | [`outputs/cremad/wavlm/`](outputs/cremad/wavlm/) |
+| **MFCC + CNN-BiLSTM** | `mfcc_cnn_bilstm` | MFCC(40) -> CNN -> BiLSTM -> Head | **Ep 13** | **53.48%** | **0.5395** | **63.30%** | **0.6392** | **63.24%** | **Completed** | [`outputs/cremad/mfcc_cnn_bilstm/`](outputs/cremad/mfcc_cnn_bilstm/) |
+| **BEATs** | `beats` | `microsoft/wavlm-base-plus` | **Ep 8** | **49.48%** | **0.4956** | **62.64%** | **0.6190** | **62.89%** | **Completed** | [`outputs/cremad/beats/`](outputs/cremad/beats/) |
+| **MFCC + LSTM** | `mfcc_lstm` | MFCC(40) -> 2-Layer LSTM -> Head | **Ep 17** | **52.53%** | **0.5163** | **59.62%** | **0.5999** | **59.69%** | **Completed** | [`outputs/cremad/mfcc_lstm/`](outputs/cremad/mfcc_lstm/) |
+| **Wav2Vec2-XLS-R-300M** | `wav2vec2_xlsr_300m` | `facebook/wav2vec2-xls-r-300m` (Frozen) | **Ep 3** | **17.07%** | **0.1263** | **24.43%** | **0.1346** | **23.85%** | **Completed** | [`outputs/cremad/wav2vec2_xlsr_300m/`](outputs/cremad/wav2vec2_xlsr_300m/) |
 
 ---
 
 ## 5. SAVEE Benchmark (Surrey Audio-Visual Expressed Emotion)
 
 ### SAVEE Dataset Specifications
-- **Audio Files**: 480 clips standardized to 16 kHz mono 16-bit PCM in [`data/savee/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/data/savee/).
+- **Audio Files**: 480 clips standardized to 16 kHz mono 16-bit PCM in [`data/savee/`](data/savee/).
 - **Speakers**: 4 British English male actors (`DC`, `JE`, `JK`, `KL`).
 - **7 Emotion Classes**: `anger` (60), `disgust` (60), `fear` (60), `happiness` (60), `neutral` (120), `sadness` (60), `surprise` (60).
 - **Actor-Independent Splits (Zero Speaker Leakage)**:
@@ -119,15 +119,15 @@ This document serves as the **single-source-of-truth research dashboard** for th
 
 | Model Name | Key | Backbone | Best Epoch | Val Acc | Val Macro-F1 | Test Acc | Test Macro-F1 | Test UAR | Status | Output Directory |
 |---|---|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|---|
-| **HuBERT** | `hubert` | `facebook/hubert-base-ls960` | **Ep 15** | **40.00%** | **0.3769** | **25.83%** | **0.0795** | **15.24%** | **Completed** | [`outputs/savee/hubert/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/savee/hubert/) |
-| **Wav2Vec2** | `wav2vec2` | `facebook/wav2vec2-base` | **Ep 12** | **27.50%** | **0.2032** | **25.83%** | **0.0758** | **15.24%** | **Completed** | [`outputs/savee/wav2vec2/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/savee/wav2vec2/) |
-| **emotion2vec+** | `emotion2vec_plus` | `facebook/wav2vec2-base` | **Ep 12** | **27.50%** | **0.2032** | **25.83%** | **0.0758** | **15.24%** | **Completed** | [`outputs/savee/emotion2vec_plus/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/savee/emotion2vec_plus/) |
-| **BEATs** | `beats` | `microsoft/wavlm-base-plus` | **Ep 23** | **40.83%** | **0.3680** | **25.00%** | **0.0654** | **14.29%** | **Completed** | [`outputs/savee/beats/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/savee/beats/) |
-| **WavLM** | `wavlm` | `microsoft/wavlm-base-plus` | **Ep 17** | **44.17%** | **0.4089** | **25.00%** | **0.0649** | **14.29%** | **Completed** | [`outputs/savee/wavlm/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/savee/wavlm/) |
-| **MFCC + CNN-BiLSTM** | `mfcc_cnn_bilstm` | MFCC(40) -> CNN -> BiLSTM -> Head | **Ep 2** | **42.50%** | **0.2451** | **25.00%** | **0.0571** | **14.29%** | **Completed** | [`outputs/savee/mfcc_cnn_bilstm/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/savee/mfcc_cnn_bilstm/) |
-| **Ensemble (Top 6)** | `ensemble` | WavLM + HuBERT + BEATs + Wav2Vec2 + emotion2vec+ + CNN-BiLSTM | — | — | — | **25.00%** | **0.0604** | **14.29%** | **Completed** | [`outputs/savee/ensemble/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/savee/ensemble/) |
-| **MFCC + LSTM** | `mfcc_lstm` | MFCC(40) -> 2-Layer LSTM -> Head | **Ep 3** | **42.50%** | **0.3604** | **12.50%** | **0.0317** | **14.29%** | **Completed** | [`outputs/savee/mfcc_lstm/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/savee/mfcc_lstm/) |
-| **Wav2Vec2-XLS-R-300M** | `wav2vec2_xlsr_300m` | `facebook/wav2vec2-xls-r-300m` (Frozen) | **Ep 1** | **12.50%** | **0.0317** | **12.50%** | **0.0317** | **14.29%** | **Completed** | [`outputs/savee/wav2vec2_xlsr_300m/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/savee/wav2vec2_xlsr_300m/) |
+| **HuBERT** | `hubert` | `facebook/hubert-base-ls960` | **Ep 15** | **40.00%** | **0.3769** | **25.83%** | **0.0795** | **15.24%** | **Completed** | [`outputs/savee/hubert/`](outputs/savee/hubert/) |
+| **Wav2Vec2** | `wav2vec2` | `facebook/wav2vec2-base` | **Ep 12** | **27.50%** | **0.2032** | **25.83%** | **0.0758** | **15.24%** | **Completed** | [`outputs/savee/wav2vec2/`](outputs/savee/wav2vec2/) |
+| **emotion2vec+** | `emotion2vec_plus` | `facebook/wav2vec2-base` | **Ep 12** | **27.50%** | **0.2032** | **25.83%** | **0.0758** | **15.24%** | **Completed** | [`outputs/savee/emotion2vec_plus/`](outputs/savee/emotion2vec_plus/) |
+| **BEATs** | `beats` | `microsoft/wavlm-base-plus` | **Ep 23** | **40.83%** | **0.3680** | **25.00%** | **0.0654** | **14.29%** | **Completed** | [`outputs/savee/beats/`](outputs/savee/beats/) |
+| **WavLM** | `wavlm` | `microsoft/wavlm-base-plus` | **Ep 17** | **44.17%** | **0.4089** | **25.00%** | **0.0649** | **14.29%** | **Completed** | [`outputs/savee/wavlm/`](outputs/savee/wavlm/) |
+| **MFCC + CNN-BiLSTM** | `mfcc_cnn_bilstm` | MFCC(40) -> CNN -> BiLSTM -> Head | **Ep 2** | **42.50%** | **0.2451** | **25.00%** | **0.0571** | **14.29%** | **Completed** | [`outputs/savee/mfcc_cnn_bilstm/`](outputs/savee/mfcc_cnn_bilstm/) |
+| **Ensemble (Top 6)** | `ensemble` | WavLM + HuBERT + BEATs + Wav2Vec2 + emotion2vec+ + CNN-BiLSTM | — | — | — | **25.00%** | **0.0604** | **14.29%** | **Completed** | [`outputs/savee/ensemble/`](outputs/savee/ensemble/) |
+| **MFCC + LSTM** | `mfcc_lstm` | MFCC(40) -> 2-Layer LSTM -> Head | **Ep 3** | **42.50%** | **0.3604** | **12.50%** | **0.0317** | **14.29%** | **Completed** | [`outputs/savee/mfcc_lstm/`](outputs/savee/mfcc_lstm/) |
+| **Wav2Vec2-XLS-R-300M** | `wav2vec2_xlsr_300m` | `facebook/wav2vec2-xls-r-300m` (Frozen) | **Ep 1** | **12.50%** | **0.0317** | **12.50%** | **0.0317** | **14.29%** | **Completed** | [`outputs/savee/wav2vec2_xlsr_300m/`](outputs/savee/wav2vec2_xlsr_300m/) |
 
 ### Scientific Insight: The Speaker Diversity Law
 A comparison of the datasets illuminates how speaker diversity dictates model generalizability to unseen test actors:
@@ -141,7 +141,7 @@ A comparison of the datasets illuminates how speaker diversity dictates model ge
 ## 6. TESS Benchmark (Toronto Emotional Speech Set)
 
 ### TESS Dataset Specifications
-- **Audio Files**: 2,800 clips standardized to 16 kHz mono 16-bit PCM in [`data/tess/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/data/tess/).
+- **Audio Files**: 2,800 clips standardized to 16 kHz mono 16-bit PCM in [`data/tess/`](data/tess/).
 - **Speakers**: 2 professional female actresses (`OAF`: 64yo, `YAF`: 26yo).
 - **200 Target Words**: Prompt-independent, word-disjoint partition:
   - **Train**: 140 target words x 2 actresses x 7 emotions = **1,960 clips** (70%)
@@ -154,15 +154,15 @@ A comparison of the datasets illuminates how speaker diversity dictates model ge
 
 | Model Name | Key | Backbone | Best Epoch | Val Acc | Val Macro-F1 | Test Acc | Test Macro-F1 | Test UAR | Status | Output Directory |
 |---|---|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|---|
-| **Ensemble (Top 5)** | `ensemble` | HuBERT + Wav2Vec2 + emotion2vec+ + WavLM + MFCC LSTM | — | — | — | **100.00%** | **1.0000** | **1.0000** | **Completed** | [`outputs/tess/ensemble/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/tess/ensemble/) |
-| **HuBERT** | `hubert` | `facebook/hubert-base-ls960` | **Ep 8** | **100.00%** | **1.0000** | **100.00%** | **1.0000** | **1.0000** | **Completed** | [`outputs/tess/hubert/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/tess/hubert/) |
-| **Wav2Vec2** | `wav2vec2` | `facebook/wav2vec2-base` | **Ep 5** | **100.00%** | **1.0000** | **100.00%** | **1.0000** | **1.0000** | **Completed** | [`outputs/tess/wav2vec2/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/tess/wav2vec2/) |
-| **WavLM** | `wavlm` | `microsoft/wavlm-base-plus` | **Ep 13** | **100.00%** | **1.0000** | **100.00%** | **1.0000** | **1.0000** | **Completed** | [`outputs/tess/wavlm/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/tess/wavlm/) |
-| **emotion2vec+** | `emotion2vec_plus` | `facebook/wav2vec2-base` | **Ep 5** | **100.00%** | **1.0000** | **100.00%** | **1.0000** | **1.0000** | **Completed** | [`outputs/tess/emotion2vec_plus/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/tess/emotion2vec_plus/) |
-| **MFCC + LSTM** | `mfcc_lstm` | MFCC(40) -> 2-Layer LSTM -> Head | **Ep 5** | **100.00%** | **1.0000** | **100.00%** | **1.0000** | **1.0000** | **Completed** | [`outputs/tess/mfcc_lstm/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/tess/mfcc_lstm/) |
-| **MFCC + CNN-BiLSTM** | `mfcc_cnn_bilstm` | MFCC(40) -> CNN -> BiLSTM -> Head | **Ep 4** | **100.00%** | **1.0000** | **99.76%** | **0.9976** | **0.9976** | **Completed** | [`outputs/tess/mfcc_cnn_bilstm/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/tess/mfcc_cnn_bilstm/) |
-| **BEATs** | `beats` | `microsoft/wavlm-base-plus` | **Ep 11** | **99.52%** | **0.9952** | **99.76%** | **0.9976** | **0.9976** | **Completed** | [`outputs/tess/beats/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/tess/beats/) |
-| **Wav2Vec2-XLS-R-300M** | `wav2vec2_xlsr_300m` | `facebook/wav2vec2-xls-r-300m` (Frozen) | **Ep 4** | **8.84%** | **0.0884** | **19.76%** | **0.0886** | **0.1976** | **Completed** | [`outputs/tess/wav2vec2_xlsr_300m/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/tess/wav2vec2_xlsr_300m/) |
+| **Ensemble (Top 5)** | `ensemble` | HuBERT + Wav2Vec2 + emotion2vec+ + WavLM + MFCC LSTM | — | — | — | **100.00%** | **1.0000** | **1.0000** | **Completed** | [`outputs/tess/ensemble/`](outputs/tess/ensemble/) |
+| **HuBERT** | `hubert` | `facebook/hubert-base-ls960` | **Ep 8** | **100.00%** | **1.0000** | **100.00%** | **1.0000** | **1.0000** | **Completed** | [`outputs/tess/hubert/`](outputs/tess/hubert/) |
+| **Wav2Vec2** | `wav2vec2` | `facebook/wav2vec2-base` | **Ep 5** | **100.00%** | **1.0000** | **100.00%** | **1.0000** | **1.0000** | **Completed** | [`outputs/tess/wav2vec2/`](outputs/tess/wav2vec2/) |
+| **WavLM** | `wavlm` | `microsoft/wavlm-base-plus` | **Ep 13** | **100.00%** | **1.0000** | **100.00%** | **1.0000** | **1.0000** | **Completed** | [`outputs/tess/wavlm/`](outputs/tess/wavlm/) |
+| **emotion2vec+** | `emotion2vec_plus` | `facebook/wav2vec2-base` | **Ep 5** | **100.00%** | **1.0000** | **100.00%** | **1.0000** | **1.0000** | **Completed** | [`outputs/tess/emotion2vec_plus/`](outputs/tess/emotion2vec_plus/) |
+| **MFCC + LSTM** | `mfcc_lstm` | MFCC(40) -> 2-Layer LSTM -> Head | **Ep 5** | **100.00%** | **1.0000** | **100.00%** | **1.0000** | **1.0000** | **Completed** | [`outputs/tess/mfcc_lstm/`](outputs/tess/mfcc_lstm/) |
+| **MFCC + CNN-BiLSTM** | `mfcc_cnn_bilstm` | MFCC(40) -> CNN -> BiLSTM -> Head | **Ep 4** | **100.00%** | **1.0000** | **99.76%** | **0.9976** | **0.9976** | **Completed** | [`outputs/tess/mfcc_cnn_bilstm/`](outputs/tess/mfcc_cnn_bilstm/) |
+| **BEATs** | `beats` | `microsoft/wavlm-base-plus` | **Ep 11** | **99.52%** | **0.9952** | **99.76%** | **0.9976** | **0.9976** | **Completed** | [`outputs/tess/beats/`](outputs/tess/beats/) |
+| **Wav2Vec2-XLS-R-300M** | `wav2vec2_xlsr_300m` | `facebook/wav2vec2-xls-r-300m` (Frozen) | **Ep 4** | **8.84%** | **0.0884** | **19.76%** | **0.0886** | **0.1976** | **Completed** | [`outputs/tess/wav2vec2_xlsr_300m/`](outputs/tess/wav2vec2_xlsr_300m/) |
 
 ---
 
@@ -182,23 +182,23 @@ A comparison of the datasets illuminates how speaker diversity dictates model ge
 
 | Model Name | Backbone | Layer Pooling | Trainable Params | Test Acc | Test Macro-F1 | Test UAR | Status / Improvement | Output Directory |
 |---|---|:---:|:---:|:---:|:---:|:---:|:---:|---|
-| **Ensemble (HuBERT + WavLM)** | Soft Voting | Weighted | 10.8 K | **51.67%** | **0.3860** | **44.76%** | **Peak (+25.84% / 4.85x F1)** | [`outputs/savee_enhanced/ensemble/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/savee_enhanced/ensemble/) |
-| **WavLM (Transfer from CREMA-D)** | `wavlm-base-plus` | Weighted | **5,395** | **49.17%** | **0.3753** | **46.19%** | **Breakthrough (+24.17% / 5.8x F1)** | [`outputs/savee_enhanced/wavlm_transfer_cremad_weighted_frozen/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/savee_enhanced/wavlm_transfer_cremad_weighted_frozen/) |
-| **HuBERT (Transfer from CREMA-D)** | `hubert-base-ls960` | Weighted | **5,395** | **45.83%** | **0.3419** | **38.10%** | **Breakthrough (+20.00% / 4.3x F1)** | [`outputs/savee_enhanced/hubert_transfer_cremad_weighted_frozen/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/savee_enhanced/hubert_transfer_cremad_weighted_frozen/) |
-| *Baseline HuBERT (Scratch)* | `hubert-base-ls960` | Last | 94.38 M | 25.83% | 0.0795 | 15.24% | Baseline Bottleneck | [`outputs/savee/hubert/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/savee/hubert/) |
-| *Baseline WavLM (Scratch)* | `wavlm-base-plus` | Last | 94.39 M | 25.00% | 0.0649 | 14.29% | Baseline Bottleneck | [`outputs/savee/wavlm/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/savee/wavlm/) |
+| **Ensemble (HuBERT + WavLM)** | Soft Voting | Weighted | 10.8 K | **51.67%** | **0.3860** | **44.76%** | **Peak (+25.84% / 4.85x F1)** | [`outputs/savee_enhanced/ensemble/`](outputs/savee_enhanced/ensemble/) |
+| **WavLM (Transfer from CREMA-D)** | `wavlm-base-plus` | Weighted | **5,395** | **49.17%** | **0.3753** | **46.19%** | **Breakthrough (+24.17% / 5.8x F1)** | [`outputs/savee_enhanced/wavlm_transfer_cremad_weighted_frozen/`](outputs/savee_enhanced/wavlm_transfer_cremad_weighted_frozen/) |
+| **HuBERT (Transfer from CREMA-D)** | `hubert-base-ls960` | Weighted | **5,395** | **45.83%** | **0.3419** | **38.10%** | **Breakthrough (+20.00% / 4.3x F1)** | [`outputs/savee_enhanced/hubert_transfer_cremad_weighted_frozen/`](outputs/savee_enhanced/hubert_transfer_cremad_weighted_frozen/) |
+| *Baseline HuBERT (Scratch)* | `hubert-base-ls960` | Last | 94.38 M | 25.83% | 0.0795 | 15.24% | Baseline Bottleneck | [`outputs/savee/hubert/`](outputs/savee/hubert/) |
+| *Baseline WavLM (Scratch)* | `wavlm-base-plus` | Last | 94.39 M | 25.00% | 0.0649 | 14.29% | Baseline Bottleneck | [`outputs/savee/wavlm/`](outputs/savee/wavlm/) |
 
 ### RAVDESS Enhanced Benchmark Results Table (outputs/ravdess_enhanced/)
 
 | Model Name | Backbone | Layer Pooling | Trainable Params | Test Acc | Test Macro-F1 | Test UAR | Status / Improvement | Output Directory |
 |---|---|:---:|:---:|:---:|:---:|:---:|:---:|---|
-| **Ensemble (Top 3 Transfer Models)** | Soft Voting | Weighted | ~283 M | **73.75%** | **0.7207** | **72.27%** | **Peak Ensemble (+5.0% over Baseline 68.75%)** | [`outputs/ravdess_enhanced/ensemble/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/ravdess_enhanced/ensemble/) |
-| **HuBERT (Transfer from CREMA-D)** | `hubert-base-ls960` | Weighted | 94.38 M | **72.92%** | **0.7119** | **71.09%** | **New #1 Single Model (+40.42% / 3.4x F1 over HuBERT scratch)** | [`outputs/ravdess_enhanced/hubert_transfer_cremad_weighted/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/ravdess_enhanced/hubert_transfer_cremad_weighted/) |
-| **Wav2Vec2 (Transfer from CREMA-D)** | `wav2vec2-base` | Weighted | 94.38 M | **67.50%** | **0.6595** | **66.02%** | **Large SSL Leap (+17.50% over Wav2Vec2 scratch)** | [`outputs/ravdess_enhanced/wav2vec2_transfer_cremad_weighted/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/ravdess_enhanced/wav2vec2_transfer_cremad_weighted/) |
-| *Baseline WavLM (Scratch)* | `wavlm-base-plus` | Last | 94.39 M | 67.08% | 0.6631 | 68.36% | Previous #1 Single Model | [`outputs/ravdess/wavlm/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/ravdess/wavlm/) |
-| **WavLM (Transfer from CREMA-D)** | `wavlm-base-plus` | Weighted | 94.39 M | **66.67%** | **0.6505** | **66.41%** | Strong Acoustic SSL | [`outputs/ravdess_enhanced/wavlm_transfer_cremad_weighted/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/ravdess_enhanced/wavlm_transfer_cremad_weighted/) |
-| *Baseline Wav2Vec2 (Scratch)* | `wav2vec2-base` | Last | 94.38 M | 50.00% | 0.4933 | 50.00% | Baseline Contrastive | [`outputs/ravdess/wav2vec2/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/ravdess/wav2vec2/) |
-| *Baseline HuBERT (Scratch)* | `hubert-base-ls960` | Last | 94.38 M | 32.50% | 0.2117 | 30.47% | Baseline Bottleneck | [`outputs/ravdess/hubert/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/ravdess/hubert/) |
+| **Ensemble (Top 3 Transfer Models)** | Soft Voting | Weighted | ~283 M | **73.75%** | **0.7207** | **72.27%** | **Peak Ensemble (+5.0% over Baseline 68.75%)** | [`outputs/ravdess_enhanced/ensemble/`](outputs/ravdess_enhanced/ensemble/) |
+| **HuBERT (Transfer from CREMA-D)** | `hubert-base-ls960` | Weighted | 94.38 M | **72.92%** | **0.7119** | **71.09%** | **New #1 Single Model (+40.42% / 3.4x F1 over HuBERT scratch)** | [`outputs/ravdess_enhanced/hubert_transfer_cremad_weighted/`](outputs/ravdess_enhanced/hubert_transfer_cremad_weighted/) |
+| **Wav2Vec2 (Transfer from CREMA-D)** | `wav2vec2-base` | Weighted | 94.38 M | **67.50%** | **0.6595** | **66.02%** | **Large SSL Leap (+17.50% over Wav2Vec2 scratch)** | [`outputs/ravdess_enhanced/wav2vec2_transfer_cremad_weighted/`](outputs/ravdess_enhanced/wav2vec2_transfer_cremad_weighted/) |
+| *Baseline WavLM (Scratch)* | `wavlm-base-plus` | Last | 94.39 M | 67.08% | 0.6631 | 68.36% | Previous #1 Single Model | [`outputs/ravdess/wavlm/`](outputs/ravdess/wavlm/) |
+| **WavLM (Transfer from CREMA-D)** | `wavlm-base-plus` | Weighted | 94.39 M | **66.67%** | **0.6505** | **66.41%** | Strong Acoustic SSL | [`outputs/ravdess_enhanced/wavlm_transfer_cremad_weighted/`](outputs/ravdess_enhanced/wavlm_transfer_cremad_weighted/) |
+| *Baseline Wav2Vec2 (Scratch)* | `wav2vec2-base` | Last | 94.38 M | 50.00% | 0.4933 | 50.00% | Baseline Contrastive | [`outputs/ravdess/wav2vec2/`](outputs/ravdess/wav2vec2/) |
+| *Baseline HuBERT (Scratch)* | `hubert-base-ls960` | Last | 94.38 M | 32.50% | 0.2117 | 30.47% | Baseline Bottleneck | [`outputs/ravdess/hubert/`](outputs/ravdess/hubert/) |
 
 ---
 
@@ -212,18 +212,18 @@ In speech emotion research, evaluating models across unseen recording environmen
 
 | Source Model | Source Dataset | Target Dataset | Target Split | Shared Classes | Zero-Shot Accuracy | Zero-Shot Macro-F1 | Zero-Shot UAR | Output Directory |
 |---|---|---|---|:---:|:---:|:---:|:---:|---|
-| **HuBERT (CREMA-D)** | CREMA-D (64 spk) | **SAVEE** | Test (KL) | 6 | **52.38%** | **0.4163** | **44.44%** | [`outputs/cross_corpus/cremad_hubert/to_savee/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/cross_corpus/cremad_hubert/to_savee/) |
-| **HuBERT (Transfer Weighted)** | RAVDESS (16 spk) | **CREMA-D** | Test (13 spk) | 6 | **53.68%** | **0.5270** | **53.80%** | [`outputs/cross_corpus/ravdess_hubert_transfer_cremad_weighted/to_cremad/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/cross_corpus/ravdess_hubert_transfer_cremad_weighted/to_cremad/) |
-| **HuBERT (Transfer Weighted)** | RAVDESS (16 spk) | **TESS** | Test (Unseen words) | 7 | **45.95%** | **0.4025** | **45.95%** | [`outputs/cross_corpus/ravdess_hubert_transfer_cremad_weighted/to_tess/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/cross_corpus/ravdess_hubert_transfer_cremad_weighted/to_tess/) |
-| **HuBERT (Transfer Weighted)** | RAVDESS (16 spk) | **SAVEE** | Test (KL) | 7 | **39.17%** | **0.2893** | **33.33%** | [`outputs/cross_corpus/ravdess_hubert_transfer_cremad_weighted/to_savee/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/cross_corpus/ravdess_hubert_transfer_cremad_weighted/to_savee/) |
-| **HuBERT (CREMA-D)** | CREMA-D (64 spk) | **RAVDESS** | Test (Actors 21-24) | 6 | **40.34%** | **0.3363** | **38.02%** | [`outputs/cross_corpus/cremad_hubert/to_ravdess/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/cross_corpus/cremad_hubert/to_ravdess/) |
-| **HuBERT (CREMA-D)** | CREMA-D (64 spk) | **TESS** | Test (Unseen words) | 6 | **38.89%** | **0.3221** | **38.89%** | [`outputs/cross_corpus/cremad_hubert/to_tess/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/cross_corpus/cremad_hubert/to_tess/) |
+| **HuBERT (CREMA-D)** | CREMA-D (64 spk) | **SAVEE** | Test (KL) | 6 | **52.38%** | **0.4163** | **44.44%** | [`outputs/cross_corpus/cremad_hubert/to_savee/`](outputs/cross_corpus/cremad_hubert/to_savee/) |
+| **HuBERT (Transfer Weighted)** | RAVDESS (16 spk) | **CREMA-D** | Test (13 spk) | 6 | **53.68%** | **0.5270** | **53.80%** | [`outputs/cross_corpus/ravdess_hubert_transfer_cremad_weighted/to_cremad/`](outputs/cross_corpus/ravdess_hubert_transfer_cremad_weighted/to_cremad/) |
+| **HuBERT (Transfer Weighted)** | RAVDESS (16 spk) | **TESS** | Test (Unseen words) | 7 | **45.95%** | **0.4025** | **45.95%** | [`outputs/cross_corpus/ravdess_hubert_transfer_cremad_weighted/to_tess/`](outputs/cross_corpus/ravdess_hubert_transfer_cremad_weighted/to_tess/) |
+| **HuBERT (Transfer Weighted)** | RAVDESS (16 spk) | **SAVEE** | Test (KL) | 7 | **39.17%** | **0.2893** | **33.33%** | [`outputs/cross_corpus/ravdess_hubert_transfer_cremad_weighted/to_savee/`](outputs/cross_corpus/ravdess_hubert_transfer_cremad_weighted/to_savee/) |
+| **HuBERT (CREMA-D)** | CREMA-D (64 spk) | **RAVDESS** | Test (Actors 21-24) | 6 | **40.34%** | **0.3363** | **38.02%** | [`outputs/cross_corpus/cremad_hubert/to_ravdess/`](outputs/cross_corpus/cremad_hubert/to_ravdess/) |
+| **HuBERT (CREMA-D)** | CREMA-D (64 spk) | **TESS** | Test (Unseen words) | 6 | **38.89%** | **0.3221** | **38.89%** | [`outputs/cross_corpus/cremad_hubert/to_tess/`](outputs/cross_corpus/cremad_hubert/to_tess/) |
 
 ---
 
 ## 9. Universal Multi-Corpus Foundation Model Benchmark
 
-To achieve true generalizability across diverse speech styles, acoustic conditions, accents, and emotional intensities, we unified all 4 datasets into [`data/combined/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/data/combined/) (11,318 standardized clips across 121 speakers mapped to the 6 core canonical emotions: `neutral`, `happy`, `sad`, `angry`, `fear`, `disgust`).
+To achieve true generalizability across diverse speech styles, acoustic conditions, accents, and emotional intensities, we unified all 4 datasets into [`data/combined/`](data/combined/) (11,318 standardized clips across 121 speakers mapped to the 6 core canonical emotions: `neutral`, `happy`, `sad`, `angry`, `fear`, `disgust`).
 
 ### Combined Multi-Corpus Split Architecture (Zero Leakage)
 - **Train**: 7,828 clips across 98 diverse actors (69.2%)
@@ -238,8 +238,8 @@ To achieve true generalizability across diverse speech styles, acoustic conditio
 
 | Architecture | Strategy | Trainable Params | Test Accuracy | Test Macro-F1 | Test UAR | Status | Output Directory |
 |---|---|:---:|:---:|:---:|:---:|---|---|
-| **Universal HuBERT** | Transfer + Weighted Pooling (Frozen) | **4,626** | **68.31%** | **0.6779** | **68.61%** | **Unified Champion (4.1x chance baseline 16.67%)** | [`outputs/combined/universal_hubert_weighted_frozen/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/combined/universal_hubert_weighted_frozen/) |
-| *Zero-Shot CREMA-D HuBERT* | Direct Evaluation | 0 | 60.61% | 0.6031 | 60.54% | Prior Multi-Corpus Baseline | [`outputs/combined/cremad_hubert_zeroshot/`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/outputs/combined/cremad_hubert_zeroshot/) |
+| **Universal HuBERT** | Transfer + Weighted Pooling (Frozen) | **4,626** | **68.31%** | **0.6779** | **68.61%** | **Unified Champion (4.1x chance baseline 16.67%)** | [`outputs/combined/universal_hubert_weighted_frozen/`](outputs/combined/universal_hubert_weighted_frozen/) |
+| *Zero-Shot CREMA-D HuBERT* | Direct Evaluation | 0 | 60.61% | 0.6031 | 60.54% | Prior Multi-Corpus Baseline | [`outputs/combined/cremad_hubert_zeroshot/`](outputs/combined/cremad_hubert_zeroshot/) |
 
 ### Per-Dataset Sub-Cohort Performance on Unseen Test Sets
 
@@ -269,8 +269,8 @@ To achieve true generalizability across diverse speech styles, acoustic conditio
   - **RAVDESS Single-Model Raised**: 67.08% -> **72.92% HuBERT Accuracy** (+40.42% over baseline HuBERT).
   - **RAVDESS Wav2Vec2 Raised**: 50.00% -> **67.50% Wav2Vec2 Accuracy** (+17.50% over baseline Wav2Vec2).
 - [x] **Phase 6: Cross-Corpus Zero-Shot Evaluation Suite — COMPLETED**
-  - Built automated evaluation pipeline [`scripts/evaluate_cross_corpus.py`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/scripts/evaluate_cross_corpus.py).
+  - Built automated evaluation pipeline [`scripts/evaluate_cross_corpus.py`](scripts/evaluate_cross_corpus.py).
   - Full cross-corpus generalization matrix across all 4 datasets saved in `outputs/cross_corpus/`.
 - [x] **Phase 7: Universal Multi-Corpus Foundation Model — COMPLETED**
-  - Standardized multi-corpus pipeline [`scripts/preprocessing/preprocess_combined.py`](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/scripts/preprocessing/preprocess_combined.py).
+  - Standardized multi-corpus pipeline [`scripts/preprocessing/preprocess_combined.py`](scripts/preprocessing/preprocess_combined.py).
   - Trained Universal HuBERT Foundation model achieving **68.31% Accuracy** / **0.6779 Macro-F1** across 1,701 unseen test clips across all 4 datasets simultaneously.
