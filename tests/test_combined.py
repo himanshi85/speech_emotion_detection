@@ -8,9 +8,9 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_combined_splits_exist():
-    combined_dir = PROJECT_ROOT / "combined_preprocessed"
+    combined_dir = PROJECT_ROOT / "data" / "combined" if (PROJECT_ROOT / "data" / "combined").exists() else PROJECT_ROOT / "combined_preprocessed"
     if not combined_dir.exists():
-        pytest.skip("combined_preprocessed does not exist yet")
+        pytest.skip("combined dataset does not exist yet")
 
     bundle = load_ravdess_splits(combined_dir)
     assert bundle.sizes["train"] > 7000
@@ -20,9 +20,9 @@ def test_combined_splits_exist():
 
 
 def test_combined_classes_are_canonical_six():
-    combined_dir = PROJECT_ROOT / "combined_preprocessed"
+    combined_dir = PROJECT_ROOT / "data" / "combined" if (PROJECT_ROOT / "data" / "combined").exists() else PROJECT_ROOT / "combined_preprocessed"
     if not combined_dir.exists():
-        pytest.skip("combined_preprocessed does not exist yet")
+        pytest.skip("combined dataset does not exist yet")
 
     bundle = load_ravdess_splits(combined_dir)
     emotions = set(bundle.train["emotion"].unique())
@@ -31,9 +31,9 @@ def test_combined_classes_are_canonical_six():
 
 
 def test_audio_files_resolve():
-    combined_dir = PROJECT_ROOT / "combined_preprocessed"
+    combined_dir = PROJECT_ROOT / "data" / "combined" if (PROJECT_ROOT / "data" / "combined").exists() else PROJECT_ROOT / "combined_preprocessed"
     if not combined_dir.exists():
-        pytest.skip("combined_preprocessed does not exist yet")
+        pytest.skip("combined dataset does not exist yet")
 
     bundle = load_ravdess_splits(combined_dir)
     # Test first 5 files from each split

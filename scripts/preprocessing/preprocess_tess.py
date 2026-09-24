@@ -32,9 +32,18 @@ import soundfile as sf
 from scipy import signal
 from tqdm import tqdm
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+def _find_project_root() -> Path:
+    current = Path(__file__).resolve().parent
+    for p in [current] + list(current.parents):
+        if (p / "pyproject.toml").exists() or (p / ".git").exists():
+            return p
+    return Path(__file__).resolve().parents[2]
+
+PROJECT_ROOT = _find_project_root()
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+if str(PROJECT_ROOT / "src") not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 TARGET_SAMPLE_RATE = 16000
 TARGET_CHANNELS = 1
@@ -126,7 +135,7 @@ def extract_word_from_stem(stem: str) -> str:
 
 
 def main() -> int:
-    default_raw = (
+    kaggle_raw = (
         Path.home()
         / ".cache"
         / "kagglehub"
@@ -137,6 +146,16 @@ def main() -> int:
         / "1"
         / "TESS Toronto emotional speech set data"
     )
+    candidates = [
+        PROJECT_ROOT / "data" / "raw" / "tess",
+        PROJECT_ROOT / "dataset" / "tess",
+        kaggle_raw,
+    ]
+    default_raw = candidates[-1]
+    for c in candidates:
+        if c.exists():
+            default_raw = c
+            break
 
     parser = argparse.ArgumentParser(description="Preprocess TESS speech emotion recognition dataset.")
     parser.add_argument(
@@ -148,7 +167,7 @@ def main() -> int:
     parser.add_argument(
         "--output_dir",
         type=str,
-        default=str(PROJECT_ROOT / "tess_preprocessed"),
+        default=str(PROJECT_ROOT / "data" / "tess"),
         help="Destination directory for standardized audio and metadata.",
     )
     parser.add_argument(

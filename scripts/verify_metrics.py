@@ -9,6 +9,8 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+if str(PROJECT_ROOT / "src") not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 import pandas as pd
 
@@ -193,7 +195,9 @@ def main() -> int:
     print("=" * 72)
 
     # Resolve expected emotions
-    labels_file = PROJECT_ROOT / f"{args.dataset}_preprocessed" / "metadata" / "labels.json"
+    labels_file = PROJECT_ROOT / "data" / args.dataset / "metadata" / "labels.json"
+    if not labels_file.exists():
+        labels_file = PROJECT_ROOT / f"{args.dataset}_preprocessed" / "metadata" / "labels.json"
     if labels_file.exists():
         expected_emotions = list(json.loads(labels_file.read_text(encoding="utf-8")).keys())
     else:

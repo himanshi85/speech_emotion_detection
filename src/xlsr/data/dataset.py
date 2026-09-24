@@ -23,6 +23,7 @@ from xlsr.core.paths import (
     DEFAULT_DATA_DIR,
     FULL_METADATA_CSV_NAME,
     METADATA_SUBDIR,
+    PROJECT_ROOT,
     TEST_CSV_NAME,
     TRAIN_CSV_NAME,
     VALIDATION_CSV_NAME,
@@ -180,7 +181,21 @@ def _load_split_csv(path: Path, expected_split: str, data_dir: Path) -> pd.DataF
 
 def load_ravdess_splits(data_dir: Path | str | None = None) -> DatasetBundle:
     """Load train / validation / test CSVs from the existing preprocessed dataset."""
-    root = Path(data_dir).resolve() if data_dir is not None else DEFAULT_DATA_DIR.resolve()
+    if data_dir is not None:
+        p = Path(data_dir)
+        if not p.is_absolute():
+            if (PROJECT_ROOT / p).exists():
+                root = (PROJECT_ROOT / p).resolve()
+            elif (PROJECT_ROOT / "data" / p).exists():
+                root = (PROJECT_ROOT / "data" / p).resolve()
+            elif str(p).endswith("_preprocessed") and (PROJECT_ROOT / "data" / str(p).replace("_preprocessed", "")).exists():
+                root = (PROJECT_ROOT / "data" / str(p).replace("_preprocessed", "")).resolve()
+            else:
+                root = p.resolve()
+        else:
+            root = p.resolve()
+    else:
+        root = DEFAULT_DATA_DIR.resolve()
     validate_data_dir_structure(root)
 
     meta = _metadata_dir(root)

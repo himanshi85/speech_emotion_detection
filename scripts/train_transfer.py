@@ -17,6 +17,8 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+if str(PROJECT_ROOT / "src") not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 import torch
 
@@ -62,11 +64,12 @@ def main() -> int:
         return 1
 
     # Resolve target dataset directory
-    target_data_dir = (
-        Path(args.target_data_dir).resolve()
-        if args.target_data_dir
-        else (PROJECT_ROOT / f"{args.target_dataset}_preprocessed").resolve()
-    )
+    if args.target_data_dir:
+        target_data_dir = Path(args.target_data_dir).resolve()
+    elif (PROJECT_ROOT / "data" / args.target_dataset).exists():
+        target_data_dir = (PROJECT_ROOT / "data" / args.target_dataset).resolve()
+    else:
+        target_data_dir = (PROJECT_ROOT / f"{args.target_dataset}_preprocessed").resolve()
     if not target_data_dir.exists():
         logger.error("Target dataset directory not found at: %s", target_data_dir)
         return 1

@@ -21,9 +21,18 @@ from typing import Dict, List, Optional, Tuple
 import numpy as np
 import pandas as pd
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+def _find_project_root() -> Path:
+    current = Path(__file__).resolve().parent
+    for p in [current] + list(current.parents):
+        if (p / "pyproject.toml").exists() or (p / ".git").exists():
+            return p
+    return Path(__file__).resolve().parents[2]
+
+PROJECT_ROOT = _find_project_root()
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+if str(PROJECT_ROOT / "src") not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger("preprocess_combined")
@@ -146,7 +155,7 @@ def process_dataset(
 
 
 def main() -> int:
-    combined_dir = PROJECT_ROOT / "combined_preprocessed"
+    combined_dir = PROJECT_ROOT / "data" / "combined"
     combined_audio = combined_dir / "audio"
     combined_meta = combined_dir / "metadata"
 
@@ -154,11 +163,17 @@ def main() -> int:
     combined_audio.mkdir(parents=True, exist_ok=True)
     combined_meta.mkdir(parents=True, exist_ok=True)
 
+    def resolve_ds(name: str) -> Path:
+        for c in [PROJECT_ROOT / "data" / name, PROJECT_ROOT / f"{name}_preprocessed"]:
+            if c.exists():
+                return c
+        return PROJECT_ROOT / "data" / name
+
     datasets = {
-        "cremad": PROJECT_ROOT / "cremad_preprocessed",
-        "ravdess": PROJECT_ROOT / "ravdess_preprocessed",
-        "savee": PROJECT_ROOT / "savee_preprocessed",
-        "tess": PROJECT_ROOT / "tess_preprocessed",
+        "cremad": resolve_ds("cremad"),
+        "ravdess": resolve_ds("ravdess"),
+        "savee": resolve_ds("savee"),
+        "tess": resolve_ds("tess"),
     }
 
     all_dfs = []

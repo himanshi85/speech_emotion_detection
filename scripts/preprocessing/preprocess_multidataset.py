@@ -26,8 +26,18 @@ import pandas as pd
 import soundfile as sf
 from scipy import signal
 
-# Add project root to sys.path
-sys.path.insert(0, str(Path(__file__).parent.parent.resolve()))
+def _find_project_root() -> Path:
+    current = Path(__file__).resolve().parent
+    for p in [current] + list(current.parents):
+        if (p / "pyproject.toml").exists() or (p / ".git").exists():
+            return p
+    return Path(__file__).resolve().parents[2]
+
+PROJECT_ROOT = _find_project_root()
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+if str(PROJECT_ROOT / "src") not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT / "src"))
 from xlsr.data.labels import EMOTION_TO_ID
 
 TARGET_SAMPLE_RATE = 16000
@@ -248,19 +258,19 @@ def main() -> None:
     parser.add_argument(
         "--ravdess_dir",
         type=str,
-        default="dataset/Audio_Song_Actors_01-24",
+        default=str(PROJECT_ROOT / "data" / "raw" / "ravdess" if (PROJECT_ROOT / "data" / "raw" / "ravdess").exists() else PROJECT_ROOT / "dataset" / "Audio_Song_Actors_01-24"),
         help="Path to raw RAVDESS dataset directory",
     )
     parser.add_argument(
         "--savee_dir",
         type=str,
-        default="dataset/savee",
+        default=str(PROJECT_ROOT / "data" / "raw" / "savee" if (PROJECT_ROOT / "data" / "raw" / "savee").exists() else PROJECT_ROOT / "dataset" / "savee"),
         help="Path to raw SAVEE dataset directory",
     )
     parser.add_argument(
         "--output_dir",
         type=str,
-        default="combined_preprocessed",
+        default=str(PROJECT_ROOT / "data" / "combined"),
         help="Output directory for preprocessed dataset",
     )
     parser.add_argument("--seed", type=int, default=42, help="Random seed for split reproducibility")

@@ -1,7 +1,7 @@
 # Shared defaults for all SER models
 num_classes: 8
 sample_rate: 16000
-data_dir: ravdess_preprocessed
+data_dir: data/ravdess
 
 dropout: 0.3
 freeze_encoder: false

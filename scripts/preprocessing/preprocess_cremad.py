@@ -30,9 +30,18 @@ import soundfile as sf
 from scipy import signal
 from tqdm import tqdm
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+def _find_project_root() -> Path:
+    current = Path(__file__).resolve().parent
+    for p in [current] + list(current.parents):
+        if (p / "pyproject.toml").exists() or (p / ".git").exists():
+            return p
+    return Path(__file__).resolve().parents[2]
+
+PROJECT_ROOT = _find_project_root()
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+if str(PROJECT_ROOT / "src") not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 TARGET_SAMPLE_RATE = 16000
 TARGET_CHANNELS = 1
@@ -155,7 +164,7 @@ def main() -> int:
     parser.add_argument(
         "--output_dir",
         type=str,
-        default="cremad_preprocessed",
+        default=str(PROJECT_ROOT / "data" / "cremad"),
         help="Path to preprocessed output directory",
     )
     parser.add_argument("--seed", type=int, default=42, help="Random seed for actor split")
@@ -167,6 +176,8 @@ def main() -> int:
     if not input_dir.exists():
         # Check alternate known paths
         candidates = [
+            PROJECT_ROOT / "data" / "raw" / "crema_d",
+            PROJECT_ROOT / "data" / "raw" / "cremad",
             PROJECT_ROOT / "dataset" / "crema_d",
             PROJECT_ROOT / "dataset" / "cremad",
             Path.home() / "Downloads" / "crema-d",

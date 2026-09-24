@@ -30,6 +30,7 @@ coverage.xml
 .ipynb_checkpoints/
 
 # Raw Datasets & Preprocessed Corpora
+data/
 dataset/
 .dataset/
 ravdess_preprocessed/

@@ -48,7 +48,7 @@ def load_model_config(
 
     # Infer dataset from data_dir if not explicitly provided
     if not dataset:
-        data_dir_str = str(cfg.get("data_dir", "ravdess_preprocessed"))
+        data_dir_str = str(cfg.get("data_dir", "data/ravdess"))
         dataset = Path(data_dir_str).name.replace("_preprocessed", "").replace("_data", "")
         if not dataset:
             dataset = "ravdess"
@@ -61,7 +61,12 @@ def load_model_config(
         cfg["output_dir"] = str((PROJECT_ROOT / out).resolve())
     data_dir = cfg.get("data_dir")
     if data_dir and not Path(data_dir).is_absolute():
-        cfg["data_dir"] = str((PROJECT_ROOT / data_dir).resolve())
+        p = PROJECT_ROOT / data_dir
+        if not p.exists() and (PROJECT_ROOT / "data" / data_dir).exists():
+            p = PROJECT_ROOT / "data" / data_dir
+        elif not p.exists() and str(data_dir).endswith("_preprocessed") and (PROJECT_ROOT / "data" / str(data_dir).replace("_preprocessed", "")).exists():
+            p = PROJECT_ROOT / "data" / str(data_dir).replace("_preprocessed", "")
+        cfg["data_dir"] = str(p.resolve())
     return cfg
 
 

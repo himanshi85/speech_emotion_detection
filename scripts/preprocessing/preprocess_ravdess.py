@@ -1110,7 +1110,7 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
         "--output_dir",
         type=str,
         required=True,
-        help="Path to output directory (ravdess_preprocessed)",
+        help="Path to output directory (e.g. data/ravdess)",
     )
     return parser.parse_args(argv)
 

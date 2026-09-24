@@ -17,7 +17,7 @@ def test_no_actor_leakage_in_preprocessed_dataset() -> None:
 
 def test_no_word_leakage_in_tess() -> None:
     from pathlib import Path
-    tess_dir = Path("tess_preprocessed")
+    tess_dir = Path("data/tess") if Path("data/tess").exists() else Path("tess_preprocessed")
     if not tess_dir.exists():
         return
     bundle = load_ravdess_splits(tess_dir)

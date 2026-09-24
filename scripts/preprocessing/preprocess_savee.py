@@ -32,9 +32,18 @@ import soundfile as sf
 from scipy import signal
 from tqdm import tqdm
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+def _find_project_root() -> Path:
+    current = Path(__file__).resolve().parent
+    for p in [current] + list(current.parents):
+        if (p / "pyproject.toml").exists() or (p / ".git").exists():
+            return p
+    return Path(__file__).resolve().parents[2]
+
+PROJECT_ROOT = _find_project_root()
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+if str(PROJECT_ROOT / "src") not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 TARGET_SAMPLE_RATE = 16000
 TARGET_CHANNELS = 1
@@ -132,7 +141,9 @@ def parse_savee_filename(filename: str) -> Tuple[str, str, int] | None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Preprocess SAVEE speech emotion recognition dataset.")
-    default_savee = PROJECT_ROOT / "dataset" / "savee"
+    default_savee = PROJECT_ROOT / "data" / "raw" / "savee"
+    if not default_savee.exists():
+        default_savee = PROJECT_ROOT / "dataset" / "savee"
     if not default_savee.exists():
         default_savee = PROJECT_ROOT.parent / "speech_emotion_detection_drive" / "dataset" / "savee"
     parser.add_argument(
@@ -144,7 +155,7 @@ def main() -> int:
     parser.add_argument(
         "--output_dir",
         type=str,
-        default=str(PROJECT_ROOT / "savee_preprocessed"),
+        default=str(PROJECT_ROOT / "data" / "savee"),
         help="Destination directory for standardized audio and metadata.",
     )
     args = parser.parse_args()

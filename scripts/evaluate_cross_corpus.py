@@ -35,6 +35,8 @@ from tqdm import tqdm
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+if str(PROJECT_ROOT / "src") not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from ser.core.config import load_model_config
 from ser.core.registry import build_collator, build_model
@@ -184,7 +186,9 @@ def evaluate_single_corpus(
     output_dir: Optional[Path] = None,
 ) -> Dict[str, Any]:
     """Evaluates the source model zero-shot on target dataset."""
-    target_data_dir = PROJECT_ROOT / f"{target_name}_preprocessed"
+    target_data_dir = PROJECT_ROOT / "data" / target_name
+    if not target_data_dir.exists():
+        target_data_dir = PROJECT_ROOT / f"{target_name}_preprocessed"
     if not target_data_dir.exists():
         raise FileNotFoundError(f"Target data directory not found: {target_data_dir}")
 

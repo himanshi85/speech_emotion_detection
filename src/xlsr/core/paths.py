@@ -9,9 +9,17 @@ from __future__ import annotations
 
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+def _find_project_root() -> Path:
+    current = Path(__file__).resolve().parent
+    for p in [current] + list(current.parents):
+        if (p / "pyproject.toml").exists() or (p / ".git").exists():
+            return p
+    return Path(__file__).resolve().parents[3]
 
-DEFAULT_DATA_DIR = PROJECT_ROOT / "ravdess_preprocessed"
+PROJECT_ROOT = _find_project_root()
+
+# Support both data/ravdess and ravdess_preprocessed
+DEFAULT_DATA_DIR = PROJECT_ROOT / "data" / "ravdess" if (PROJECT_ROOT / "data" / "ravdess").exists() else PROJECT_ROOT / "ravdess_preprocessed"
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "outputs" / "wav2vec2_xlsr_300m"
 
 METADATA_SUBDIR = "metadata"
