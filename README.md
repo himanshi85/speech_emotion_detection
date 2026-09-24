@@ -131,7 +131,7 @@ Learned softmax weights across the 12 Transformer hidden states reveal that **em
 ## 📁 Repository Structure
 
 ```text
-speech_emotion_detection-develop-v2/
+speech_emotion_detection-develop-v3/
 ├── configs/                     # Model architecture and training configs
 │   ├── _base.yaml               # Shared defaults (sample rate, seed, optimizer)
 │   ├── hubert.yaml              # HuBERT SSL configuration
