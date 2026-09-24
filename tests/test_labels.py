@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from xlsr.data.labels import (
+from ser.data.labels import (
     CLASS_NAMES,
     EMOTION_TO_ID,
     ID_TO_EMOTION,
@@ -12,6 +12,7 @@ from xlsr.data.labels import (
     emotion_to_id,
     id_to_emotion,
 )
+
 
 
 def test_num_classes_is_eight() -> None:

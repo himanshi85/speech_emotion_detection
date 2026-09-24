@@ -9,7 +9,7 @@ import torch
 from transformers import AutoFeatureExtractor
 
 from ser.features.mfcc import MFCCExtractor
-from xlsr.model.loader import load_hf_token
+from ser.models.loader import load_hf_token
 
 
 def _encode_waveforms(

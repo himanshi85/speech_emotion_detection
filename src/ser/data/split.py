@@ -1,8 +1,8 @@
 """
-Actor-independent split guard.
+Actor-independent split verification and leakage guards.
 
-Train: actors 01–16 | Validation: 17–20 | Test: 21–24
-Never move actors between splits.
+Ensures strict zero-leakage across train, validation, and test partitions
+for RAVDESS, CREMA-D, SAVEE, TESS, and multi-corpus combined datasets.
 """
 
 from __future__ import annotations
@@ -11,7 +11,7 @@ import logging
 from dataclasses import dataclass, field
 from typing import Dict, List, Set
 
-from xlsr.data.dataset import (
+from ser.data.dataset import (
     EXPECTED_TEST_ACTORS,
     EXPECTED_TRAIN_ACTORS,
     EXPECTED_VAL_ACTORS,
@@ -39,14 +39,9 @@ class SplitVerificationReport:
     def to_text(self) -> str:
         status = "PASSED" if self.ok else "FAILED — STOP EXECUTION"
         lines = [
-            "RAVDESS Actor-Independent Split Verification (Section 3)",
+            "Actor-Independent Split Verification",
             "=" * 60,
             f"Status: {status}",
-            "",
-            "Required split (must not be changed):",
-            f"  Train actors:      {sorted(EXPECTED_TRAIN_ACTORS)}",
-            f"  Validation actors: {sorted(EXPECTED_VAL_ACTORS)}",
-            f"  Test actors:       {sorted(EXPECTED_TEST_ACTORS)}",
             "",
             "Observed actors:",
             f"  Train:      {sorted(self.train_actors)}",
@@ -54,9 +49,9 @@ class SplitVerificationReport:
             f"  Test:       {sorted(self.test_actors)}",
             "",
             "Leakage checks (must all be empty):",
-            f"  Train ∩ Validation = {self.intersections['train_validation']}",
-            f"  Train ∩ Test       = {self.intersections['train_test']}",
-            f"  Validation ∩ Test  = {self.intersections['validation_test']}",
+            f"  Train ∩ Validation = {self.intersections.get('train_validation', [])}",
+            f"  Train ∩ Test       = {self.intersections.get('train_test', [])}",
+            f"  Validation ∩ Test  = {self.intersections.get('validation_test', [])}",
             "",
             f"Sizes: {self.sizes}",
         ]
@@ -67,7 +62,7 @@ class SplitVerificationReport:
                 lines.append(f"  - {issue}")
         else:
             lines.append("")
-            lines.append("No actor leakage detected. Actor-independent split preserved.")
+            lines.append("No actor or data leakage detected. Split preserved.")
         return "\n".join(lines) + "\n"
 
 
@@ -118,7 +113,7 @@ def _check_actor_appears_in_one_split_only(bundle: DatasetBundle) -> List[str]:
 
 
 def verify_dataset_split(bundle: DatasetBundle) -> SplitVerificationReport:
-    """Run full Section 3 checks. Does not raise; returns a report."""
+    """Run full split verification checks. Does not raise; returns a report."""
     actors = get_actor_sets(bundle)
     train_a = actors["train"]
     val_a = actors["validation"]

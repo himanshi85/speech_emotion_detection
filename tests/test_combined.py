@@ -2,7 +2,7 @@
 
 from pathlib import Path
 import pytest
-from xlsr.data.dataset import load_ravdess_splits
+from ser.data.dataset import load_ravdess_splits
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 

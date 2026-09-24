@@ -9,7 +9,7 @@ import pandas as pd
 import torch
 from torch.utils.data import Dataset
 
-from xlsr.data.audio import load_raw_waveform
+from ser.data.audio import load_raw_waveform
 
 
 class RAVDESSSERDataset(Dataset):

@@ -1,8 +1,7 @@
 """
-Raw audio input for Wav2Vec2-XLS-R-300M.
+Raw audio waveform loader and validator for Speech Emotion Recognition (SER).
 
-Loads preprocessed RAVDESS WAVs as raw waveforms only (mono, 16 kHz).
-No MFCC / Mel / handcrafted features — HF feature extractor handles encoding.
+Loads preprocessed audio as 16 kHz mono raw waveforms.
 """
 
 from __future__ import annotations
@@ -14,7 +13,7 @@ from typing import List, Optional, Sequence, Tuple, Union
 import numpy as np
 import soundfile as sf
 
-from xlsr.core.constants import NUM_CHANNELS, SAMPLE_RATE
+from ser.core.constants import NUM_CHANNELS, SAMPLE_RATE
 
 PathLike = Union[str, Path]
 
@@ -25,7 +24,7 @@ class AudioInputError(RuntimeError):
 
 @dataclass(frozen=True)
 class RawWaveform:
-    """Raw mono waveform ready for the HF feature extractor."""
+    """Raw mono waveform ready for model ingestion."""
 
     waveform: np.ndarray
     sample_rate: int
@@ -50,20 +49,12 @@ class AudioVerificationReport:
     def to_text(self) -> str:
         status = "PASSED" if self.ok else "FAILED"
         lines = [
-            "RAVDESS Raw Audio Input Verification (Section 5)",
+            "Raw Audio Input Verification",
             "=" * 60,
             f"Status: {status}",
             f"Expected: mono, {self.sample_rate_expected} Hz, raw waveform WAV",
             f"Checked files: {self.checked}",
             f"Failed files: {self.failed}",
-            "",
-            "Forbidden in this stage:",
-            "  - MFCC",
-            "  - Mel spectrogram",
-            "  - handcrafted acoustic / pitch / energy features",
-            "  - extra model-specific audio transforms",
-            "",
-            "Model input: raw waveform only.",
         ]
         if self.issues:
             lines.append("")
@@ -185,7 +176,7 @@ def verify_audio_paths(
 
 
 def collect_split_audio_paths(bundle, max_per_split: Optional[int] = None) -> List[Path]:
-    """Collect abs_filepath values from train/val/test (optionally capped per split)."""
+    """Collect abs_filepath values from train/val/test."""
     paths: List[Path] = []
     for df in (bundle.train, bundle.validation, bundle.test):
         col = "abs_filepath" if "abs_filepath" in df.columns else "filepath"

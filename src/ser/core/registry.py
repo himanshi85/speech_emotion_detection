@@ -9,8 +9,8 @@ from ser.models.base import BaseSERModel
 from ser.models.mfcc_cnn_bilstm import MFCCCNNBiLSTMModel
 from ser.models.mfcc_lstm import MFCCLSTMModel
 from ser.models.transformer import TransformerSERModel
-from xlsr.data.labels import NUM_CLASSES
-from xlsr.model.loader import load_hf_token
+from ser.data.labels import NUM_CLASSES
+from ser.models.loader import load_hf_token
 
 # Verified HuggingFace hub IDs and expected parameter scales
 HUB_IDS: Dict[str, Dict[str, Any]] = {

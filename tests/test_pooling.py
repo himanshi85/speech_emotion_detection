@@ -4,8 +4,7 @@ from __future__ import annotations
 
 import torch
 
-from xlsr.model.pooling import masked_mean_pooling
-from xlsr.verify.pooling import verify_masked_mean_pooling
+from ser.models.pooling import masked_mean_pooling, verify_masked_mean_pooling
 
 
 def test_masked_mean_ignores_padding() -> None:

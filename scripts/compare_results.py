@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 from ser.core.paths import ALL_MODEL_KEYS, COMPARISON_DIR, OUTPUTS_ROOT
-from xlsr.data.labels import CLASS_NAMES
+from ser.data.labels import CLASS_NAMES
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger("compare_results")

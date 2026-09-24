@@ -8,8 +8,8 @@ import torch
 import torch.nn as nn
 
 from ser.models.base import BaseSERModel
-from xlsr.data.labels import NUM_CLASSES
-from xlsr.model.pooling import masked_mean_pooling
+from ser.data.labels import NUM_CLASSES
+from ser.models.pooling import masked_mean_pooling
 
 
 class MFCCLSTMModel(BaseSERModel):

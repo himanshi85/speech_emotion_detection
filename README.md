@@ -242,13 +242,15 @@ speech_emotion_detection-develop-v3/
 │
 ├── outputs/                     # Experiment artifacts, checkpoints, confusion matrices, logs
 │   ├── combined/                # Universal multi-corpus foundation model runs
+│   ├── comparison/              # Cross-model parameter reports and comparative plots
 │   ├── cremad/                  # CREMA-D 8-model benchmarks, ensembles, and curves
+│   ├── cross_corpus/            # Zero-shot cross-corpus evaluation matrices and heatmaps
 │   ├── ravdess/                 # RAVDESS baseline benchmarks
 │   ├── ravdess_enhanced/        # Cross-corpus transfer models and transfer ensembles
 │   ├── savee/                   # SAVEE baseline benchmarks
 │   ├── savee_enhanced/          # Transfer models and ensembles on SAVEE
 │   ├── tess/                    # TESS benchmark runs and evaluation reports
-│   └── wav2vec2_xlsr_300m/      # Dedicated XLS-R-300M training runs
+│   └── comparison_layer_weights.png # Layer weight distribution across transformers
 │
 ├── scripts/                     # Executable command-line interfaces
 │   ├── preprocessing/           # Data ingestion, audio standardization, and split generators
@@ -258,34 +260,24 @@ speech_emotion_detection-develop-v3/
 │   │   ├── preprocess_tess.py
 │   │   ├── preprocess_combined.py
 │   │   └── preprocess_multidataset.py
-│   ├── train.py                 # Single model training entrypoint
+│   ├── train.py                 # Single model training entrypoint across all 8 models
 │   ├── train_all.py             # Sequential training runner for complete suites
-│   ├── train_transfer.py        # Cross-corpus transfer learning pipeline
-│   ├── train_xlsr.py            # Standalone XLS-R-300M fine-tuning script
+│   ├── train_transfer.py        # Cross-corpus transfer learning pipeline with weighted layer pooling
 │   ├── evaluate.py              # In-domain checkpoint evaluation entrypoint
-│   ├── evaluate_xlsr.py         # Standalone XLS-R-300M evaluation script
 │   ├── evaluate_ensemble.py     # Multi-model soft-voting and weighted ensembling
 │   ├── evaluate_cross_corpus.py # Cross-corpus zero-shot evaluation pipeline
 │   ├── compare_results.py       # Metrics aggregation, rankings, and curve plotting
 │   ├── verify_metrics.py        # Automated artifact integrity and metrics parity auditor
-│   ├── check_models.py          # Model architecture and parameter count validator
-│   ├── verify_training.py       # Sanity checks for forward and backward passes
-│   └── verify_all.py            # End-to-end verification orchestrator
+│   └── check_models.py          # Model architecture and parameter count validator
 │
-├── src/                         # Reusable core Python packages
-│   ├── ser/                     # Core Speech Emotion Recognition engine
-│   │   ├── core/                # Paths, config loader, model registry, seed control
-│   │   ├── data/                # Dataset loaders, dynamic collators, class weights
-│   │   ├── features/            # Feature extraction (MFCC, Spectrograms, Deltas)
-│   │   ├── models/              # Model architectures (CNN-BiLSTM, HuBERT, WavLM, etc.)
-│   │   ├── training/            # Training loop, optimizer, scheduler, early stopping
-│   │   └── evaluation/          # Metrics, confusion matrices, evaluation runner
-│   └── xlsr/                    # Dedicated XLS-R-300M package
-│       ├── core/                # Constants, paths, configurations
-│       ├── data/                # Audio I/O, dataset loaders, label mappers, split guard
-│       ├── model/               # Model wrapper, masked pooling, processors
-│       ├── training/            # Trainer, metrics computation, fine-tuning utilities
-│       └── verify/              # Verification test modules
+├── src/                         # Reusable core Python package
+│   └── ser/                     # Complete Speech Emotion Recognition engine
+│       ├── core/                # Paths, config loader, model registry, seed control
+│       ├── data/                # Dataset loaders, dynamic collators, split guards, class weights
+│       ├── features/            # Feature extraction (MFCC, Spectrograms, Deltas)
+│       ├── models/              # Model architectures, weighted layer pooling, Hub loaders
+│       ├── training/            # Training loop, optimizer, scheduler, early stopping
+│       └── evaluation/          # Metrics, confusion matrices, evaluation runner
 │
 ├── tests/                       # Automated pytest verification suite
 │   ├── conftest.py              # Synthetic audio and mock dataset fixtures
@@ -299,8 +291,8 @@ speech_emotion_detection-develop-v3/
 ├── .gitignore                   # Comprehensive ignore rules for weights, data, cache
 ├── pyproject.toml               # Package configuration and build metadata
 ├── requirements.txt             # Primary Python dependencies
-├── requirements-preprocess.txt  # Lightweight audio preprocessing dependencies
-└── requirements-xlsr.txt        # XLS-R specific dependencies
+└── requirements-preprocess.txt  # Lightweight audio preprocessing dependencies
+
 ```
 
 ---

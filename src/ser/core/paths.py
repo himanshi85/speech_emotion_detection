@@ -47,3 +47,12 @@ def model_output_dir(model_key: str, dataset: str = "ravdess") -> Path:
 
 def get_comparison_dir(dataset: str = "ravdess") -> Path:
     return OUTPUTS_ROOT / dataset / "comparison"
+
+
+METADATA_SUBDIR = "metadata"
+AUDIO_SUBDIR = "audio"
+TRAIN_CSV_NAME = "train.csv"
+VALIDATION_CSV_NAME = "validation.csv"
+TEST_CSV_NAME = "test.csv"
+FULL_METADATA_CSV_NAME = "ravdess_metadata.csv"
+

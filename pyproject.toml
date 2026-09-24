@@ -25,12 +25,9 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["pytest>=7.0"]
 
-[project.scripts]
-xlsr = "xlsr.cli:main"
-
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["xlsr*", "ser*"]
+include = ["ser*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

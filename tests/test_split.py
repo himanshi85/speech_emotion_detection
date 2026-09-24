@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from xlsr.data.dataset import load_ravdess_splits
-from xlsr.data.split import verify_dataset_split
+from ser.data.dataset import load_ravdess_splits
+from ser.data.split import verify_dataset_split
 
 
 def test_no_actor_leakage_in_preprocessed_dataset() -> None:

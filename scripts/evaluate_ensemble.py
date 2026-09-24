@@ -43,8 +43,8 @@ from ser.evaluation.reports import (
 )
 from ser.evaluation.runner import _forward_batch
 from ser.training.trainer import load_checkpoint_model
-from xlsr.data.dataset import load_ravdess_splits
-from xlsr.data.labels import CLASS_NAMES
+from ser.data.dataset import load_ravdess_splits
+from ser.data.labels import CLASS_NAMES
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger("ensemble")

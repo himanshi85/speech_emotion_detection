@@ -9,7 +9,7 @@ import torch
 import torch.nn as nn
 
 from ser.models.base import BaseSERModel
-from xlsr.data.labels import NUM_CLASSES
+from ser.data.labels import NUM_CLASSES
 
 logger = logging.getLogger(__name__)
 

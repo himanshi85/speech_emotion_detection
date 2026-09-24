@@ -24,7 +24,7 @@ from ser.evaluation.reports import (
     save_predictions_csv,
 )
 from ser.models.base import BaseSERModel
-from xlsr.data.labels import CLASS_NAMES
+from ser.data.labels import CLASS_NAMES
 
 logger = logging.getLogger(__name__)
 

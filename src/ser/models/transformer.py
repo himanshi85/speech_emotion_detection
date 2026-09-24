@@ -10,8 +10,8 @@ import torch.nn as nn
 from transformers import AutoModel, HubertModel, Wav2Vec2Model, WavLMModel
 
 from ser.models.base import BaseSERModel
-from xlsr.data.labels import NUM_CLASSES
-from xlsr.model.pooling import masked_mean_pooling
+from ser.data.labels import NUM_CLASSES
+from ser.models.pooling import masked_mean_pooling
 
 logger = logging.getLogger(__name__)
 

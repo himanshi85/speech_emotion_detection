@@ -20,9 +20,9 @@ from ser.data.torch_dataset import RAVDESSSERDataset
 from ser.evaluation.plots import plot_training_curves
 from ser.evaluation.runner import evaluate_split, save_split_results
 from ser.training.experiment import create_experiment_dirs
-from xlsr.data.dataset import load_ravdess_splits
-from xlsr.data.labels import EMOTION_TO_ID
-from xlsr.data.split import assert_no_actor_leakage
+from ser.data.dataset import load_ravdess_splits
+from ser.data.labels import EMOTION_TO_ID
+from ser.data.split import assert_no_actor_leakage
 
 from ser.core.config import save_config
 

@@ -29,7 +29,7 @@ from ser.data.torch_dataset import RAVDESSSERDataset
 from ser.evaluation.runner import evaluate_split, save_split_results
 from ser.training.experiment import create_experiment_dirs
 from ser.training.trainer import load_checkpoint_model
-from xlsr.data.dataset import load_ravdess_splits
+from ser.data.dataset import load_ravdess_splits
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger("evaluate")

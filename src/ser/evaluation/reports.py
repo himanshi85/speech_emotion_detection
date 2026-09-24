@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from xlsr.data.labels import CLASS_NAMES, ID_TO_EMOTION
+from ser.data.labels import CLASS_NAMES, ID_TO_EMOTION
 
 
 def save_predictions_csv(

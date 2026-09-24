@@ -1,2 +1,0 @@
-# Redirect to main consolidated requirements
--r requirements.txt

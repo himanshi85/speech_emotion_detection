@@ -201,7 +201,7 @@ def main() -> int:
     if labels_file.exists():
         expected_emotions = list(json.loads(labels_file.read_text(encoding="utf-8")).keys())
     else:
-        from xlsr.data.labels import CLASS_NAMES
+        from ser.data.labels import CLASS_NAMES
         expected_emotions = list(CLASS_NAMES)
 
     trained: list[str] = []

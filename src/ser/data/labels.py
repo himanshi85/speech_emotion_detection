@@ -1,8 +1,8 @@
 """
-Locked 8-class emotion label mapping for RAVDESS SER.
+Locked 8-class emotion label mapping for Speech Emotion Recognition (SER).
 
-Do NOT change this mapping later. All future models in this research
-comparison must use the same IDs.
+Do NOT change this mapping. All models in this research benchmark
+use the exact same class IDs.
 """
 
 from __future__ import annotations
@@ -14,7 +14,7 @@ from typing import TYPE_CHECKING, Dict, List
 import pandas as pd
 
 if TYPE_CHECKING:
-    from xlsr.data.dataset import DatasetBundle
+    from ser.data.dataset import DatasetBundle
 
 logger = logging.getLogger(__name__)
 
@@ -108,7 +108,7 @@ class LabelVerificationReport:
     def to_text(self) -> str:
         status = "PASSED" if self.ok else "FAILED"
         lines = [
-            "RAVDESS Emotion Label Verification (Section 4)",
+            "Emotion Label Verification",
             "=" * 60,
             f"Status: {status}",
             f"NUM_CLASSES (classifier logits): {self.num_classes}",

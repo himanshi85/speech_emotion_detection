@@ -1,12 +1,12 @@
 """
-Load the existing preprocessed RAVDESS dataset.
+Load preprocessed speech emotion recognition datasets.
 
-Uses metadata/train.csv, validation.csv, test.csv as-is.
-Does NOT create a new random or file-level split.
+Preserves train.csv, validation.csv, and test.csv as generated during preprocessing.
 """
 
 from __future__ import annotations
 
+import json
 import logging
 from dataclasses import dataclass
 from pathlib import Path
@@ -17,8 +17,8 @@ import pandas as pd
 import torch
 from torch.utils.data import Dataset
 
-from xlsr.core.constants import SAMPLE_RATE
-from xlsr.core.paths import (
+from ser.core.constants import SAMPLE_RATE
+from ser.core.paths import (
     AUDIO_SUBDIR,
     DEFAULT_DATA_DIR,
     FULL_METADATA_CSV_NAME,
@@ -28,8 +28,8 @@ from xlsr.core.paths import (
     TRAIN_CSV_NAME,
     VALIDATION_CSV_NAME,
 )
-from xlsr.data.audio import load_raw_waveform
-from xlsr.data.labels import EMOTION_TO_ID
+from ser.data.audio import load_raw_waveform
+from ser.data.labels import EMOTION_TO_ID
 
 logger = logging.getLogger(__name__)
 
@@ -85,7 +85,7 @@ def _audio_dir(data_dir: Path) -> Path:
 
 
 def validate_data_dir_structure(data_dir: Path) -> None:
-    """Check that ravdess_preprocessed has the expected folders/files."""
+    """Check that the preprocessed dataset has the expected folders/files."""
     data_dir = Path(data_dir).resolve()
     if not data_dir.exists():
         raise DatasetNotFoundError(f"Data directory not found: {data_dir}")
@@ -142,7 +142,6 @@ def _load_split_csv(path: Path, expected_split: str, data_dir: Path) -> pd.DataF
 
     labels_path = data_dir / "metadata" / "labels.json"
     if labels_path.exists():
-        import json
         mapping = json.loads(labels_path.read_text(encoding="utf-8"))
     else:
         mapping = EMOTION_TO_ID
@@ -180,7 +179,7 @@ def _load_split_csv(path: Path, expected_split: str, data_dir: Path) -> pd.DataF
 
 
 def load_ravdess_splits(data_dir: Path | str | None = None) -> DatasetBundle:
-    """Load train / validation / test CSVs from the existing preprocessed dataset."""
+    """Load train / validation / test CSVs from the preprocessed dataset directory."""
     if data_dir is not None:
         p = Path(data_dir)
         if not p.is_absolute():
@@ -278,7 +277,7 @@ def write_dataset_summary(bundle: DatasetBundle, output_path: Path) -> Path:
     actors = get_actor_sets(bundle)
 
     lines = [
-        "RAVDESS Existing Dataset Summary (Section 2)",
+        "Dataset Summary",
         "=" * 50,
         f"data_dir: {bundle.data_dir}",
         f"train: {len(bundle.train)}",
@@ -286,7 +285,7 @@ def write_dataset_summary(bundle: DatasetBundle, output_path: Path) -> Path:
         f"test: {len(bundle.test)}",
         f"total: {bundle.sizes['total']}",
         "",
-        "Actors (preserved from preprocessing; not re-split):",
+        "Actors:",
         f"  train: {sorted(actors['train'])}",
         f"  validation: {sorted(actors['validation'])}",
         f"  test: {sorted(actors['test'])}",
@@ -303,83 +302,9 @@ def write_dataset_summary(bundle: DatasetBundle, output_path: Path) -> Path:
 
 
 def load_full_metadata(data_dir: Path | str | None = None) -> Optional[pd.DataFrame]:
-    """Optionally load ravdess_metadata.csv if present."""
+    """Optionally load full metadata CSV if present."""
     root = Path(data_dir).resolve() if data_dir is not None else DEFAULT_DATA_DIR.resolve()
     path = _metadata_dir(root) / FULL_METADATA_CSV_NAME
     if not path.exists():
         return None
     return pd.read_csv(path)
-
-
-class RAVDESSXLSRDataset(Dataset):
-    """
-    PyTorch Dataset for preprocessed RAVDESS metadata.
-
-    Loads raw 16 kHz mono WAV audio waveforms and mapped 8-class emotion labels.
-    Preserves original filenames and actor IDs for evaluation/debugging.
-    """
-
-    def __init__(
-        self,
-        df: pd.DataFrame,
-        data_dir: Optional[Union[Path, str]] = None,
-        max_samples: Optional[int] = None,
-    ) -> None:
-        super().__init__()
-        self.df = df.reset_index(drop=True)
-        if max_samples is not None and max_samples > 0:
-            self.df = self.df.iloc[:max_samples].reset_index(drop=True)
-
-        self.data_dir = Path(data_dir).resolve() if data_dir else None
-
-    def __len__(self) -> int:
-        return len(self.df)
-
-    def __getitem__(self, idx: int) -> Dict[str, Any]:
-        row = self.df.iloc[idx]
-        filepath = str(row["abs_filepath"]) if "abs_filepath" in row else str(row["filepath"])
-        
-        # Load raw audio waveform (16000 Hz, mono)
-        audio = load_raw_waveform(filepath, expected_sr=SAMPLE_RATE)
-        
-        return {
-            "waveform": audio.waveform,  # 1D float32 numpy array
-            "label": int(row["label"]),
-            "filename": str(row["filename"]),
-            "actor_id": int(row["actor_id"]),
-            "emotion": str(row["emotion"]),
-            "filepath": filepath,
-        }
-
-
-class SERDataCollator:
-    """
-    Custom collator for dynamic padding of variable-length audio waveforms.
-
-    Pads waveforms dynamically within each batch to produce:
-      - input_values (B, max_length)
-      - attention_mask (B, max_length)
-      - labels (B,)
-    """
-
-    def __init__(self, processor: Any) -> None:
-        self.processor = processor
-
-    def __call__(self, features: List[Dict[str, Any]]) -> Dict[str, torch.Tensor]:
-        from xlsr.model.processor import waveforms_to_model_inputs
-
-        waveforms = [item["waveform"] for item in features]
-        labels = [item["label"] for item in features]
-
-        # Convert waveforms into padded model inputs
-        batch_inputs = waveforms_to_model_inputs(
-            self.processor,
-            waveforms=waveforms,
-            padding=True,
-            return_tensors="pt",
-            return_attention_mask=True,
-        )
-
-        batch_inputs["labels"] = torch.tensor(labels, dtype=torch.long)
-        return batch_inputs
-
