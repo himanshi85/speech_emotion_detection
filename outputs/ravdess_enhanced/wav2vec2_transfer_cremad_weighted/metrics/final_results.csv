@@ -1,0 +1,2 @@
+model,model_key,accuracy,macro_precision,macro_recall,macro_f1,weighted_precision,weighted_recall,weighted_f1,uar,war,parameters,trainable_parameters,training_time_sec,inference_time_sec,best_epoch,best_val_macro_f1
+Wav2Vec2 (Transfer from CREMAD),wav2vec2,0.675,0.6811109954834124,0.66015625,0.6595212302559161,0.6876295062934176,0.675,0.670155978939644,0.66015625,0.675,94377876,94377876,5802.157499074936,58.91630792617798,23,0.6894645915954234

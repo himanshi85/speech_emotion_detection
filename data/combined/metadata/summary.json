@@ -1,0 +1,43 @@
+{
+  "total_clips": 11318,
+  "total_actors": 121,
+  "splits": {
+    "train": 7828,
+    "validation": 1789,
+    "test": 1701
+  },
+  "datasets": {
+    "cremad": 7442,
+    "ravdess": 1056,
+    "savee": 420,
+    "tess": 2400
+  },
+  "emotions": {
+    "neutral": 1703,
+    "happy": 1923,
+    "sad": 1923,
+    "angry": 1923,
+    "fear": 1923,
+    "disgust": 1923
+  },
+  "dataset_split_matrix": {
+    "test": {
+      "cremad": 1060,
+      "ravdess": 176,
+      "savee": 105,
+      "tess": 360
+    },
+    "train": {
+      "cremad": 5234,
+      "ravdess": 704,
+      "savee": 210,
+      "tess": 1680
+    },
+    "validation": {
+      "cremad": 1148,
+      "ravdess": 176,
+      "savee": 105,
+      "tess": 360
+    }
+  }
+}

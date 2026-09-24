@@ -1,0 +1,2 @@
+model_key,model,angry,disgust,fear,happy,neutral,sad
+universal_hubert_weighted_frozen,HuBERT (Transfer from CREMAD),0.7598784194528876,0.5866666666666667,0.6890756302521008,0.6200716845878136,0.7821612349914236,0.629399585921325

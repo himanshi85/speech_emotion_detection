@@ -1,0 +1,44 @@
+{
+  "ensemble_models": [
+    "wavlm",
+    "wav2vec2",
+    "mfcc_cnn_bilstm"
+  ],
+  "weights": [
+    0.5,
+    0.3,
+    0.2
+  ],
+  "split": "test",
+  "ensemble_metrics": {
+    "accuracy": 0.6875,
+    "macro_precision": 0.7076209974236289,
+    "macro_recall": 0.69921875,
+    "macro_f1": 0.6815420856322425,
+    "weighted_precision": 0.7123714881609619,
+    "weighted_recall": 0.6875,
+    "weighted_f1": 0.6778554176568482,
+    "uar": 0.69921875,
+    "war": 0.6875
+  },
+  "individual_metrics": {
+    "wavlm": {
+      "accuracy": 0.6708333333333333,
+      "macro_f1": 0.663069939012646,
+      "uar": 0.68359375,
+      "weight": 0.5
+    },
+    "wav2vec2": {
+      "accuracy": 0.5,
+      "macro_f1": 0.4933183233892454,
+      "uar": 0.5,
+      "weight": 0.3
+    },
+    "mfcc_cnn_bilstm": {
+      "accuracy": 0.425,
+      "macro_f1": 0.39843063225191166,
+      "uar": 0.421875,
+      "weight": 0.2
+    }
+  }
+}

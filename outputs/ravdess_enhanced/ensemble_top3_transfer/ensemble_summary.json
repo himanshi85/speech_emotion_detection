@@ -1,0 +1,44 @@
+{
+  "ensemble_models": [
+    "outputs/ravdess_enhanced/hubert_transfer_cremad_weighted",
+    "outputs/ravdess_enhanced/wavlm_transfer_cremad_weighted",
+    "outputs/ravdess/wavlm"
+  ],
+  "weights": [
+    0.3333333333333333,
+    0.3333333333333333,
+    0.3333333333333333
+  ],
+  "split": "test",
+  "ensemble_metrics": {
+    "accuracy": 0.7291666666666666,
+    "macro_precision": 0.7548510140222098,
+    "macro_recall": 0.7265625,
+    "macro_f1": 0.7204833279465632,
+    "weighted_precision": 0.7644336742162829,
+    "weighted_recall": 0.7291666666666666,
+    "weighted_f1": 0.7253782949077067,
+    "uar": 0.7265625,
+    "war": 0.7291666666666666
+  },
+  "individual_metrics": {
+    "outputs/ravdess_enhanced/hubert_transfer_cremad_weighted": {
+      "accuracy": 0.7291666666666666,
+      "macro_f1": 0.7119136757766851,
+      "uar": 0.7109375,
+      "weight": 0.3333333333333333
+    },
+    "outputs/ravdess_enhanced/wavlm_transfer_cremad_weighted": {
+      "accuracy": 0.6666666666666666,
+      "macro_f1": 0.6505243534177728,
+      "uar": 0.6640625,
+      "weight": 0.3333333333333333
+    },
+    "outputs/ravdess/wavlm": {
+      "accuracy": 0.6708333333333333,
+      "macro_f1": 0.663069939012646,
+      "uar": 0.68359375,
+      "weight": 0.3333333333333333
+    }
+  }
+}

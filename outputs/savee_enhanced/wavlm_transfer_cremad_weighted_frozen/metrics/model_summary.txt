@@ -1,0 +1,17 @@
+Model: WavLM (Transfer from CREMAD)
+Model key: wavlm
+Hub ID: microsoft/wavlm-base-plus
+Input type: waveform
+Hidden size: 768
+Total params: 94,387,331
+Trainable params: 5,395
+Batch size: 4
+Accum steps: 4
+Effective batch size: 16
+Num epochs: 20
+Patience: 6
+Warmup ratio: 0.1
+Device: mps
+Mixed precision: False
+Num classes: 7
+Classes: anger, disgust, fear, happiness, neutral, sadness, surprise

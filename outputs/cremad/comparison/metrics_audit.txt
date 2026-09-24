@@ -1,0 +1,20 @@
+Dataset: cremad
+Trained: 8/8
+
+mfcc_lstm: history 20 epochs
+mfcc_lstm: test acc=0.5962 macro_f1=0.5999
+mfcc_cnn_bilstm: history 15 epochs
+mfcc_cnn_bilstm: test acc=0.6330 macro_f1=0.6392
+wav2vec2_xlsr_300m: history 8 epochs
+wav2vec2_xlsr_300m: test acc=0.2443 macro_f1=0.1346
+wav2vec2: history 8 epochs
+wav2vec2: test acc=0.6925 macro_f1=0.6982
+hubert: history 8 epochs
+hubert: test acc=0.7198 macro_f1=0.7209
+wavlm: history 8 epochs
+wavlm: test acc=0.6632 macro_f1=0.6584
+emotion2vec_plus: history 8 epochs
+emotion2vec_plus: test acc=0.6925 macro_f1=0.6982
+beats: history 8 epochs
+beats: test acc=0.6264 macro_f1=0.6190
+comparison: 8 models in all_models_results.csv

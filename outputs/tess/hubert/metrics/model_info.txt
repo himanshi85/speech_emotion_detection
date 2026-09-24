@@ -1,0 +1,15 @@
+Model: HuBERT
+Model key: hubert
+Hub ID: facebook/hubert-base-ls960
+Input type: waveform
+Num classes: 7
+Parameters total: 94,377,095
+Parameters trainable: 94,377,095
+Parameters frozen: 0
+Device: mps
+Batch size: 4
+Effective batch: 16
+Learning rate: 1e-05
+Dropout: 0.3
+Class weights: True
+Freeze encoder: False

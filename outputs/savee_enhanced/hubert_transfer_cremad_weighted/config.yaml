@@ -1,0 +1,25 @@
+num_classes: 8
+sample_rate: 16000
+data_dir: /Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v2/savee_preprocessed
+dropout: 0.3
+freeze_encoder: false
+class_weights: true
+weight_decay: 0.01
+warmup_ratio: 0.1
+max_grad_norm: 1.0
+mixed_precision: true
+early_stopping_patience: 6
+seed: 42
+model_key: hubert
+display_name: HuBERT (Transfer from CREMAD)
+hub_id: facebook/hubert-base-ls960
+input_type: waveform
+batch_size: 4
+gradient_accumulation_steps: 4
+num_epochs: 25
+encoder_learning_rate: 1.0e-05
+classifier_learning_rate: 0.0001
+output_dir: /Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v2/outputs/savee_enhanced/hubert_transfer_cremad_weighted
+pretrained_checkpoint: /Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v2/outputs/cremad/hubert/checkpoints/best_model/model.pt
+layer_pooling: weighted
+learning_rate: 1.0e-05

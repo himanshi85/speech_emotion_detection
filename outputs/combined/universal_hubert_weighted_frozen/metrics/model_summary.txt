@@ -1,0 +1,17 @@
+Model: HuBERT (Transfer from CREMAD)
+Model key: hubert
+Hub ID: facebook/hubert-base-ls960
+Input type: waveform
+Hidden size: 768
+Total params: 94,376,338
+Trainable params: 4,626
+Batch size: 16
+Accum steps: 4
+Effective batch size: 64
+Num epochs: 10
+Patience: 4
+Warmup ratio: 0.1
+Device: mps
+Mixed precision: False
+Num classes: 6
+Classes: neutral, happy, sad, angry, fear, disgust

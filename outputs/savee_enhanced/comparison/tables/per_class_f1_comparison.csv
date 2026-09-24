@@ -1,0 +1,4 @@
+model_key,model,anger,disgust,fear,happiness,neutral,sadness,surprise
+hubert_transfer_cremad_weighted,HuBERT (Transfer from CREMAD),0.0,0.0384615384615384,0.0,0.0,0.5882352941176471,0.0,0.0
+hubert_transfer_cremad_weighted_frozen,HuBERT (Transfer from CREMAD),0.4878048780487805,0.4,0.4827586206896552,0.2857142857142857,0.631578947368421,0.1052631578947368,0.0
+wavlm_transfer_cremad_weighted_frozen,WavLM (Transfer from CREMAD),0.5714285714285714,0.0,0.5238095238095238,0.0,0.7241379310344828,0.5217391304347826,0.2857142857142857

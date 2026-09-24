@@ -1,0 +1,21 @@
+{
+  "source_dataset": "cremad",
+  "target_dataset": "ravdess",
+  "target_split": "test",
+  "total_clips": 176,
+  "num_shared_classes": 6,
+  "shared_classes": [
+    "angry",
+    "disgust",
+    "fear",
+    "happy",
+    "neutral",
+    "sad"
+  ],
+  "accuracy": 0.4034090909090909,
+  "macro_f1": 0.33633941635690157,
+  "macro_precision": 0.4724808268325598,
+  "macro_recall": 0.3802083333333333,
+  "uar": 0.3802083333333333,
+  "war": 0.4034090909090909
+}

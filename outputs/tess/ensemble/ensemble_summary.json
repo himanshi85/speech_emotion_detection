@@ -1,0 +1,60 @@
+{
+  "ensemble_models": [
+    "hubert",
+    "wav2vec2",
+    "emotion2vec_plus",
+    "wavlm",
+    "mfcc_lstm"
+  ],
+  "weights": [
+    0.2,
+    0.2,
+    0.2,
+    0.2,
+    0.2
+  ],
+  "split": "test",
+  "ensemble_metrics": {
+    "accuracy": 1.0,
+    "macro_precision": 1.0,
+    "macro_recall": 1.0,
+    "macro_f1": 1.0,
+    "weighted_precision": 1.0,
+    "weighted_recall": 1.0,
+    "weighted_f1": 1.0,
+    "uar": 1.0,
+    "war": 1.0
+  },
+  "individual_metrics": {
+    "hubert": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "uar": 1.0,
+      "weight": 0.2
+    },
+    "wav2vec2": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "uar": 1.0,
+      "weight": 0.2
+    },
+    "emotion2vec_plus": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "uar": 1.0,
+      "weight": 0.2
+    },
+    "wavlm": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "uar": 1.0,
+      "weight": 0.2
+    },
+    "mfcc_lstm": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "uar": 1.0,
+      "weight": 0.2
+    }
+  }
+}

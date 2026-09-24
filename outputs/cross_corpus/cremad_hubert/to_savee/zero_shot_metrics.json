@@ -1,0 +1,21 @@
+{
+  "source_dataset": "cremad",
+  "target_dataset": "savee",
+  "target_split": "test",
+  "total_clips": 105,
+  "num_shared_classes": 6,
+  "shared_classes": [
+    "angry",
+    "disgust",
+    "fear",
+    "happy",
+    "neutral",
+    "sad"
+  ],
+  "accuracy": 0.5238095238095238,
+  "macro_f1": 0.4162980051137946,
+  "macro_precision": 0.5276792750197006,
+  "macro_recall": 0.4444444444444445,
+  "uar": 0.4444444444444445,
+  "war": 0.5238095238095238
+}

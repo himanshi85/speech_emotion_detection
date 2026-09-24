@@ -1,0 +1,15 @@
+Model: MFCC + LSTM
+Model key: mfcc_lstm
+Hub ID: N/A
+Input type: mfcc
+Num classes: 6
+Parameters total: 833,030
+Parameters trainable: 833,030
+Parameters frozen: 0
+Device: mps
+Batch size: 32
+Effective batch: 32
+Learning rate: 0.001
+Dropout: 0.3
+Class weights: True
+Freeze encoder: False

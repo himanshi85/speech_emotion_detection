@@ -1,0 +1,15 @@
+Model: Wav2Vec2
+Model key: wav2vec2
+Hub ID: facebook/wav2vec2-base
+Input type: waveform
+Num classes: 6
+Parameters total: 94,376,326
+Parameters trainable: 94,376,326
+Parameters frozen: 0
+Device: mps
+Batch size: 4
+Effective batch: 16
+Learning rate: 1e-05
+Dropout: 0.3
+Class weights: True
+Freeze encoder: False

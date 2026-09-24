@@ -1,0 +1,28 @@
+{
+  "ensemble_models": [
+    "outputs/cremad/hubert"
+  ],
+  "weights": [
+    1.0
+  ],
+  "split": "test",
+  "ensemble_metrics": {
+    "accuracy": 0.606114050558495,
+    "macro_precision": 0.6424965813276046,
+    "macro_recall": 0.6054438058748404,
+    "macro_f1": 0.6031053588098821,
+    "weighted_precision": 0.6396595580109105,
+    "weighted_recall": 0.606114050558495,
+    "weighted_f1": 0.6020723991373116,
+    "uar": 0.6054438058748404,
+    "war": 0.606114050558495
+  },
+  "individual_metrics": {
+    "outputs/cremad/hubert": {
+      "accuracy": 0.606114050558495,
+      "macro_f1": 0.6031053588098821,
+      "uar": 0.6054438058748404,
+      "weight": 1.0
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "ensemble_models": [
+    "outputs/ravdess_enhanced/hubert_transfer_cremad_weighted",
+    "outputs/ravdess_enhanced/wav2vec2_transfer_cremad_weighted",
+    "outputs/ravdess_enhanced/wavlm_transfer_cremad_weighted"
+  ],
+  "weights": [
+    0.3333333333333333,
+    0.3333333333333333,
+    0.3333333333333333
+  ],
+  "split": "test",
+  "ensemble_metrics": {
+    "accuracy": 0.7375,
+    "macro_precision": 0.7482972696660899,
+    "macro_recall": 0.72265625,
+    "macro_f1": 0.7207364032270237,
+    "weighted_precision": 0.7537393098660513,
+    "weighted_recall": 0.7375,
+    "weighted_f1": 0.7306902586802538,
+    "uar": 0.72265625,
+    "war": 0.7375
+  },
+  "individual_metrics": {
+    "outputs/ravdess_enhanced/hubert_transfer_cremad_weighted": {
+      "accuracy": 0.7291666666666666,
+      "macro_f1": 0.7119136757766851,
+      "uar": 0.7109375,
+      "weight": 0.3333333333333333
+    },
+    "outputs/ravdess_enhanced/wav2vec2_transfer_cremad_weighted": {
+      "accuracy": 0.675,
+      "macro_f1": 0.6595212302559161,
+      "uar": 0.66015625,
+      "weight": 0.3333333333333333
+    },
+    "outputs/ravdess_enhanced/wavlm_transfer_cremad_weighted": {
+      "accuracy": 0.6666666666666666,
+      "macro_f1": 0.6505243534177728,
+      "uar": 0.6640625,
+      "weight": 0.3333333333333333
+    }
+  }
+}

@@ -1,0 +1,2 @@
+model,model_key,accuracy,macro_precision,macro_recall,macro_f1,weighted_precision,weighted_recall,weighted_f1,uar,war,parameters,trainable_parameters,training_time_sec,inference_time_sec,best_epoch,best_val_macro_f1
+HuBERT (Transfer from CREMAD),hubert,0.7291666666666666,0.7439119173083404,0.7109375,0.7119136757766851,0.7546171562400076,0.7291666666666666,0.7260412541617974,0.7109375,0.7291666666666666,94377876,94377876,4678.163365840912,62.42288899421692,25,0.6961253119921058

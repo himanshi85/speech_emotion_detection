@@ -1,0 +1,2 @@
+model,model_key,accuracy,macro_precision,macro_recall,macro_f1,weighted_precision,weighted_recall,weighted_f1,uar,war,parameters,trainable_parameters,training_time_sec,inference_time_sec,best_epoch,best_val_macro_f1
+HuBERT,hubert,0.325,0.27185318290507876,0.3046875,0.21169496987838365,0.289976728432084,0.325,0.2258079678702759,0.3046875,0.325,94377864,94377864,2865.1609988212585,50.56008815765381,7,0.35650145956293905

@@ -1,0 +1,2 @@
+model,model_key,accuracy,macro_precision,macro_recall,macro_f1,weighted_precision,weighted_recall,weighted_f1,uar,war,parameters,trainable_parameters,training_time_sec,inference_time_sec,best_epoch,best_val_macro_f1
+MFCC + LSTM,mfcc_lstm,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,833287,833287,54.96851897239685,11.743322134017944,5,1.0

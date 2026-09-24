@@ -1,0 +1,13 @@
+category,name,number_of_samples,number_of_actors,total_duration,number_of_emotions
+total,all,1440,24,5328.9867,8
+split,train,960,16,3515.2646,8
+split,validation,240,4,900.9719,8
+split,test,240,4,912.7501,8
+emotion,neutral,96,24,336.3048,1
+emotion,calm,192,24,728.7982,1
+emotion,happy,192,24,698.5349,1
+emotion,sad,192,24,709.3461,1
+emotion,angry,192,24,743.3134,1
+emotion,fearful,192,24,686.2564,1
+emotion,disgust,192,24,756.8269,1
+emotion,surprised,192,24,669.6061,1

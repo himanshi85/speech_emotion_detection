@@ -1,0 +1,17 @@
+Model: emotion2vec+
+Model key: emotion2vec_plus
+Hub ID: facebook/wav2vec2-base
+Input type: waveform
+Hidden size: 768
+Total params: 94,376,326
+Trainable params: 94,376,326
+Batch size: 4
+Accum steps: 4
+Effective batch size: 16
+Num epochs: 8
+Patience: 5
+Warmup ratio: 0.1
+Device: mps
+Mixed precision: False
+Num classes: 6
+Classes: neutral, happy, sad, angry, fearful, disgust

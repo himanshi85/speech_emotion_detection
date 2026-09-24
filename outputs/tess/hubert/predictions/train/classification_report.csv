@@ -1,0 +1,10 @@
+emotion,precision,recall,f1_score,support
+angry,1.0,1.0,1.0,280
+disgust,1.0,1.0,1.0,280
+fear,1.0,1.0,1.0,280
+happy,1.0,1.0,1.0,280
+neutral,1.0,1.0,1.0,280
+pleasant_surprise,1.0,1.0,1.0,280
+sad,1.0,1.0,1.0,280
+macro avg,1.0,1.0,1.0,1960
+weighted avg,1.0,1.0,1.0,1960

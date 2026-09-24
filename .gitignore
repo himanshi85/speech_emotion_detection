@@ -29,10 +29,11 @@ coverage.xml
 # Jupyter Notebooks
 .ipynb_checkpoints/
 
-# Raw Datasets & Preprocessed Corpora
-/data/
-/dataset/
-/.dataset/
+# Raw Datasets & Audio Corpora
+data/raw/
+**/audio/
+dataset/
+.dataset/
 
 ravdess_preprocessed/
 cremad_preprocessed/
@@ -47,13 +48,15 @@ scratch/
 *.ogg
 
 # Model Checkpoints & Large Weights
-outputs/
+checkpoints/
+**/checkpoints/
 *.pt
 *.pth
 *.bin
 *.safetensors
 *.onnx
 *.ckpt
+
 
 # Experiment Tracking & Logs
 wandb/

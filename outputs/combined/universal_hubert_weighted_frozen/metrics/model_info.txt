@@ -1,0 +1,15 @@
+Model: HuBERT (Transfer from CREMAD)
+Model key: hubert
+Hub ID: facebook/hubert-base-ls960
+Input type: waveform
+Num classes: 6
+Parameters total: 94,376,338
+Parameters trainable: 4,626
+Parameters frozen: 94,371,712
+Device: mps
+Batch size: 16
+Effective batch: 64
+Learning rate: 1e-05
+Dropout: 0.3
+Class weights: True
+Freeze encoder: True

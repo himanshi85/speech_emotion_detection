@@ -1,0 +1,17 @@
+Model: WavLM
+Model key: wavlm
+Hub ID: microsoft/wavlm-base-plus
+Input type: waveform
+Hidden size: 768
+Total params: 94,387,319
+Trainable params: 94,387,319
+Batch size: 4
+Accum steps: 4
+Effective batch size: 16
+Num epochs: 25
+Patience: 5
+Warmup ratio: 0.1
+Device: mps
+Mixed precision: False
+Num classes: 7
+Classes: angry, disgust, fear, happy, neutral, pleasant_surprise, sad

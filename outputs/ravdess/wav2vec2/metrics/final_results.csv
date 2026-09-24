@@ -1,0 +1,2 @@
+model,model_key,accuracy,macro_precision,macro_recall,macro_f1,weighted_precision,weighted_recall,weighted_f1,uar,war,parameters,trainable_parameters,training_time_sec,inference_time_sec,best_epoch,best_val_macro_f1
+Wav2Vec2,wav2vec2,0.5,0.5671983656961268,0.5,0.4933183233892454,0.5783449234092018,0.5,0.4965765819855655,0.5,0.5,94377864,94377864,7023.377543926239,52.80619716644287,19,0.692577741661029

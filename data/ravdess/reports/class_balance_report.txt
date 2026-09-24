@@ -1,0 +1,40 @@
+Class Balance Check
+========================================
+
+train:
+  samples=960
+  neutral: 64 (6.67%)
+  calm: 128 (13.33%)
+  happy: 128 (13.33%)
+  sad: 128 (13.33%)
+  angry: 128 (13.33%)
+  fearful: 128 (13.33%)
+  disgust: 128 (13.33%)
+  surprised: 128 (13.33%)
+  All 8 emotions represented.
+
+validation:
+  samples=240
+  neutral: 16 (6.67%)
+  calm: 32 (13.33%)
+  happy: 32 (13.33%)
+  sad: 32 (13.33%)
+  angry: 32 (13.33%)
+  fearful: 32 (13.33%)
+  disgust: 32 (13.33%)
+  surprised: 32 (13.33%)
+  All 8 emotions represented.
+
+test:
+  samples=240
+  neutral: 16 (6.67%)
+  calm: 32 (13.33%)
+  happy: 32 (13.33%)
+  sad: 32 (13.33%)
+  angry: 32 (13.33%)
+  fearful: 32 (13.33%)
+  disgust: 32 (13.33%)
+  surprised: 32 (13.33%)
+  All 8 emotions represented.
+
+Note: No oversampling, undersampling, SMOTE, or augmentation applied.

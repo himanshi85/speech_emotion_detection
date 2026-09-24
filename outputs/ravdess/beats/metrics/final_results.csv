@@ -1,0 +1,2 @@
+model,model_key,accuracy,macro_precision,macro_recall,macro_f1,weighted_precision,weighted_recall,weighted_f1,uar,war,parameters,trainable_parameters,training_time_sec,inference_time_sec,best_epoch,best_val_macro_f1
+BEATs,beats,0.3458333333333333,0.30827922077922076,0.32421875,0.24663357840126235,0.3288311688311688,0.3458333333333333,0.2630758169613465,0.32421875,0.3458333333333333,94388088,94388088,3010.1608612537384,56.263219356536865,10,0.26318260171201346

@@ -1,0 +1,60 @@
+{
+  "ensemble_models": [
+    "hubert",
+    "wav2vec2",
+    "emotion2vec_plus",
+    "wavlm",
+    "mfcc_cnn_bilstm"
+  ],
+  "weights": [
+    0.35,
+    0.25,
+    0.2,
+    0.1,
+    0.1
+  ],
+  "split": "test",
+  "ensemble_metrics": {
+    "accuracy": 0.7556603773584906,
+    "macro_precision": 0.7751901798902109,
+    "macro_recall": 0.756104081268936,
+    "macro_f1": 0.7594472922202627,
+    "weighted_precision": 0.773180019882127,
+    "weighted_recall": 0.7556603773584906,
+    "weighted_f1": 0.7581200160172867,
+    "uar": 0.756104081268936,
+    "war": 0.7556603773584906
+  },
+  "individual_metrics": {
+    "hubert": {
+      "accuracy": 0.719811320754717,
+      "macro_f1": 0.7209338783694625,
+      "uar": 0.7203409968514228,
+      "weight": 0.35
+    },
+    "wav2vec2": {
+      "accuracy": 0.6924528301886792,
+      "macro_f1": 0.6982367464585789,
+      "uar": 0.692865205251589,
+      "weight": 0.25
+    },
+    "emotion2vec_plus": {
+      "accuracy": 0.6924528301886792,
+      "macro_f1": 0.6982367464585789,
+      "uar": 0.692865205251589,
+      "weight": 0.2
+    },
+    "wavlm": {
+      "accuracy": 0.6632075471698113,
+      "macro_f1": 0.6584099387087856,
+      "uar": 0.6644745440503773,
+      "weight": 0.1
+    },
+    "mfcc_cnn_bilstm": {
+      "accuracy": 0.6330188679245283,
+      "macro_f1": 0.6392173293137915,
+      "uar": 0.6323828194617716,
+      "weight": 0.1
+    }
+  }
+}

@@ -1,0 +1,15 @@
+Model: BEATs
+Model key: beats
+Hub ID: microsoft/wavlm-base-plus
+Input type: waveform
+Num classes: 7
+Parameters total: 94,387,319
+Parameters trainable: 94,387,319
+Parameters frozen: 0
+Device: mps
+Batch size: 4
+Effective batch: 16
+Learning rate: 5e-06
+Dropout: 0.3
+Class weights: True
+Freeze encoder: False

@@ -1,0 +1,21 @@
+{
+  "source_dataset": "cremad",
+  "target_dataset": "tess",
+  "target_split": "test",
+  "total_clips": 360,
+  "num_shared_classes": 6,
+  "shared_classes": [
+    "angry",
+    "disgust",
+    "fear",
+    "happy",
+    "neutral",
+    "sad"
+  ],
+  "accuracy": 0.3888888888888889,
+  "macro_f1": 0.32211310241272306,
+  "macro_precision": 0.5012776777945074,
+  "macro_recall": 0.3888888888888889,
+  "uar": 0.3888888888888889,
+  "war": 0.3888888888888889
+}

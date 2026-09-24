@@ -1,0 +1,17 @@
+Model: HuBERT
+Model key: hubert
+Hub ID: facebook/hubert-base-ls960
+Input type: waveform
+Hidden size: 768
+Total params: 94,377,095
+Trainable params: 94,377,095
+Batch size: 4
+Accum steps: 4
+Effective batch size: 16
+Num epochs: 40
+Patience: 5
+Warmup ratio: 0.1
+Device: mps
+Mixed precision: False
+Num classes: 7
+Classes: anger, disgust, fear, happiness, neutral, sadness, surprise

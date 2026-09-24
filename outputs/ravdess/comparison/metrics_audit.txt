@@ -1,0 +1,20 @@
+Dataset: ravdess
+Trained: 8/8
+
+mfcc_lstm: history 14 epochs
+mfcc_lstm: test acc=0.3292 macro_f1=0.2817
+mfcc_cnn_bilstm: history 16 epochs
+mfcc_cnn_bilstm: test acc=0.4250 macro_f1=0.3984
+wav2vec2_xlsr_300m: history 6 epochs
+wav2vec2_xlsr_300m: test acc=0.1333 macro_f1=0.0294
+wav2vec2: history 24 epochs
+wav2vec2: test acc=0.5000 macro_f1=0.4933
+hubert: history 12 epochs
+hubert: test acc=0.3250 macro_f1=0.2117
+wavlm: history 45 epochs
+wavlm: test acc=0.6708 macro_f1=0.6631
+emotion2vec_plus: history 24 epochs
+emotion2vec_plus: test acc=0.5000 macro_f1=0.4933
+beats: history 15 epochs
+beats: test acc=0.3458 macro_f1=0.2466
+comparison: 8 models in all_models_results.csv

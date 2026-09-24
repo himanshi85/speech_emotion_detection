@@ -1,0 +1,17 @@
+Model: MFCC + CNN-BiLSTM
+Model key: mfcc_cnn_bilstm
+Hub ID: N/A
+Input type: mfcc
+Hidden size: 256
+Total params: 923,974
+Trainable params: 923,974
+Batch size: 32
+Accum steps: 1
+Effective batch size: 32
+Num epochs: 15
+Patience: 5
+Warmup ratio: 0.1
+Device: mps
+Mixed precision: False
+Num classes: 6
+Classes: neutral, happy, sad, angry, fearful, disgust

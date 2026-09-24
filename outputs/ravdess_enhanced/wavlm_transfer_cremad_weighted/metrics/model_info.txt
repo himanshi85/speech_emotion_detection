@@ -1,0 +1,15 @@
+Model: WavLM (Transfer from CREMAD)
+Model key: wavlm
+Hub ID: microsoft/wavlm-base-plus
+Input type: waveform
+Num classes: 8
+Parameters total: 94,388,100
+Parameters trainable: 94,388,100
+Parameters frozen: 0
+Device: mps
+Batch size: 4
+Effective batch: 16
+Learning rate: 1e-05
+Dropout: 0.3
+Class weights: True
+Freeze encoder: False

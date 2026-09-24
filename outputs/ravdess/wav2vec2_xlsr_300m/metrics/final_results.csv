@@ -1,0 +1,2 @@
+model,model_key,accuracy,macro_precision,macro_recall,macro_f1,weighted_precision,weighted_recall,weighted_f1,uar,war,parameters,trainable_parameters,training_time_sec,inference_time_sec,best_epoch,best_val_macro_f1
+Wav2Vec2-XLS-R-300M,wav2vec2_xlsr_300m,0.13333333333333333,0.016666666666666666,0.125,0.029411764705882353,0.017777777777777778,0.13333333333333333,0.03137254901960784,0.125,0.13333333333333333,315446920,315446920,3089.4349040985107,169.86566305160522,1,0.029411764705882353

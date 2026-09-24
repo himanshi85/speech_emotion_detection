@@ -1,0 +1,2 @@
+total_training_time_sec,avg_epoch_time_sec,total_inference_time_sec,avg_inference_per_file_sec
+16.70345377922058,2.0879317224025726,3.3823161125183105,0.028185967604319254

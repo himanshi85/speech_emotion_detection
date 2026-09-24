@@ -1,0 +1,19 @@
+Model: Wav2Vec2-XLS-R-300M
+Model key: wav2vec2_xlsr_300m
+Hub ID: facebook/wav2vec2-xls-r-300m
+Input type: waveform
+Hidden size: 1024
+Num classes: 8
+Parameters total: 315,446,920
+Parameters trainable: 8,200
+Parameters frozen: 315,438,720
+Encoder parameters: 315,438,720
+Head parameters: 8,200
+Device: mps
+Batch size: 4
+Effective batch: 16
+Encoder LR: 1e-05
+Classifier LR: 0.0001
+Dropout: 0.3
+Class weights: True
+Freeze encoder: True

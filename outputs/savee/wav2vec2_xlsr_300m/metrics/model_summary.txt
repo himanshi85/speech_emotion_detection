@@ -1,0 +1,17 @@
+Model: Wav2Vec2-XLS-R-300M
+Model key: wav2vec2_xlsr_300m
+Hub ID: facebook/wav2vec2-xls-r-300m
+Input type: waveform
+Hidden size: 1024
+Total params: 315,445,895
+Trainable params: 7,175
+Batch size: 4
+Accum steps: 4
+Effective batch size: 16
+Num epochs: 40
+Patience: 5
+Warmup ratio: 0.1
+Device: mps
+Mixed precision: False
+Num classes: 7
+Classes: anger, disgust, fear, happiness, neutral, sadness, surprise

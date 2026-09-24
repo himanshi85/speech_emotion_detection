@@ -1,0 +1,2 @@
+model,model_key,accuracy,macro_precision,macro_recall,macro_f1,weighted_precision,weighted_recall,weighted_f1,uar,war,parameters,trainable_parameters,training_time_sec,inference_time_sec,best_epoch,best_val_macro_f1
+MFCC + CNN-BiLSTM,mfcc_cnn_bilstm,0.25,0.03571428571428571,0.14285714285714285,0.05714285714285715,0.0625,0.25,0.1,0.14285714285714285,0.25,924231,924231,29.714993000030518,4.7634313106536865,2,0.2451013175751852

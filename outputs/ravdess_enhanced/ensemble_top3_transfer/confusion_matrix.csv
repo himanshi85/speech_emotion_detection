@@ -1,0 +1,9 @@
+,Neutral,Calm,Happy,Sad,Angry,Fearful,Disgust,Surprised
+Neutral,11,5,0,0,0,0,0,0
+Calm,3,29,0,0,0,0,0,0
+Happy,4,2,20,0,0,0,0,6
+Sad,0,12,1,18,0,0,1,0
+Angry,0,0,0,0,30,0,0,2
+Fearful,0,0,5,3,2,22,0,0
+Disgust,0,0,1,0,13,1,17,0
+Surprised,0,0,1,1,1,1,0,28

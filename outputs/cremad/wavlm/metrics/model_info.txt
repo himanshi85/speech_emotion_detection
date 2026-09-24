@@ -1,0 +1,15 @@
+Model: WavLM
+Model key: wavlm
+Hub ID: microsoft/wavlm-base-plus
+Input type: waveform
+Num classes: 6
+Parameters total: 94,386,550
+Parameters trainable: 94,386,550
+Parameters frozen: 0
+Device: mps
+Batch size: 4
+Effective batch: 16
+Learning rate: 1e-05
+Dropout: 0.3
+Class weights: True
+Freeze encoder: False

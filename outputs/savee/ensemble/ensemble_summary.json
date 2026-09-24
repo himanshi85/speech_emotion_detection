@@ -1,0 +1,68 @@
+{
+  "ensemble_models": [
+    "wavlm",
+    "hubert",
+    "beats",
+    "wav2vec2",
+    "emotion2vec_plus",
+    "mfcc_cnn_bilstm"
+  ],
+  "weights": [
+    0.3,
+    0.25,
+    0.15,
+    0.1,
+    0.1,
+    0.1
+  ],
+  "split": "test",
+  "ensemble_metrics": {
+    "accuracy": 0.25,
+    "macro_precision": 0.03826530612244898,
+    "macro_recall": 0.14285714285714285,
+    "macro_f1": 0.060362173038229376,
+    "weighted_precision": 0.06696428571428571,
+    "weighted_recall": 0.25,
+    "weighted_f1": 0.1056338028169014,
+    "uar": 0.14285714285714285,
+    "war": 0.25
+  },
+  "individual_metrics": {
+    "wavlm": {
+      "accuracy": 0.25,
+      "macro_f1": 0.06493506493506493,
+      "uar": 0.14285714285714285,
+      "weight": 0.3
+    },
+    "hubert": {
+      "accuracy": 0.25833333333333336,
+      "macro_f1": 0.07952209660842754,
+      "uar": 0.15238095238095237,
+      "weight": 0.25
+    },
+    "beats": {
+      "accuracy": 0.25,
+      "macro_f1": 0.06543075245365322,
+      "uar": 0.14285714285714285,
+      "weight": 0.15
+    },
+    "wav2vec2": {
+      "accuracy": 0.25833333333333336,
+      "macro_f1": 0.07577220077220079,
+      "uar": 0.15238095238095237,
+      "weight": 0.1
+    },
+    "emotion2vec_plus": {
+      "accuracy": 0.25833333333333336,
+      "macro_f1": 0.07577220077220079,
+      "uar": 0.15238095238095237,
+      "weight": 0.1
+    },
+    "mfcc_cnn_bilstm": {
+      "accuracy": 0.25,
+      "macro_f1": 0.05714285714285715,
+      "uar": 0.14285714285714285,
+      "weight": 0.1
+    }
+  }
+}

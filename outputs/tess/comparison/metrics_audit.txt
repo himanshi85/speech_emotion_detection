@@ -1,0 +1,20 @@
+Dataset: tess
+Trained: 8/8
+
+mfcc_lstm: history 5 epochs
+mfcc_lstm: test acc=1.0000 macro_f1=1.0000
+mfcc_cnn_bilstm: history 9 epochs
+mfcc_cnn_bilstm: test acc=0.9976 macro_f1=0.9976
+wav2vec2_xlsr_300m: history 9 epochs
+wav2vec2_xlsr_300m: test acc=0.1976 macro_f1=0.0886
+wav2vec2: history 10 epochs
+wav2vec2: test acc=1.0000 macro_f1=1.0000
+hubert: history 13 epochs
+hubert: test acc=1.0000 macro_f1=1.0000
+wavlm: history 18 epochs
+wavlm: test acc=1.0000 macro_f1=1.0000
+emotion2vec_plus: history 10 epochs
+emotion2vec_plus: test acc=1.0000 macro_f1=1.0000
+beats: history 16 epochs
+beats: test acc=0.9976 macro_f1=0.9976
+comparison: 8 models in all_models_results.csv

@@ -1,0 +1,4 @@
+source_dataset,target_dataset,target_split,total_clips,num_shared_classes,shared_classes,accuracy,macro_f1,macro_precision,macro_recall,uar,war
+ravdess,savee,test,120,7,"['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']",0.39166666666666666,0.28927507870330976,0.3603514514992384,0.33333333333333337,0.33333333333333337,0.39166666666666666
+ravdess,tess,test,420,7,"['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']",0.4595238095238095,0.4024511905834835,0.6272019004301178,0.45952380952380956,0.45952380952380956,0.4595238095238095
+ravdess,cremad,test,1060,6,"['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad']",0.5367924528301887,0.5270297447881725,0.6435671435377504,0.5379967920156834,0.5379967920156834,0.5367924528301887

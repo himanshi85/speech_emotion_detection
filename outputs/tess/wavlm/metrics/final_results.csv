@@ -1,0 +1,2 @@
+model,model_key,accuracy,macro_precision,macro_recall,macro_f1,weighted_precision,weighted_recall,weighted_f1,uar,war,parameters,trainable_parameters,training_time_sec,inference_time_sec,best_epoch,best_val_macro_f1
+WavLM,wavlm,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,94387319,94387319,4183.4600481987,83.412358045578,13,1.0

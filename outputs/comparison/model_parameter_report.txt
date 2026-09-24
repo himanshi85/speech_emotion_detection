@@ -1,0 +1,60 @@
+SER Model Parameter Verification Report
+========================================================================
+Model                  Hub / Arch                                  Total      Train          Enc     Head     H Out       
+--------------------------------------------------------------------------------------------------------------------------
+mfcc_lstm              MFCC(40) -> LSTM(256x2) -> Linear(8)      833,544    833,544      831,488    2,056   256 OK        
+  arch: MFCC(40) -> LSTM(256x2) -> Linear(8)
+  expected: ~800K
+
+mfcc_cnn_bilstm        MFCC -> CNN(64,128,256) -> BiLSTM(128x2) -> Linear(8)      924,488    924,488      922,432    2,056   256 OK        
+  arch: MFCC -> CNN(64,128,256) -> BiLSTM(128x2) -> Linear(8)
+  expected: ~900K
+
+wav2vec2_xlsr_300m     facebook/wav2vec2-xls-r-300m          315,446,920 315,446,920  315,438,720    8,200  1024 OK        
+  arch: XLS-R-300M -> masked pool -> Dropout -> Linear(8)
+  expected: ~315M
+
+wav2vec2               facebook/wav2vec2-base                 94,377,864 94,377,864   94,371,712    6,152   768 OK        
+  arch: Wav2Vec2-base -> masked pool -> Dropout -> Linear(8)
+  expected: ~94M
+
+hubert                 facebook/hubert-base-ls960             94,377,864 94,377,864   94,371,712    6,152   768 OK        
+  arch: HuBERT -> masked pool -> Dropout -> Linear(8)
+  expected: ~94M
+
+wavlm                  microsoft/wavlm-base-plus              94,388,088 94,388,088   94,381,936    6,152   768 OK        
+  arch: WavLM -> masked pool -> Dropout -> Linear(8)
+  expected: ~94M
+
+emotion2vec_plus       facebook/wav2vec2-base                 94,377,864 94,377,864   94,371,712    6,152   768 OK        
+  arch: emotion2vec+ base via FunASR -> fine-tune head
+  expected: ~90M
+
+beats                  microsoft/wavlm-base-plus              94,388,088 94,388,088   94,381,936    6,152   768 OK        
+  arch: WavLM-base-plus proxy for BEATs-style acoustic SSL
+  expected: ~94M
+
+Training hyperparameters (from config):
+------------------------------------------------------------------------
+  mfcc_lstm              epochs= 80 batch= 32 accum= 1 lr=0.001 dropout=0.3 cw=True
+  mfcc_cnn_bilstm        epochs= 80 batch= 32 accum= 1 lr=0.001 dropout=0.3 cw=True
+  wav2vec2_xlsr_300m     epochs= 25 batch=  4 accum= 4 lr=enc=1e-05 head=0.0001 dropout=0.3 cw=True
+  wav2vec2               epochs= 25 batch=  4 accum= 4 lr=enc=1e-05 head=0.0001 dropout=0.3 cw=True
+  hubert                 epochs= 25 batch=  4 accum= 4 lr=enc=1e-05 head=0.0001 dropout=0.3 cw=True
+  wavlm                  epochs= 25 batch=  4 accum= 4 lr=enc=1e-05 head=0.0001 dropout=0.3 cw=True
+  emotion2vec_plus       epochs= 25 batch=  4 accum= 4 lr=enc=1e-05 head=0.0001 dropout=0.3 cw=True
+  beats                  epochs= 25 batch=  4 accum= 4 lr=enc=5e-06 head=0.0001 dropout=0.3 cw=True
+
+Expected parameter summary:
+  mfcc_lstm          ~833K   (LSTM encoder + 2K head)
+  mfcc_cnn_bilstm    ~925K   (CNN+BiLSTM + 2K head)
+  wav2vec2           ~94M    (768 hidden, 6K head)
+  hubert             ~94M    (768 hidden, 6K head)
+  wavlm              ~94M    (768 hidden, 6K head)
+  wav2vec2_xlsr_300m ~315M   (1024 hidden, 8K head)
+  emotion2vec_plus   ~90M    (true; currently wav2vec2 proxy)
+  beats              ~90M    (true BEATs; currently wavlm proxy)
+
+Notes / warnings:
+  - emotion2vec_plus: using Wav2Vec2-base proxy (~94M); true emotion2vec+ is ~90M via FunASR
+  - beats: using WavLM proxy; official BEATs is separate Microsoft checkpoint

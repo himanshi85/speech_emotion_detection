@@ -1,0 +1,17 @@
+Model: MFCC + LSTM
+Model key: mfcc_lstm
+Hub ID: N/A
+Input type: mfcc
+Hidden size: 256
+Total params: 833,030
+Trainable params: 833,030
+Batch size: 32
+Accum steps: 1
+Effective batch size: 32
+Num epochs: 20
+Patience: 5
+Warmup ratio: 0.1
+Device: mps
+Mixed precision: False
+Num classes: 6
+Classes: neutral, happy, sad, angry, fearful, disgust

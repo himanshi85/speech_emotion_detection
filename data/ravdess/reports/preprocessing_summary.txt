@@ -1,0 +1,40 @@
+RAVDESS Preprocessing Summary
+========================================
+SEED: 42
+Target sample rate: 16000
+Target channels: 1
+
+WAV files discovered: 1440
+Speech files selected: 1440
+Song files excluded: 0
+Video-only files excluded: 0
+Other excluded / parse failures: 0
+Successfully processed: 1440
+Failed: 0
+
+Total files in metadata: 1440
+Total duration (seconds): 5328.9867
+Unique actors: 24
+Emotions: 8
+
+Split distribution:
+  train: samples=960, actors=16, duration=3515.2646s
+  validation: samples=240, actors=4, duration=900.9719s
+  test: samples=240, actors=4, duration=912.7501s
+
+Emotion distribution:
+  neutral: 96 (6.67%), duration=336.3048s
+  calm: 192 (13.33%), duration=728.7982s
+  happy: 192 (13.33%), duration=698.5349s
+  sad: 192 (13.33%), duration=709.3461s
+  angry: 192 (13.33%), duration=743.3134s
+  fearful: 192 (13.33%), duration=686.2564s
+  disgust: 192 (13.33%), duration=756.8269s
+  surprised: 192 (13.33%), duration=669.6061s
+
+Total processing time (seconds): 6.19
+
+Actor split:
+  train: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+  validation: [17, 18, 19, 20]
+  test: [21, 22, 23, 24]

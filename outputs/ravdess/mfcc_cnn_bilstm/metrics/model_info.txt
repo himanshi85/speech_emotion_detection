@@ -1,0 +1,19 @@
+Model: MFCC + CNN-BiLSTM
+Model key: mfcc_cnn_bilstm
+Hub ID: N/A
+Input type: mfcc
+Hidden size: 256
+Num classes: 8
+Parameters total: 924,488
+Parameters trainable: 924,488
+Parameters frozen: 0
+Encoder parameters: 922,432
+Head parameters: 2,056
+Device: mps
+Batch size: 32
+Effective batch: 32
+Encoder LR: 0.001
+Classifier LR: 0.001
+Dropout: 0.3
+Class weights: True
+Freeze encoder: False

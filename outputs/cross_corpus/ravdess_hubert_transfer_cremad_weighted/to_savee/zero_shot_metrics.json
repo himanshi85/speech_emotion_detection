@@ -1,0 +1,22 @@
+{
+  "source_dataset": "ravdess",
+  "target_dataset": "savee",
+  "target_split": "test",
+  "total_clips": 120,
+  "num_shared_classes": 7,
+  "shared_classes": [
+    "angry",
+    "disgust",
+    "fear",
+    "happy",
+    "neutral",
+    "sad",
+    "surprise"
+  ],
+  "accuracy": 0.39166666666666666,
+  "macro_f1": 0.28927507870330976,
+  "macro_precision": 0.3603514514992384,
+  "macro_recall": 0.33333333333333337,
+  "uar": 0.33333333333333337,
+  "war": 0.39166666666666666
+}

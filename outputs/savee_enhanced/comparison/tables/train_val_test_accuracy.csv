@@ -1,0 +1,4 @@
+model_key,model,test,train,validation
+hubert_transfer_cremad_weighted,HuBERT (Transfer from CREMAD),0.2583333333333333,0.8958333333333334,0.2333333333333333
+hubert_transfer_cremad_weighted_frozen,HuBERT (Transfer from CREMAD),0.4583333333333333,0.5333333333333333,0.225
+wavlm_transfer_cremad_weighted_frozen,WavLM (Transfer from CREMAD),0.4916666666666666,0.3958333333333333,0.1583333333333333

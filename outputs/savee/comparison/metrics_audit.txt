@@ -1,0 +1,20 @@
+Dataset: savee
+Trained: 8/8
+
+mfcc_lstm: history 8 epochs
+mfcc_lstm: test acc=0.1250 macro_f1=0.0317
+mfcc_cnn_bilstm: history 7 epochs
+mfcc_cnn_bilstm: test acc=0.2500 macro_f1=0.0571
+wav2vec2_xlsr_300m: history 6 epochs
+wav2vec2_xlsr_300m: test acc=0.1250 macro_f1=0.0317
+wav2vec2: history 17 epochs
+wav2vec2: test acc=0.2583 macro_f1=0.0758
+hubert: history 20 epochs
+hubert: test acc=0.2583 macro_f1=0.0795
+wavlm: history 22 epochs
+wavlm: test acc=0.2500 macro_f1=0.0649
+emotion2vec_plus: history 17 epochs
+emotion2vec_plus: test acc=0.2583 macro_f1=0.0758
+beats: history 28 epochs
+beats: test acc=0.2500 macro_f1=0.0654
+comparison: 8 models in all_models_results.csv

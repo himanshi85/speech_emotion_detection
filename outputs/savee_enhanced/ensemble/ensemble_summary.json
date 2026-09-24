@@ -1,0 +1,36 @@
+{
+  "ensemble_models": [
+    "hubert_transfer_cremad_weighted_frozen",
+    "wavlm_transfer_cremad_weighted_frozen"
+  ],
+  "weights": [
+    0.5,
+    0.5
+  ],
+  "split": "test",
+  "ensemble_metrics": {
+    "accuracy": 0.5166666666666667,
+    "macro_precision": 0.5513196255945987,
+    "macro_recall": 0.44761904761904764,
+    "macro_f1": 0.3860024227530282,
+    "weighted_precision": 0.558935284640172,
+    "weighted_recall": 0.5166666666666667,
+    "weighted_f1": 0.43268882876965914,
+    "uar": 0.44761904761904764,
+    "war": 0.5166666666666667
+  },
+  "individual_metrics": {
+    "hubert_transfer_cremad_weighted_frozen": {
+      "accuracy": 0.4583333333333333,
+      "macro_f1": 0.3418742699594112,
+      "uar": 0.38095238095238093,
+      "weight": 0.5
+    },
+    "wavlm_transfer_cremad_weighted_frozen": {
+      "accuracy": 0.49166666666666664,
+      "macro_f1": 0.37526134891737806,
+      "uar": 0.46190476190476193,
+      "weight": 0.5
+    }
+  }
+}

@@ -1,0 +1,2 @@
+model_key,model,test,train,validation
+universal_hubert_weighted_frozen,HuBERT (Transfer from CREMAD),0.677875536978703,0.7416547599691542,0.6054866096390529

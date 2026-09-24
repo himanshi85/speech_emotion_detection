@@ -1,0 +1,22 @@
+{
+  "source_dataset": "ravdess",
+  "target_dataset": "tess",
+  "target_split": "test",
+  "total_clips": 420,
+  "num_shared_classes": 7,
+  "shared_classes": [
+    "angry",
+    "disgust",
+    "fear",
+    "happy",
+    "neutral",
+    "sad",
+    "surprise"
+  ],
+  "accuracy": 0.4595238095238095,
+  "macro_f1": 0.4024511905834835,
+  "macro_precision": 0.6272019004301178,
+  "macro_recall": 0.45952380952380956,
+  "uar": 0.45952380952380956,
+  "war": 0.4595238095238095
+}
