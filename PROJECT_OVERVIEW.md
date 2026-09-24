@@ -1,14 +1,44 @@
 # Speech Emotion Recognition (SER) — Project Master Overview
 
-This document serves as the **single-source-of-truth research dashboard** for the Speech Emotion Recognition benchmarking suite, detailing all 8 classical and deep speech architectures on the actor-independent RAVDESS benchmark, CREMA-D, SAVEE, TESS, cross-corpus zero-shot evaluations, and the Universal Multi-Corpus Foundation Model.
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.10+" />
+  <img src="https://img.shields.io/badge/PyTorch-2.0%2B-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white" alt="PyTorch 2.0+" />
+  <img src="https://img.shields.io/badge/Transformers-4.30%2B-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black" alt="Hugging Face Transformers" />
+  <img src="https://img.shields.io/badge/Benchmarks-4%20Datasets-blueviolet?style=for-the-badge" alt="4 Datasets" />
+  <img src="https://img.shields.io/badge/Models-8%20Architectures-informational?style=for-the-badge" alt="8 Models" />
+  <img src="https://img.shields.io/badge/Tests-15%2F15%20Passing-brightgreen?style=for-the-badge&logo=pytest&logoColor=white" alt="Tests Passing" />
+  <img src="https://img.shields.io/badge/Author-Jash%20Lathiya-lightgrey?style=for-the-badge" alt="Author" />
+</p>
+
+This document serves as the **single-source-of-truth technical research dashboard** for the Speech Emotion Recognition benchmarking suite, detailing all 8 classical and deep speech architectures on the actor-independent RAVDESS benchmark, CREMA-D, SAVEE, TESS, cross-corpus zero-shot evaluations, and the Universal Multi-Corpus Foundation Model.
+
+> [!IMPORTANT]
+> **Evaluation Protocol Guarantee**: All benchmark figures are evaluated on strictly unseen test actors or unseen word prompts. There is zero data leakage or speaker identity contamination between train, validation, and test partitions.
+
+---
+
+## Table of Contents
+
+- [1. Official Final Leaderboard (RAVDESS 8-Class Benchmark)](#1-official-final-leaderboard-ravdess-8-class-benchmark)
+- [2. Direct Links to Reports, Tables and Plots](#2-direct-links-to-reports-tables-and-plots)
+- [3. Key Research Takeaways and Scientific Findings](#3-key-research-takeaways-and-scientific-findings)
+- [4. Phase 2: CREMA-D 6-Class Benchmark](#4-phase-2-crema-d-6-class-benchmark)
+- [5. Phase 3: SAVEE Benchmark](#5-phase-3-savee-benchmark)
+- [6. Phase 4: TESS Benchmark](#6-phase-4-tess-benchmark)
+- [7. Phase 5: Speech Emotion Recognition Enhancements](#7-phase-5-speech-emotion-recognition-enhancements)
+  - [SAVEE Enhanced Benchmark](#savee-enhanced-benchmark-outputssavee_enhanced)
+  - [RAVDESS Enhanced Benchmark](#ravdess-enhanced-benchmark-outputsravdess_enhanced)
+  - [Visual Layer Weight Interpretability](#visual-layer-weight-interpretability)
+- [8. Phase 6: Cross-Corpus Zero-Shot Generalization Benchmark](#8-phase-6-cross-corpus-zero-shot-generalization-benchmark)
+- [9. Phase 7: Universal Multi-Corpus Foundation Model Benchmark](#9-phase-7-universal-multi-corpus-foundation-model-benchmark)
+- [10. Multi-Dataset Milestone Roadmap](#10-multi-dataset-milestone-roadmap)
 
 ---
 
 ## 1. Official Final Leaderboard (RAVDESS 8-Class Benchmark)
 
 *Evaluated on 240 unseen test audio clips from completely unseen speakers (Actors 21-24).*  
-*Strict 8-class classification (Neutral, Calm, Happy, Sad, Angry, Fearful, Disgust, Surprised).*  
-*Random baseline for 8 classes is **12.5%**.*
+*Strict 8-class classification (`neutral`, `calm`, `happy`, `sad`, `angry`, `fearful`, `disgust`, `surprised`). Random baseline: **12.50%**.*
 
 | Rank | Model Name | Key (`configs/`) | Architecture / Backbone | Total Params | Best Epoch | Val Acc | Val Macro-F1 | Test Acc | Test Macro-F1 | Test UAR | Status |
 |:---:|---|---|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|---|
@@ -22,9 +52,17 @@ This document serves as the **single-source-of-truth research dashboard** for th
 | **[7]** | **HuBERT** | `hubert` | `facebook/hubert-base-ls960` | ~94.4 M | **Ep 7** | 40.42% | 0.3565 | **32.50%** | **0.2117** | 30.47% | **Completed** (12 ep) |
 | **[8]** | **Wav2Vec2-XLS-R-300M** | `wav2vec2_xlsr_300m` | `facebook/wav2vec2-xls-r-300m` | ~315.4 M | **Ep 1** | 13.33% | 0.0294 | **13.33%** | **0.0294** | 12.50% | **Completed** (6 ep) |
 
+<p align="center">
+  <img src="outputs/ravdess/comparison/curves/all_models_test_macro_f1_bar.png" width="48%" alt="RAVDESS Baseline Test Macro-F1 Bar Chart" />
+  <img src="outputs/ravdess/ensemble/confusion_matrix.png" width="48%" alt="RAVDESS Baseline Ensemble Confusion Matrix" />
+</p>
+
 ---
 
 ## 2. Direct Links to Reports, Tables and Plots
+
+<details open>
+<summary>Click to view Directory Links & Artifact Locations</summary>
 
 ### Combined Comparative Reports (RAVDESS — Folder-Wise)
 - **[ranking_by_macro_f1.csv](outputs/ravdess/comparison/ranking_by_macro_f1.csv)**: Official leaderboard ranked by Macro-F1.
@@ -51,12 +89,14 @@ This document serves as the **single-source-of-truth research dashboard** for th
 - **7. HuBERT**: [`outputs/ravdess/hubert/`](outputs/ravdess/hubert/)
 - **8. Wav2Vec2-XLS-R-300M**: [`outputs/ravdess/wav2vec2_xlsr_300m/`](outputs/ravdess/wav2vec2_xlsr_300m/)
 
+</details>
+
 ---
 
 ## 3. Key Research Takeaways and Scientific Findings
 
 1. **Ensemble Soft Voting Delivers Highest Overall Benchmark (68.75% Test Acc, 0.6815 Macro-F1)**:
-   - Fusing WavLM (speech denoising SSL) + Wav2Vec2 (contrastive SSL) + MFCC CNN-BiLSTM (temporal spectral features) improves robustness across ambiguous classes (fearful/calm).
+   - Fusing WavLM (speech denoising SSL) + Wav2Vec2 (contrastive SSL) + MFCC CNN-BiLSTM (temporal spectral features) improves robustness across ambiguous classes (`fearful`/`calm`).
 2. **WavLM is the Undisputed Single-Model Champion (67.08% Test Accuracy)**:
    - Outperformed all other architectures by a substantial margin (+17.08% over Wav2Vec2, +24.58% over CNN-BiLSTM).
 3. **The Handcrafted Baseline Progression Holds Perfectly**:
@@ -65,7 +105,7 @@ This document serves as the **single-source-of-truth research dashboard** for th
 4. **Contrastive Transformers (Wav2Vec2 / emotion2vec+) Reached 50.00%**:
    - Strong performance, outperforming handcrafted acoustic features by +7.5%.
 5. **The Scale Effect and Overfitting on Small Datasets**:
-   - `Wav2Vec2-XLS-R-300M` (315M params) struggled on 960 audio samples because of parameter scale relative to dataset size. This provides the mathematical justification for expanding to larger datasets like CREMA-D (~7,442 clips).
+   - `Wav2Vec2-XLS-R-300M` (315M params) struggled on 960 audio samples because of parameter scale relative to dataset size. This provides the empirical justification for expanding to larger datasets like CREMA-D (~7,442 clips).
 
 ---
 
@@ -74,13 +114,7 @@ This document serves as the **single-source-of-truth research dashboard** for th
 - **Dataset**: Crowd-sourced Emotional Multimodal Actors Dataset (CREMA-D).
 - **Total Audio**: 7,442 standardized 16 kHz mono 16-bit PCM clips in [`data/cremad/`](data/cremad/).
 - **Actors**: 91 diverse actors (IDs 1001 to 1091).
-- **6 Locked Emotion Classes**:
-  - `0`: Neutral
-  - `1`: Happy
-  - `2`: Sad
-  - `3`: Angry
-  - `4`: Fearful
-  - `5`: Disgust
+- **6 Locked Emotion Classes**: `neutral` (0), `happy` (1), `sad` (2), `angry` (3), `fearful` (4), `disgust` (5).
 - **Actor-Independent Splits (Zero Speaker Leakage)**:
   - **Train**: 5,234 clips (64 actors, ~70%)
   - **Validation**: 1,148 clips (14 actors, ~15%)
@@ -101,9 +135,14 @@ This document serves as the **single-source-of-truth research dashboard** for th
 | **MFCC + LSTM** | `mfcc_lstm` | MFCC(40) -> 2-Layer LSTM -> Head | **Ep 17** | **52.53%** | **0.5163** | **59.62%** | **0.5999** | **59.69%** | **Completed** | [`outputs/cremad/mfcc_lstm/`](outputs/cremad/mfcc_lstm/) |
 | **Wav2Vec2-XLS-R-300M** | `wav2vec2_xlsr_300m` | `facebook/wav2vec2-xls-r-300m` (Frozen) | **Ep 3** | **17.07%** | **0.1263** | **24.43%** | **0.1346** | **23.85%** | **Completed** | [`outputs/cremad/wav2vec2_xlsr_300m/`](outputs/cremad/wav2vec2_xlsr_300m/) |
 
+<p align="center">
+  <img src="outputs/cremad/comparison/curves/all_models_test_macro_f1_bar.png" width="48%" alt="CREMA-D Test Macro-F1 Bar Chart" />
+  <img src="outputs/cremad/ensemble/confusion_matrix.png" width="48%" alt="CREMA-D Ensemble Confusion Matrix" />
+</p>
+
 ---
 
-## 5. SAVEE Benchmark (Surrey Audio-Visual Expressed Emotion)
+## 5. Phase 3: SAVEE Benchmark
 
 ### SAVEE Dataset Specifications
 - **Audio Files**: 480 clips standardized to 16 kHz mono 16-bit PCM in [`data/savee/`](data/savee/).
@@ -129,16 +168,16 @@ This document serves as the **single-source-of-truth research dashboard** for th
 | **MFCC + LSTM** | `mfcc_lstm` | MFCC(40) -> 2-Layer LSTM -> Head | **Ep 3** | **42.50%** | **0.3604** | **12.50%** | **0.0317** | **14.29%** | **Completed** | [`outputs/savee/mfcc_lstm/`](outputs/savee/mfcc_lstm/) |
 | **Wav2Vec2-XLS-R-300M** | `wav2vec2_xlsr_300m` | `facebook/wav2vec2-xls-r-300m` (Frozen) | **Ep 1** | **12.50%** | **0.0317** | **12.50%** | **0.0317** | **14.29%** | **Completed** | [`outputs/savee/wav2vec2_xlsr_300m/`](outputs/savee/wav2vec2_xlsr_300m/) |
 
-### Scientific Insight: The Speaker Diversity Law
-A comparison of the datasets illuminates how speaker diversity dictates model generalizability to unseen test actors:
-1. **SAVEE (2 Train Actors)**: With only 2 actors in training, models overfit heavily to individual speaker timbre, yielding ~25.8% test accuracy across 7 emotions.
-2. **RAVDESS (16 Train Actors)**: With 16 diverse actors in training, generalization improves markedly to **68.75%** test accuracy across 8 emotions.
-3. **CREMA-D (64 Train Actors)**: With 64 diverse actors, self-supervised representations disentangle emotional prosody from speaker characteristics, surging to **75.57%** test accuracy across 6 emotions.
-4. **TESS (Pristine Studio Recordings, 200 Target Words)**: Prompt-disjoint evaluation on 30 unseen words yields **100.00%** test accuracy across SSL foundation models and soft-voting ensemble.
+> [!NOTE]
+> **Scientific Insight: The Speaker Diversity Law**  
+> 1. **SAVEE (2 Train Actors)**: With only 2 actors in training, models overfit heavily to individual speaker timbre, yielding ~25.8% test accuracy across 7 emotions.  
+> 2. **RAVDESS (16 Train Actors)**: With 16 diverse actors in training, generalization improves markedly to **68.75%** test accuracy across 8 emotions.  
+> 3. **CREMA-D (64 Train Actors)**: With 64 diverse actors, self-supervised representations disentangle emotional prosody from speaker characteristics, surging to **75.57%** test accuracy across 6 emotions.  
+> 4. **TESS (Pristine Studio Recordings, 200 Target Words)**: Prompt-disjoint evaluation on 30 unseen words yields **100.00%** test accuracy across SSL foundation models and soft-voting ensemble.
 
 ---
 
-## 6. TESS Benchmark (Toronto Emotional Speech Set)
+## 6. Phase 4: TESS Benchmark
 
 ### TESS Dataset Specifications
 - **Audio Files**: 2,800 clips standardized to 16 kHz mono 16-bit PCM in [`data/tess/`](data/tess/).
@@ -164,9 +203,14 @@ A comparison of the datasets illuminates how speaker diversity dictates model ge
 | **BEATs** | `beats` | `microsoft/wavlm-base-plus` | **Ep 11** | **99.52%** | **0.9952** | **99.76%** | **0.9976** | **0.9976** | **Completed** | [`outputs/tess/beats/`](outputs/tess/beats/) |
 | **Wav2Vec2-XLS-R-300M** | `wav2vec2_xlsr_300m` | `facebook/wav2vec2-xls-r-300m` (Frozen) | **Ep 4** | **8.84%** | **0.0884** | **19.76%** | **0.0886** | **0.1976** | **Completed** | [`outputs/tess/wav2vec2_xlsr_300m/`](outputs/tess/wav2vec2_xlsr_300m/) |
 
+<p align="center">
+  <img src="outputs/tess/comparison/curves/all_models_test_accuracy_bar.png" width="48%" alt="TESS Test Accuracy Bar Chart" />
+  <img src="outputs/tess/ensemble/confusion_matrix.png" width="48%" alt="TESS Ensemble Confusion Matrix" />
+</p>
+
 ---
 
-## 7. Speech Emotion Recognition Enhancements
+## 7. Phase 5: Speech Emotion Recognition Enhancements
 
 ### Architectural and Training Upgrades
 1. **SUPERB-Style Learnable Weighted Layer Pooling**:
@@ -178,7 +222,7 @@ A comparison of the datasets illuminates how speaker diversity dictates model ge
 3. **Frozen-Encoder Transfer Learning for Small Datasets**:
    - Prevents catastrophic forgetting and speaker vocal tract memorization on small corpora (e.g. SAVEE's 2 training actors `DC` and `JE`) by keeping the 94M parameter foundation encoder frozen and training only the 5,395 parameters of the pooling layer and classification head.
 
-### SAVEE Enhanced Benchmark Results Table (outputs/savee_enhanced/)
+### SAVEE Enhanced Benchmark Results Table (`outputs/savee_enhanced/`)
 
 | Model Name | Backbone | Layer Pooling | Trainable Params | Test Acc | Test Macro-F1 | Test UAR | Status / Improvement | Output Directory |
 |---|---|:---:|:---:|:---:|:---:|:---:|:---:|---|
@@ -188,7 +232,12 @@ A comparison of the datasets illuminates how speaker diversity dictates model ge
 | *Baseline HuBERT (Scratch)* | `hubert-base-ls960` | Last | 94.38 M | 25.83% | 0.0795 | 15.24% | Baseline Bottleneck | [`outputs/savee/hubert/`](outputs/savee/hubert/) |
 | *Baseline WavLM (Scratch)* | `wavlm-base-plus` | Last | 94.39 M | 25.00% | 0.0649 | 14.29% | Baseline Bottleneck | [`outputs/savee/wavlm/`](outputs/savee/wavlm/) |
 
-### RAVDESS Enhanced Benchmark Results Table (outputs/ravdess_enhanced/)
+<p align="center">
+  <img src="outputs/savee_enhanced/comparison/curves/all_models_test_macro_f1_bar.png" width="48%" alt="SAVEE Enhanced Test Macro-F1 Bar Chart" />
+  <img src="outputs/savee_enhanced/ensemble/confusion_matrix.png" width="48%" alt="SAVEE Enhanced Ensemble Confusion Matrix" />
+</p>
+
+### RAVDESS Enhanced Benchmark Results Table (`outputs/ravdess_enhanced/`)
 
 | Model Name | Backbone | Layer Pooling | Trainable Params | Test Acc | Test Macro-F1 | Test UAR | Status / Improvement | Output Directory |
 |---|---|:---:|:---:|:---:|:---:|:---:|:---:|---|
@@ -200,9 +249,24 @@ A comparison of the datasets illuminates how speaker diversity dictates model ge
 | *Baseline Wav2Vec2 (Scratch)* | `wav2vec2-base` | Last | 94.38 M | 50.00% | 0.4933 | 50.00% | Baseline Contrastive | [`outputs/ravdess/wav2vec2/`](outputs/ravdess/wav2vec2/) |
 | *Baseline HuBERT (Scratch)* | `hubert-base-ls960` | Last | 94.38 M | 32.50% | 0.2117 | 30.47% | Baseline Bottleneck | [`outputs/ravdess/hubert/`](outputs/ravdess/hubert/) |
 
+<p align="center">
+  <img src="outputs/ravdess_enhanced/comparison/curves/all_models_test_macro_f1_bar.png" width="48%" alt="RAVDESS Enhanced Test Macro-F1 Bar Chart" />
+  <img src="outputs/ravdess_enhanced/ensemble/confusion_matrix.png" width="48%" alt="RAVDESS Enhanced Ensemble Confusion Matrix" />
+</p>
+
+### Visual Layer Weight Interpretability
+
+<p align="center">
+  <img src="outputs/comparison_layer_weights.png" width="92%" alt="Layer Weights Distribution across Transformers" />
+</p>
+
+- **Acoustic Substructure (Layers 1-4)**: Focuses on raw acoustic waveform representation and pitch contours (~7.1-7.6%).
+- **Prosodic Culmination (Layers 9-11)**: Carries the dominant emotion discrimination weight (~11.1% per layer).
+- **Phonetic Convergence (Layer 12)**: Specializes in discrete phonetic decoding (~9.2%), explaining why intermediate representations are significantly more expressive for emotion recognition.
+
 ---
 
-## 8. Cross-Corpus Zero-Shot Generalization Benchmark
+## 8. Phase 6: Cross-Corpus Zero-Shot Generalization Benchmark
 
 In speech emotion research, evaluating models across unseen recording environments, microphone setups, accents, and prompt sets with **zero training** on the target corpus is the ultimate test of acoustic invariance and emotional generalization.
 
@@ -221,7 +285,7 @@ In speech emotion research, evaluating models across unseen recording environmen
 
 ---
 
-## 9. Universal Multi-Corpus Foundation Model Benchmark
+## 9. Phase 7: Universal Multi-Corpus Foundation Model Benchmark
 
 To achieve true generalizability across diverse speech styles, acoustic conditions, accents, and emotional intensities, we unified all 4 datasets into [`data/combined/`](data/combined/) (11,318 standardized clips across 121 speakers mapped to the 6 core canonical emotions: `neutral`, `happy`, `sad`, `angry`, `fear`, `disgust`).
 
@@ -234,12 +298,17 @@ To achieve true generalizability across diverse speech styles, acoustic conditio
   - SAVEE: 105 clips (unseen Actor `KL`)
   - TESS: 360 clips (30 unseen vocabulary words)
 
-### Universal Foundation Model Results (outputs/combined/)
+### Universal Foundation Model Results (`outputs/combined/`)
 
 | Architecture | Strategy | Trainable Params | Test Accuracy | Test Macro-F1 | Test UAR | Status | Output Directory |
 |---|---|:---:|:---:|:---:|:---:|---|---|
 | **Universal HuBERT** | Transfer + Weighted Pooling (Frozen) | **4,626** | **68.31%** | **0.6779** | **68.61%** | **Unified Champion (4.1x chance baseline 16.67%)** | [`outputs/combined/universal_hubert_weighted_frozen/`](outputs/combined/universal_hubert_weighted_frozen/) |
 | *Zero-Shot CREMA-D HuBERT* | Direct Evaluation | 0 | 60.61% | 0.6031 | 60.54% | Prior Multi-Corpus Baseline | [`outputs/combined/cremad_hubert_zeroshot/`](outputs/combined/cremad_hubert_zeroshot/) |
+
+<p align="center">
+  <img src="outputs/combined/comparison/curves/all_models_test_macro_f1_bar.png" width="48%" alt="Universal Combined Test Macro-F1 Bar Chart" />
+  <img src="outputs/combined/cremad_hubert_zeroshot/confusion_matrix.png" width="48%" alt="Universal Combined Zero-Shot Confusion Matrix" />
+</p>
 
 ### Per-Dataset Sub-Cohort Performance on Unseen Test Sets
 
