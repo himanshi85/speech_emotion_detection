@@ -143,6 +143,95 @@ document.addEventListener('DOMContentLoaded', () => {
     paneMic.classList.remove('active');
   });
 
+  /**
+   * Encodes an AudioBuffer into standard 16-bit Mono PCM RIFF/WAVE Blob.
+   */
+  function encodePcmWav(audioBuffer) {
+    const channelData = audioBuffer.getChannelData(0);
+    const sampleRate = audioBuffer.sampleRate;
+    const numSamples = channelData.length;
+    const buffer = new ArrayBuffer(44 + numSamples * 2);
+    const view = new DataView(buffer);
+
+    function writeString(offset, string) {
+      for (let i = 0; i < string.length; i++) {
+        view.setUint8(offset + i, string.charCodeAt(i));
+      }
+    }
+
+    // RIFF identifier
+    writeString(0, 'RIFF');
+    // File length minus RIFF identifier and length (36 + data size)
+    view.setUint32(4, 36 + numSamples * 2, true);
+    // RIFF type
+    writeString(8, 'WAVE');
+    // Format chunk identifier
+    writeString(12, 'fmt ');
+    // Format chunk length (16 for PCM)
+    view.setUint32(16, 16, true);
+    // Audio format (1 = PCM)
+    view.setUint16(20, 1, true);
+    // Number of channels (1 = Mono)
+    view.setUint16(22, 1, true);
+    // Sample rate (16000)
+    view.setUint32(24, sampleRate, true);
+    // Byte rate (sampleRate * numChannels * bitsPerSample / 8)
+    view.setUint32(28, sampleRate * 2, true);
+    // Block align (numChannels * bitsPerSample / 8)
+    view.setUint16(32, 2, true);
+    // Bits per sample
+    view.setUint16(34, 16, true);
+    // Data chunk identifier
+    writeString(36, 'data');
+    // Data chunk length
+    view.setUint32(40, numSamples * 2, true);
+
+    // Write 16-bit signed PCM samples with clipping
+    let offset = 44;
+    for (let i = 0; i < numSamples; i++) {
+      const s = Math.max(-1, Math.min(1, channelData[i]));
+      view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+      offset += 2;
+    }
+
+    return new Blob([view], { type: 'audio/wav' });
+  }
+
+  /**
+   * Decodes an arbitrary audio blob using Web Audio API and resamples to 16 kHz Mono PCM WAV.
+   */
+  async function convertBlobToPcmWav(blob, targetSampleRate = 16000) {
+    const arrayBuffer = await blob.arrayBuffer();
+    const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtxClass) {
+      throw new Error('AudioContext not supported in this browser.');
+    }
+    const audioCtx = new AudioCtxClass();
+    let audioBuffer;
+    try {
+      audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+    } finally {
+      if (audioCtx.state !== 'closed') {
+        audioCtx.close();
+      }
+    }
+
+    const OfflineCtxClass = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+    if (!OfflineCtxClass) {
+      return encodePcmWav(audioBuffer);
+    }
+
+    const targetLength = Math.max(1, Math.ceil(audioBuffer.duration * targetSampleRate));
+    const offlineCtx = new OfflineCtxClass(1, targetLength, targetSampleRate);
+    const source = offlineCtx.createBufferSource();
+    source.buffer = audioBuffer;
+    source.connect(offlineCtx.destination);
+    source.start(0);
+
+    const renderedBuffer = await offlineCtx.startRendering();
+    return encodePcmWav(renderedBuffer);
+  }
+
   // 4. Microphone Recording
   micBtn.addEventListener('click', async () => {
     if (mediaRecorder && mediaRecorder.state === 'recording') {
@@ -164,12 +253,26 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.data.size > 0) audioChunks.push(e.data);
       };
 
-      mediaRecorder.onstop = () => {
-        const mimeType = mediaRecorder.mimeType || 'audio/webm';
-        activeAudioBlob = new Blob(audioChunks, { type: mimeType });
-        activeAudioFilename = 'microphone_recording.wav';
+      mediaRecorder.onstop = async () => {
         stream.getTracks().forEach(track => track.stop());
         if (visualizer) visualizer.stop();
+
+        recordHint.textContent = 'Encoding recording into 16 kHz PCM WAV...';
+        const rawMime = mediaRecorder.mimeType || 'audio/webm';
+        const rawBlob = new Blob(audioChunks, { type: rawMime });
+
+        try {
+          activeAudioBlob = await convertBlobToPcmWav(rawBlob, 16000);
+          activeAudioFilename = 'microphone_recording.wav';
+          recordHint.textContent = 'Audio recorded & encoded as 16 kHz PCM WAV! Ready to analyze.';
+        } catch (convErr) {
+          console.warn('Browser PCM conversion fallback:', convErr);
+          activeAudioBlob = rawBlob;
+          const ext = rawMime.includes('mp4') ? '.mp4' : (rawMime.includes('ogg') ? '.ogg' : '.webm');
+          activeAudioFilename = `microphone_recording${ext}`;
+          recordHint.textContent = 'Audio recorded. Ready to analyze.';
+        }
+
         enableAnalysis('Microphone Recording');
       };
 
@@ -194,7 +297,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     clearInterval(recordInterval);
     micBtn.classList.remove('recording');
-    recordHint.textContent = 'Audio recorded successfully! Ready to analyze.';
   }
 
   function updateTimer() {
@@ -227,12 +329,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  function handleSelectedFile(file) {
-    activeAudioBlob = file;
-    activeAudioFilename = file.name;
+  async function handleSelectedFile(file) {
     fileNameDisplay.textContent = file.name;
     filePreview.style.display = 'flex';
     enableAnalysis(file.name);
+
+    if (!file.name.toLowerCase().endsWith('.wav')) {
+      try {
+        const convertedBlob = await convertBlobToPcmWav(file, 16000);
+        activeAudioBlob = convertedBlob;
+        activeAudioFilename = file.name.replace(/\.[^/.]+$/, "") + ".wav";
+        fileNameDisplay.textContent = `${file.name} (encoded to 16 kHz WAV)`;
+      } catch (convErr) {
+        console.warn('Direct client conversion skipped, sending original format to server:', convErr);
+        activeAudioBlob = file;
+        activeAudioFilename = file.name;
+      }
+    } else {
+      activeAudioBlob = file;
+      activeAudioFilename = file.name;
+    }
   }
 
   function enableAnalysis(sourceName) {
@@ -252,8 +368,11 @@ document.addEventListener('DOMContentLoaded', () => {
     analyzeBtn.disabled = true;
     analyzeBtn.innerHTML = `<span class="spinner"></span> Analyzing Acoustic Signals...`;
 
+    let uploadBlob = activeAudioBlob;
+    let uploadFilename = activeAudioFilename;
+
     const formData = new FormData();
-    formData.append('file', activeAudioBlob, activeAudioFilename);
+    formData.append('file', uploadBlob, uploadFilename);
     formData.append('model_id', modelSelect.value);
 
     try {

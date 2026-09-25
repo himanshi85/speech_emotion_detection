@@ -256,6 +256,13 @@ async def analyze_audio_endpoint(
         tmp_path = Path(tmp.name)
         shutil.copyfileobj(file.file, tmp)
 
+    file_size = tmp_path.stat().st_size
+    logger.info("Saved temp file %s (%d bytes)", tmp_path, file_size)
+    if file_size == 0:
+        if tmp_path.exists():
+            os.remove(tmp_path)
+        raise HTTPException(status_code=400, detail="Uploaded audio recording is empty (0 bytes). Please record or select a valid audio clip.")
+
     try:
         # Load requested model
         model, cfg, label_map = get_or_load_model(model_id)

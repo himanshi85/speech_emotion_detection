@@ -212,6 +212,99 @@ def synthesize_overall_behaviour(
         return f"Responsive Speaker ({emo.capitalize()})"
 
 
+def load_audio_robust(audio_path: Union[str, Path], target_sr: int = 16000) -> Tuple[np.ndarray, int]:
+    """Robustly loads an audio file across any format (WAV, WebM, MP4, AAC, MP3, OGG, FLAC).
+    
+    Tries in sequence:
+    1. soundfile.read() (Standard WAV/FLAC)
+    2. torchaudio.load()
+    3. librosa.load()
+    4. scipy.io.wavfile.read()
+    5. av.open() (PyAV - FFmpeg container decoding for WebM/Opus, MP4/AAC, etc.)
+    """
+    path_str = str(audio_path)
+    data = None
+    sr = None
+    load_errors = []
+
+    # 1. soundfile
+    try:
+        data, sr = sf.read(path_str)
+    except Exception as e:
+        load_errors.append(f"soundfile: {e}")
+
+    # 2. torchaudio
+    if data is None:
+        try:
+            import torchaudio
+            waveform, sr = torchaudio.load(path_str)
+            data = waveform.cpu().numpy()
+            if data.ndim > 1:
+                data = np.mean(data, axis=0)
+        except Exception as e:
+            load_errors.append(f"torchaudio: {e}")
+
+    # 3. librosa
+    if data is None:
+        try:
+            import librosa
+            data, sr = librosa.load(path_str, sr=None)
+        except Exception as e:
+            load_errors.append(f"librosa: {e}")
+
+    # 4. scipy.io.wavfile
+    if data is None:
+        try:
+            from scipy.io import wavfile
+            sr, raw_data = wavfile.read(path_str)
+            if raw_data.dtype == np.int16:
+                data = raw_data.astype(np.float32) / 32768.0
+            elif raw_data.dtype == np.int32:
+                data = raw_data.astype(np.float32) / 2147483648.0
+            else:
+                data = raw_data.astype(np.float32)
+        except Exception as e:
+            load_errors.append(f"scipy: {e}")
+
+    # 5. PyAV (FFmpeg multi-format container decoder)
+    if data is None:
+        try:
+            import av
+            container = av.open(path_str)
+            resampler = av.AudioResampler(format="fltp", layout="mono", rate=target_sr)
+            audio_frames = []
+            for frame in container.decode(audio=0):
+                frame.pts = None
+                for resampled_frame in resampler.resample(frame):
+                    audio_frames.append(resampled_frame.to_ndarray())
+            container.close()
+            if audio_frames:
+                data = np.concatenate(audio_frames, axis=1).squeeze()
+                sr = target_sr
+        except Exception as e:
+            load_errors.append(f"pyav: {e}")
+
+    if data is None:
+        err_msg = " | ".join(load_errors)
+        raise ValueError(f"Could not decode audio file with any backend. Details: {err_msg}")
+
+    if data.ndim > 1:
+        data = np.mean(data, axis=-1)
+
+    if len(data) == 0:
+        raise ValueError("Audio recording is empty (0 samples). Please speak into the microphone and try again.")
+
+    # Resample to target_sr if needed
+    if sr != target_sr:
+        import math
+        from scipy import signal
+        gcd = math.gcd(sr, target_sr)
+        data = signal.resample_poly(data, target_sr // gcd, sr // gcd).astype(np.float32)
+        sr = target_sr
+
+    return data.astype(np.float32), sr
+
+
 def analyze_audio_file(
     audio_path: Union[str, Path],
     model: Optional[torch.nn.Module] = None,
@@ -224,18 +317,8 @@ def analyze_audio_file(
     if not audio_path.exists():
         raise FileNotFoundError(f"Audio file not found: {audio_path}")
 
-    # 1. Load audio
-    data, sr = sf.read(str(audio_path))
-    if data.ndim > 1:
-        data = np.mean(data, axis=-1)
-
-    # Resample to 16 kHz if needed
-    if sr != 16000:
-        import math
-        from scipy import signal
-        gcd = math.gcd(sr, 16000)
-        data = signal.resample_poly(data, 16000 // gcd, sr // gcd).astype(np.float32)
-        sr = 16000
+    # 1. Load audio with multi-backend fallbacks
+    data, sr = load_audio_robust(audio_path, target_sr=16000)
 
     # 2. Extract Acoustic Prosody
     prosody = extract_acoustic_prosody(data, sr=sr)
