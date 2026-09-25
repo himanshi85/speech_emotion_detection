@@ -1,0 +1,19 @@
+{
+  "source_dataset": "combined",
+  "target_dataset": "hindi",
+  "target_split": "test",
+  "total_clips": 105,
+  "num_shared_classes": 4,
+  "shared_classes": [
+    "angry",
+    "happy",
+    "neutral",
+    "sad"
+  ],
+  "accuracy": 0.2761904761904762,
+  "macro_f1": 0.2443011687433594,
+  "macro_precision": 0.3415830546265329,
+  "macro_recall": 0.3175559947299078,
+  "uar": 0.3175559947299078,
+  "war": 0.2761904761904762
+}

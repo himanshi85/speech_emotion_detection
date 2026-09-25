@@ -1,0 +1,2 @@
+source_dataset,target_dataset,target_split,total_clips,num_shared_classes,shared_classes,accuracy,macro_f1,macro_precision,macro_recall,uar,war
+combined,hindi,test,105,4,"['angry', 'happy', 'neutral', 'sad']",0.2761904761904762,0.2443011687433594,0.3415830546265329,0.3175559947299078,0.3175559947299078,0.2761904761904762

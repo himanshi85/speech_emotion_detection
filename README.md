@@ -4,15 +4,15 @@
   <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.10+" />
   <img src="https://img.shields.io/badge/PyTorch-2.0%2B-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white" alt="PyTorch 2.0+" />
   <img src="https://img.shields.io/badge/Transformers-4.30%2B-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black" alt="Hugging Face Transformers" />
+  <img src="https://img.shields.io/badge/Corpora-5%20Datasets%20(English%20%2B%20Hindi)-blueviolet?style=for-the-badge" alt="5 Datasets" />
+  <img src="https://img.shields.io/badge/Behaviour%20AI-Audio%20Diagnostics-orange?style=for-the-badge" alt="Audio Behaviour Intelligence" />
+  <img src="https://img.shields.io/badge/WebUI-Gradio%206.0-green?style=for-the-badge&logo=gradio&logoColor=white" alt="Gradio WebUI" />
   <img src="https://img.shields.io/badge/Tests-15%2F15%20Passing-brightgreen?style=for-the-badge&logo=pytest&logoColor=white" alt="Tests Passing" />
-  <img src="https://img.shields.io/badge/Evaluation-Zero%20Speaker%20Leakage-success?style=for-the-badge" alt="Zero Speaker Leakage" />
-  <img src="https://img.shields.io/badge/Corpora-4%20Datasets-blueviolet?style=for-the-badge" alt="4 Datasets" />
-  <img src="https://img.shields.io/badge/Models-8%20Architectures-informational?style=for-the-badge" alt="8 Models" />
   <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="MIT License" />
   <img src="https://img.shields.io/badge/Maintainer-Jash%20Lathiya-lightgrey?style=for-the-badge" alt="Maintainer" />
 </p>
 
-A modular, production-grade PyTorch benchmarking framework for **Speech Emotion Recognition (SER)** across diverse speech corpora. This repository evaluates classical acoustic baselines against state-of-the-art self-supervised foundation models under strict speaker-independent and prompt-independent evaluation protocols (guaranteeing zero speaker and zero prompt leakage).
+A modular, production-grade PyTorch benchmarking framework for **Speech Emotion Recognition (SER)** and **Audio Behaviour Intelligence** across diverse speech corpora. This repository evaluates classical acoustic baselines against state-of-the-art self-supervised foundation models across **5 speech datasets** (CREMA-D, RAVDESS, SAVEE, TESS, and authentic Hindi speech) totaling **12,180 audio clips** under strict speaker-independent and prompt-independent evaluation protocols.
 
 > [!IMPORTANT]
 > **Strict Zero-Leakage Benchmark Guarantee**: All evaluation metrics reported herein are generated exclusively on completely unseen human actors (CREMA-D: 13 unseen actors; RAVDESS: Actors 21-24; SAVEE: Actor `KL`) or unseen vocabulary prompts (TESS: 30 unseen words). There is zero data or identity overlap between train, validation, and test partitions.
@@ -28,18 +28,16 @@ A modular, production-grade PyTorch benchmarking framework for **Speech Emotion 
   - [3. RAVDESS Benchmark (24 Actors)](#3-ravdess-benchmark-24-actors)
   - [4. SAVEE Benchmark (4 Actors)](#4-savee-benchmark-4-actors)
   - [5. TESS Benchmark (Prompt-Independent)](#5-tess-benchmark-prompt-independent)
+  - [6. Hindi Speech Emotion Benchmark](#6-hindi-speech-emotion-benchmark)
+- [Audio Behaviour Analysis Engine](#audio-behaviour-analysis-engine)
+- [Interactive WebUI Platform](#interactive-webui-platform)
 - [Visual Interpretability and Layer Analysis](#visual-interpretability-and-layer-analysis)
 - [Cross-Corpus Generalization and Scientific Insights](#cross-corpus-generalization-and-scientific-insights)
   - [The Speaker Diversity Law](#the-speaker-diversity-law)
+- [Master Research Report](#master-research-report)
 - [Repository Structure](#repository-structure)
 - [Setup and Installation](#setup-and-installation)
 - [CLI Execution Guide](#cli-execution-guide)
-  - [1. Preprocess Datasets](#1-preprocess-datasets)
-  - [2. Train a Single Model](#2-train-a-single-model)
-  - [3. Transfer Learning with Weighted Layer Pooling](#3-transfer-learning-with-weighted-layer-pooling)
-  - [4. Multi-Model Soft-Voting Ensemble](#4-multi-model-soft-voting-ensemble)
-  - [5. Cross-Corpus Zero-Shot Evaluation](#5-cross-corpus-zero-shot-evaluation)
-  - [6. Verification and Test Suite](#6-verification-and-test-suite)
 - [Methodological Guarantees](#methodological-guarantees)
 - [License](#license)
 
@@ -271,6 +269,72 @@ All evaluations are conducted strictly on **unseen actors or unseen prompts** (d
 | **Wav2Vec2-XLS-R-300M** | Multilingual Frozen Backbone | **19.76%** | **0.0886** | **0.1976** |
 
 ---
+
+### 6. Hindi Speech Emotion Benchmark
+
+*862 standardized 16 kHz audio clips across authentic Indic speech corpora (Project Vaani, Indian TTS Emotion, and RapidOrc) unified into 5 emotion classes (`neutral`, `calm`, `happy`, `sad`, `angry`).*
+
+| Evaluation Regime | Source Model | Target Corpus | Test Accuracy | Macro-F1 | Test UAR | Status |
+| :--- | :--- | :--- | :---: | :---: | :---: | :--- |
+| **Zero-Shot Cross-Lingual** | **Universal HuBERT (English)** | **Hindi (Unseen Test)** | **27.62%** | **0.2443** | **31.76%** | Zero target fine-tuning (above 25% chance) |
+
+<p align="center">
+  <img src="outputs/cross_corpus/universal_hubert_to_hindi/to_hindi/confusion_matrix.png" width="55%" alt="Zero-Shot Universal HuBERT to Hindi Confusion Matrix" />
+</p>
+
+---
+
+## Audio Behaviour Analysis Engine
+
+Beyond categorical emotion classification, this framework integrates an **Audio Behaviour Analysis Engine** (`src/ser/features/behavior.py` and `scripts/analyze_audio.py`) extracting 5 complementary acoustic and behavioral intelligence metrics:
+
+| Metric | Measurement Technique | Diagnostic Interpretation |
+| :--- | :--- | :--- |
+| **Speaking Speed** | Syllable energy onset peaks / active speech duration | **Fast** (>4.2 syll/sec), **Normal** (2.3–4.2 syll/sec), **Slow** (<2.3 syll/sec) |
+| **Pause Frequency** | Contiguous silent frames ($\ge 250\text{ ms}$) via RMS VAD | **High** (>8 pauses/min or >35% silence), **Normal**, **Low** (<3 pauses/min) |
+| **Vocal Energy** | $\text{RMS}_{\text{dB}} = 20 \log_{10}(\text{RMS} + \epsilon)$ | **High** (>-22 dB), **Moderate** (-35 to -22 dB), **Low** (<-35 dB) |
+| **Pitch Variation** | Fundamental frequency $F_0$ standard deviation via pYIN | **Dynamic** ($\sigma > 35\text{ Hz}$), **Stable** ($\sigma \in [14, 35]\text{ Hz}$), **Monotone** ($\sigma < 14\text{ Hz}$) |
+| **Overall Profile** | Rule-based behavioral diagnostic synthesis | Synthesizes emotion + prosody into clinical/commercial profile. |
+
+```text
+==================================================
+         Audio Behaviour Analysis Report          
+==================================================
+Emotion:             Neutral
+Confidence:          82.0%
+
+Speaking Speed:      Normal (2.6 syllables/sec)
+Pause Frequency:     High (15.0 pauses/min, 29.1% silence)
+Energy:              Moderate (-25.4 dB RMS)
+Pitch Variation:     Stable (mean: 122.1 Hz, std: 30.1 Hz)
+
+Overall Behaviour:   Engaged Speaker
+==================================================
+```
+
+---
+
+## Interactive WebUI Platform
+
+An interactive web dashboard is available via **Gradio 6.0** (`app.py`):
+
+- **Live Microphone Recording & Audio File Upload**: Test voice recordings interactively.
+- **Model Selector**: Switch dynamically between *Universal HuBERT*, *CREMA-D HuBERT*, and *RAVDESS Transfer HuBERT*.
+- **Acoustic Meters**: Real-time display for Speaking Speed, Vocal Energy, Pause Frequency, and Pitch Intonation.
+- **Official Behaviour Report**: Live downloadable diagnostic report card.
+
+```bash
+# Launch interactive web application
+python app.py
+# Opens dashboard at http://127.0.0.1:7860
+```
+
+---
+
+## Master Research Report
+
+A comprehensive technical and scientific report detailing the complete 5-corpus findings, base vs. large model analysis, layer weight findings, and behavioral AI architecture is documented in:
+- **[FINAL_RESEARCH_REPORT.md](FINAL_RESEARCH_REPORT.md)**
 
 ## Visual Interpretability and Layer Analysis
 

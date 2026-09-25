@@ -218,11 +218,18 @@ def load_ravdess_splits(data_dir: Path | str | None = None) -> DatasetBundle:
     return bundle
 
 
+def _safe_actor(a: Any) -> Any:
+    try:
+        return int(a)
+    except (ValueError, TypeError):
+        return str(a)
+
+
 def get_actor_sets(bundle: DatasetBundle) -> Dict[str, set]:
     return {
-        "train": set(int(a) for a in bundle.train["actor_id"].unique()),
-        "validation": set(int(a) for a in bundle.validation["actor_id"].unique()),
-        "test": set(int(a) for a in bundle.test["actor_id"].unique()),
+        "train": set(_safe_actor(a) for a in bundle.train["actor_id"].unique()),
+        "validation": set(_safe_actor(a) for a in bundle.validation["actor_id"].unique()),
+        "test": set(_safe_actor(a) for a in bundle.test["actor_id"].unique()),
     }
 
 

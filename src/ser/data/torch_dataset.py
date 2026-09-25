@@ -24,12 +24,18 @@ class RAVDESSSERDataset(Dataset):
         row = self.df.iloc[idx]
         path = Path(row["abs_filepath"])
         raw = load_raw_waveform(path)
+        actor_val = row.get("actor_id", 0)
+        try:
+            actor_id = int(actor_val)
+        except (ValueError, TypeError):
+            actor_id = str(actor_val)
+
         return {
             "waveform": raw.waveform,
             "label": int(row["label"]),
             "emotion": str(row["emotion"]),
             "filepath": str(path),
             "filename": str(row["filename"]),
-            "actor_id": int(row["actor_id"]),
+            "actor_id": actor_id,
             "split": self.split_name,
         }

@@ -112,6 +112,21 @@ DATASET_LABEL_MAPPINGS = {
         "pleasant_surprise": 5,
         "sad": 6,
     },
+    "combined": {
+        "neutral": 0,
+        "happy": 1,
+        "sad": 2,
+        "angry": 3,
+        "fear": 4,
+        "disgust": 5,
+    },
+    "hindi": {
+        "neutral": 0,
+        "calm": 1,
+        "happy": 2,
+        "sad": 3,
+        "angry": 4,
+    },
 }
 
 

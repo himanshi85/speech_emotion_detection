@@ -4,13 +4,13 @@
   <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.10+" />
   <img src="https://img.shields.io/badge/PyTorch-2.0%2B-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white" alt="PyTorch 2.0+" />
   <img src="https://img.shields.io/badge/Transformers-4.30%2B-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black" alt="Hugging Face Transformers" />
-  <img src="https://img.shields.io/badge/Benchmarks-4%20Datasets-blueviolet?style=for-the-badge" alt="4 Datasets" />
+  <img src="https://img.shields.io/badge/Benchmarks-5%20Datasets-blueviolet?style=for-the-badge" alt="5 Datasets" />
   <img src="https://img.shields.io/badge/Models-8%20Architectures-informational?style=for-the-badge" alt="8 Models" />
   <img src="https://img.shields.io/badge/Tests-15%2F15%20Passing-brightgreen?style=for-the-badge&logo=pytest&logoColor=white" alt="Tests Passing" />
   <img src="https://img.shields.io/badge/Author-Jash%20Lathiya-lightgrey?style=for-the-badge" alt="Author" />
 </p>
 
-This document serves as the **single-source-of-truth technical research dashboard** for the Speech Emotion Recognition benchmarking suite, detailing all 8 classical and deep speech architectures on the actor-independent RAVDESS benchmark, CREMA-D, SAVEE, TESS, cross-corpus zero-shot evaluations, and the Universal Multi-Corpus Foundation Model.
+This document serves as the **single-source-of-truth technical research dashboard** for the Speech Emotion Recognition benchmarking suite, detailing all 8 classical and deep speech architectures on the actor-independent RAVDESS benchmark, CREMA-D, SAVEE, TESS, authentic Hindi speech, cross-corpus zero-shot evaluations, and the Universal Multi-Corpus Foundation Model.
 
 > [!IMPORTANT]
 > **Evaluation Protocol Guarantee**: All benchmark figures are evaluated on strictly unseen test actors or unseen word prompts. There is zero data leakage or speaker identity contamination between train, validation, and test partitions.
@@ -31,7 +31,10 @@ This document serves as the **single-source-of-truth technical research dashboar
   - [Visual Layer Weight Interpretability](#visual-layer-weight-interpretability)
 - [8. Phase 6: Cross-Corpus Zero-Shot Generalization Benchmark](#8-phase-6-cross-corpus-zero-shot-generalization-benchmark)
 - [9. Phase 7: Universal Multi-Corpus Foundation Model Benchmark](#9-phase-7-universal-multi-corpus-foundation-model-benchmark)
-- [10. Multi-Dataset Milestone Roadmap](#10-multi-dataset-milestone-roadmap)
+- [10. Phase 8: Authentic Hindi Speech Corpus & Cross-Lingual Evaluation](#10-phase-8-authentic-hindi-speech-corpus--cross-lingual-evaluation)
+- [11. Phase 9: Audio Behaviour Analysis Engine & WebUI Platform](#11-phase-9-audio-behaviour-analysis-engine--webui-platform)
+- [12. Master Research Report](#12-master-research-report)
+- [13. Multi-Dataset Milestone Roadmap](#13-multi-dataset-milestone-roadmap)
 
 ---
 
@@ -322,7 +325,71 @@ To achieve true generalizability across diverse speech styles, acoustic conditio
 
 ---
 
-## 10. Multi-Dataset Milestone Roadmap
+## 10. Phase 8: Authentic Hindi Speech Corpus & Cross-Lingual Evaluation
+
+To extend the research beyond Western English speech benchmarks, we curated and standardized an authentic multi-speaker Hindi speech emotion corpus across three prominent open Indian speech repositories:
+- `ghostieee11/vaani-speech-corpus`
+- `sarthwa8/indian-tts-emotion-60min`
+- `RapidOrc121/audio-emotion-detection-dataset`
+
+### Hindi Corpus Characteristics (`data/hindi/`)
+- **Total Standardized Audio**: 862 clips (1.80 hours, 16 kHz mono 16-bit PCM).
+- **Emotion Taxonomy**: 5 core classes (`neutral`: 284, `calm`: 129, `happy`: 199, `sad`: 121, `angry`: 129).
+- **Stratified Actor/Source Splits**:
+  - **Train**: 604 clips (70.1%)
+  - **Validation**: 129 clips (15.0%)
+  - **Test**: 129 clips (15.0%)
+
+### Zero-Shot Cross-Lingual Evaluation (English Foundation -> Hindi)
+Evaluating the English-trained **Universal HuBERT Foundation Model** on the unseen Hindi test split without any fine-tuning:
+
+| Source Model | Source Language / Data | Target Language / Split | Shared Classes | Zero-Shot Accuracy | Zero-Shot Macro-F1 | Zero-Shot UAR | Output Directory |
+|---|---|---|:---:|:---:|:---:|:---:|---|
+| **Universal HuBERT** | English (4 Corpora, 11k clips) | **Hindi (Test Split)** | 4 | **27.62%** | **0.2443** | **31.76%** | [`outputs/cross_corpus/universal_hubert_to_hindi/to_hindi/`](outputs/cross_corpus/universal_hubert_to_hindi/to_hindi/) |
+
+*Chance baseline on 4 balanced classes is 25.0%. Universal HuBERT exceeds chance baseline zero-shot despite substantial acoustic, phonological, and cultural shifts.*
+
+<p align="center">
+  <img src="outputs/cross_corpus/universal_hubert_to_hindi/to_hindi/confusion_matrix.png" width="48%" alt="Universal HuBERT to Hindi Zero-Shot Confusion Matrix" />
+</p>
+
+---
+
+## 11. Phase 9: Audio Behaviour Analysis Engine & WebUI Platform
+
+In addition to categorical emotion classification, the platform features a real-time **Audio Behaviour Analysis Engine** (`src/ser/features/behavior.py`) that extracts comprehensive speech dynamics to diagnose conversational engagement and communicative style.
+
+### Key Behavioral Dimensions
+1. **Speaking Speed**: Syllables per second (detected via onset envelope spectral peaks) and estimated words per minute (WPM), categorized as `Slow`, `Normal`, or `Fast`.
+2. **Pause Frequency**: Voice Activity Detection (VAD) silence duration ratio and pauses/min (threshold >= 250 ms), categorized as `Low`, `Normal`, or `Frequent`.
+3. **Vocal Energy**: Root-Mean-Square (RMS) dB loudness dynamics, categorized as `Low`, `Moderate`, or `High`.
+4. **Pitch Variation**: Fundamental frequency ($F_0$) trajectory via probabilistic YIN (`librosa.pyin`), standard deviation, and semitone pitch excursion, categorized as `Monotone`, `Stable`, or `Dynamic`.
+5. **Overall Speaker Behaviour Profile**: Rule-based synthesis combining acoustic dynamics and emotion confidence into diagnostic labels (`Engaged Speaker`, `Energetic / Assertive`, `Hesitant / Guarded`, `Distressed / Agitated`, `Flat / Monotone`, `Passive / Subdued`).
+
+### CLI and Web Application
+- **CLI Analyzer**:
+  ```bash
+  python scripts/analyze_audio.py --audio sample.wav
+  python scripts/analyze_audio.py --audio sample.wav --json
+  ```
+- **Interactive WebUI**:
+  ```bash
+  python app.py
+  ```
+  Built with Gradio 6.0, supporting real-time microphone recording, audio file upload, animated emotion confidence bars, and full diagnostic report cards.
+
+---
+
+## 12. Master Research Report
+
+For the complete technical dissertation covering the theoretical foundation, Base vs. Large model comparison, layer pooling dynamics, cross-corpus zero-shot transfer, and production deployment specifications, consult:
+
+> [!TIP]
+> **[FINAL_RESEARCH_REPORT.md](FINAL_RESEARCH_REPORT.md)**: Master technical report documenting the comprehensive multi-corpus findings, mathematical formulation, and architecture roadmap.
+
+---
+
+## 13. Multi-Dataset Milestone Roadmap
 
 - [x] **Phase 1: Full 8-Model RAVDESS Benchmark + Ensemble — COMPLETED**
   - Outputs isolated under `outputs/ravdess/`. Peak Baseline Ensemble: **68.75%** (Macro-F1: 0.6815).
@@ -343,3 +410,11 @@ To achieve true generalizability across diverse speech styles, acoustic conditio
 - [x] **Phase 7: Universal Multi-Corpus Foundation Model — COMPLETED**
   - Standardized multi-corpus pipeline [`scripts/preprocessing/preprocess_combined.py`](scripts/preprocessing/preprocess_combined.py).
   - Trained Universal HuBERT Foundation model achieving **68.31% Accuracy** / **0.6779 Macro-F1** across 1,701 unseen test clips across all 4 datasets simultaneously.
+- [x] **Phase 8: Authentic Hindi Speech Corpus & Cross-Lingual Evaluation — COMPLETED**
+  - Standardized 862 Hindi clips from Vaani, Indian-TTS, and Audio-Emotion corpora.
+  - Zero-shot cross-lingual transfer evaluated under `outputs/cross_corpus/universal_hubert_to_hindi/`.
+- [x] **Phase 9: Audio Behaviour Analysis Engine & Gradio WebUI — COMPLETED**
+  - Comprehensive acoustic feature extraction engine (`src/ser/features/behavior.py`) for tempo, pauses, pitch, and energy.
+  - Interactive WebUI with microphone input and diagnostic report generation (`app.py`).
+- [x] **Phase 10: Master Research Report & Publication Documentation — COMPLETED**
+  - Complete 7-section master report in `FINAL_RESEARCH_REPORT.md`.

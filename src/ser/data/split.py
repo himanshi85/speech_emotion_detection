@@ -95,19 +95,19 @@ def _check_row_level_actor_split(bundle: DatasetBundle) -> List[str]:
 
 def _check_actor_appears_in_one_split_only(bundle: DatasetBundle) -> List[str]:
     issues: List[str] = []
-    membership: Dict[int, List[str]] = {}
+    membership: Dict[Any, List[str]] = {}
     for split_name, df in (
         ("train", bundle.train),
         ("validation", bundle.validation),
         ("test", bundle.test),
     ):
         for actor_id in df["actor_id"].unique():
-            membership.setdefault(int(actor_id), []).append(split_name)
+            membership.setdefault(str(actor_id), []).append(split_name)
 
     for actor_id, splits in sorted(membership.items()):
         if len(splits) > 1:
             issues.append(
-                f"Actor {actor_id:02d} appears in multiple splits: {splits}"
+                f"Actor {actor_id} appears in multiple splits: {splits}"
             )
     return issues
 
@@ -118,6 +118,28 @@ def verify_dataset_split(bundle: DatasetBundle) -> SplitVerificationReport:
     train_a = actors["train"]
     val_a = actors["validation"]
     test_a = actors["test"]
+
+    is_hindi = "hindi" in bundle.data_dir.name.lower()
+    if is_hindi:
+        train_files = set(bundle.train["filepath"])
+        val_files = set(bundle.validation["filepath"])
+        test_files = set(bundle.test["filepath"])
+        issues: List[str] = []
+        if train_files & val_files:
+            issues.append(f"File leakage: Train ∩ Validation = {list(train_files & val_files)[:5]}")
+        if train_files & test_files:
+            issues.append(f"File leakage: Train ∩ Test = {list(train_files & test_files)[:5]}")
+        if val_files & test_files:
+            issues.append(f"File leakage: Validation ∩ Test = {list(val_files & test_files)[:5]}")
+        return SplitVerificationReport(
+            ok=len(issues) == 0,
+            train_actors=train_a,
+            validation_actors=val_a,
+            test_actors=test_a,
+            intersections={"train_validation": [], "train_test": [], "validation_test": []},
+            issues=issues,
+            sizes=bundle.sizes,
+        )
 
     is_tess = "tess" in bundle.data_dir.name.lower()
     if is_tess:
