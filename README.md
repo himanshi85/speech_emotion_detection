@@ -318,17 +318,29 @@ Overall Behaviour:   Engaged Speaker
 
 ---
 
-## Interactive WebUI Platform
+## Interactive Web Platforms (GUI)
 
-An interactive web dashboard is available via **Gradio 6.0** (`app.py`):
+The repository provides two deployment interfaces for testing, interactive demonstration, and live audio intelligence:
 
-- **Live Microphone Recording & Audio File Upload**: Test voice recordings interactively.
-- **Model Selector**: Switch dynamically between *Universal HuBERT*, *CREMA-D HuBERT*, and *RAVDESS Transfer HuBERT*.
-- **Acoustic Meters**: Real-time display for Speaking Speed, Vocal Energy, Pause Frequency, and Pitch Intonation.
-- **Official Behaviour Report**: Live downloadable diagnostic report card.
+### 1. Modern Glassmorphic Web GUI (`run_gui.py`) — Recommended
+Built with **FastAPI**, **HTML5 Canvas**, and modern Vanilla CSS/JS:
+- **Live HTML5 Canvas Oscilloscope**: Dynamic frequency bar audio visualizer synced with microphone recording.
+- **Radial Confidence Gauge**: Animated SVG confidence meter.
+- **Model Selector**: Instantly toggle between the *Hindi Emotion Specialist (75.2%)*, *Universal HuBERT*, *CREMA-D HuBERT*, and *RAVDESS Transfer HuBERT*.
+- **Quick Test Chips**: One-click evaluation on authentic sample Hindi speech audio clips.
+- **Acoustic Behaviour Report Card**: Interactive diagnostic tiles with one-click clipboard copying and JSON export.
 
 ```bash
-# Launch interactive web application
+# Launch modern Web GUI
+python run_gui.py
+# Opens dashboard at http://127.0.0.1:8000
+```
+
+### 2. Gradio 6.0 Web Dashboard (`app.py`)
+- Standard ML research interface with microphone recording, file upload, and emotion probability distribution.
+
+```bash
+# Launch Gradio dashboard
 python app.py
 # Opens dashboard at http://127.0.0.1:7860
 ```

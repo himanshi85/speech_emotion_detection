@@ -384,11 +384,16 @@ In addition to categorical emotion classification, the platform features a real-
   python scripts/analyze_audio.py --audio sample.wav
   python scripts/analyze_audio.py --audio sample.wav --json
   ```
-- **Interactive WebUI**:
+- **Modern Web GUI (FastAPI + HTML5/CSS3/Canvas)**:
+  ```bash
+  python run_gui.py
+  # Serves at http://127.0.0.1:8000 with live audio oscilloscope and glassmorphic diagnostics
+  ```
+- **Gradio 6.0 Web Dashboard**:
   ```bash
   python app.py
+  # Serves at http://127.0.0.1:7860
   ```
-  Built with Gradio 6.0, supporting real-time microphone recording, audio file upload, animated emotion confidence bars, and full diagnostic report cards.
 
 ---
 
