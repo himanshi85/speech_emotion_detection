@@ -305,6 +305,56 @@ def load_audio_robust(audio_path: Union[str, Path], target_sr: int = 16000) -> T
     return data.astype(np.float32), sr
 
 
+def calibrate_probabilities_with_prosody(
+    probs: np.ndarray,
+    id_to_label: Dict[int, str],
+    prosody: Dict[str, Any],
+) -> np.ndarray:
+    """Softly aligns neural network probability distributions with physical prosodic ground truth.
+    
+    Prevents common real-life microphone failure modes:
+    - High vocal loudness (> -21 dB RMS) with high pitch variability cannot physically be calm/sad.
+    - Low vocal loudness (< -36 dB RMS) with monotone pitch cannot physically be angry/happy.
+    """
+    calibrated = probs.copy()
+    energy = prosody.get("energy_desc", "Moderate")
+    rms_db = float(prosody.get("rms_db", -28.0))
+    pitch_std = float(prosody.get("pitch_std_hz", 20.0))
+
+    label_to_id = {v.lower(): k for k, v in id_to_label.items()}
+
+    # Intense acoustic activation: Shouting, agitation, or joyous exclamation
+    if energy == "High" or rms_db > -21.0 or pitch_std > 35.0:
+        if "calm" in label_to_id:
+            calibrated[label_to_id["calm"]] *= 0.15
+        if "sad" in label_to_id:
+            calibrated[label_to_id["sad"]] *= 0.25
+        if pitch_std > 28.0:
+            if "angry" in label_to_id:
+                calibrated[label_to_id["angry"]] *= 1.4
+            if "happy" in label_to_id:
+                calibrated[label_to_id["happy"]] *= 1.3
+        if "surprised" in label_to_id:
+            calibrated[label_to_id["surprised"]] *= 1.25
+
+    # Subdued acoustic activation: Whispering, low murmuring, sadness, or extreme calm
+    elif energy == "Low" or rms_db < -36.0:
+        if "angry" in label_to_id:
+            calibrated[label_to_id["angry"]] *= 0.15
+        if "happy" in label_to_id:
+            calibrated[label_to_id["happy"]] *= 0.25
+        if "sad" in label_to_id:
+            calibrated[label_to_id["sad"]] *= 1.35
+        if "calm" in label_to_id:
+            calibrated[label_to_id["calm"]] *= 1.25
+
+    # Normalize back to sum to 1.0
+    total = np.sum(calibrated)
+    if total > 0:
+        calibrated = calibrated / total
+    return calibrated
+
+
 def analyze_audio_file(
     audio_path: Union[str, Path],
     model: Optional[torch.nn.Module] = None,
@@ -320,7 +370,7 @@ def analyze_audio_file(
     # 1. Load audio with multi-backend fallbacks
     data, sr = load_audio_robust(audio_path, target_sr=16000)
 
-    # 2. Extract Acoustic Prosody
+    # 2. Extract Acoustic Prosody on full natural audio
     prosody = extract_acoustic_prosody(data, sr=sr)
 
     # 3. Model Inference (if model provided)
@@ -329,16 +379,33 @@ def analyze_audio_file(
             device = next(model.parameters()).device
         model.eval()
 
-        # Tokenize / collate
+        # Dynamic amplitude normalization (scales quiet microphone recordings to standard range)
+        max_amp = float(np.max(np.abs(data)))
+        if max_amp > 1e-4:
+            norm_speech = (data / max_amp) * 0.95
+        else:
+            norm_speech = data.copy()
+
+        # Voice Activity Trimming: trim leading/trailing dead silence so neural models focus on speech
+        try:
+            trimmed_speech, _ = librosa.effects.trim(norm_speech, top_db=28, frame_length=1024, hop_length=256)
+            if len(trimmed_speech) >= 3200:
+                model_speech = trimmed_speech
+            else:
+                model_speech = norm_speech
+        except Exception:
+            model_speech = norm_speech
+
+        # Tokenize / collate with clean 1D numpy array
         from ser.core.registry import build_collator
         collator = build_collator(cfg)
-        batch = collator([{"waveform": torch.from_numpy(data.astype(np.float32)), "label": 0}])
+        batch = collator([{"waveform": model_speech.astype(np.float32), "label": 0}])
 
         with torch.no_grad():
             from ser.evaluation.runner import _forward_batch
             outputs, _ = _forward_batch(model, batch, device, None)
             logits = outputs["logits"] if isinstance(outputs, dict) else (outputs.logits if hasattr(outputs, "logits") else outputs)
-            probs = torch.softmax(logits, dim=-1).cpu().numpy()[0]
+            raw_probs = torch.softmax(logits, dim=-1).cpu().numpy()[0]
 
         # Resolve labels
         if label_mapping:
@@ -346,15 +413,15 @@ def analyze_audio_file(
         else:
             id_to_label = {0: "neutral", 1: "happy", 2: "sad", 3: "angry", 4: "fear", 5: "disgust"}
 
-        pred_idx = int(np.argmax(probs))
+        # Prosody-guided probability calibration
+        calibrated_probs = calibrate_probabilities_with_prosody(raw_probs, id_to_label, prosody)
+
+        pred_idx = int(np.argmax(calibrated_probs))
         pred_emotion = id_to_label.get(pred_idx, f"Class_{pred_idx}")
-        confidence = float(probs[pred_idx])
-        prob_dict = {id_to_label.get(i, f"Class_{i}"): float(p) for i, p in enumerate(probs)}
+        confidence = float(calibrated_probs[pred_idx])
+        prob_dict = {id_to_label.get(i, f"Class_{i}"): float(p) for i, p in enumerate(calibrated_probs)}
     else:
-        # Fallback / heuristic default if running without model
-        pred_emotion = "neutral"
-        confidence = 0.82
-        prob_dict = {"neutral": 0.82, "calm": 0.10, "sad": 0.05, "happy": 0.03}
+        raise ValueError("Model was not provided or failed to load. Please select an available model.")
 
     # 4. Synthesize Overall Behaviour
     overall_behaviour = synthesize_overall_behaviour(pred_emotion, confidence, prosody)

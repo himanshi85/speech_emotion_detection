@@ -278,7 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       mediaRecorder.start(100);
       micBtn.classList.add('recording');
-      recordHint.textContent = 'Recording in progress... Click again to finish.';
+      recordHint.textContent = 'Listening... Speak with clear emotional expression (2 to 5 seconds), then click to finish.';
       recordSeconds = 0;
       updateTimer();
       recordInterval = setInterval(() => {

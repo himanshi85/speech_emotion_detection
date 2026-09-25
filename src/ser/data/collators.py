@@ -20,7 +20,7 @@ def _encode_waveforms(
     import numpy as np
 
     arrays = [
-        w if hasattr(w, "dtype") else np.asarray(w, dtype=np.float32)
+        w.detach().cpu().numpy().squeeze() if isinstance(w, torch.Tensor) else np.asarray(w, dtype=np.float32).squeeze()
         for w in waveforms
     ]
     return feature_extractor(

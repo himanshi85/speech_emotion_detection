@@ -100,58 +100,54 @@ def get_or_load_model(model_id: str):
     model_key = meta["model_key"]
 
     if not ckpt_path.exists():
-        logger.warning("Checkpoint not found at %s. Searching fallback...", ckpt_path)
-        return None, None, None
+        logger.error("Checkpoint not found at %s.", ckpt_path)
+        raise FileNotFoundError(f"Checkpoint not found at {ckpt_path}")
 
     try:
-        # Resolve config
-        config_file = None
-        for search_dir in [ckpt_path.parent, ckpt_path.parent.parent, ckpt_path.parent.parent.parent]:
-            cf = search_dir / "config.yaml"
-            if cf.exists():
-                config_file = cf
-                break
+        ckpt = torch.load(ckpt_path, map_location="cpu")
+        state_dict = ckpt.get("model_state_dict", ckpt)
+        saved_cfg = ckpt.get("config", {})
+        label_map = ckpt.get("label_mapping")
 
+        # Base default config for model key
         cfg = load_model_config(model_key)
-        if config_file:
-            import yaml
-            with open(config_file) as f:
-                saved_cfg = yaml.safe_load(f)
-            if saved_cfg:
-                cfg.update(saved_cfg)
+        if saved_cfg:
+            cfg.update(saved_cfg)
 
-        # Resolve labels
-        label_map = None
-        data_dir = cfg.get("data_dir")
-        if data_dir and (Path(data_dir) / "metadata" / "labels.json").exists():
-            with open(Path(data_dir) / "metadata" / "labels.json") as f:
-                label_map = json.load(f)
-        else:
-            for search_dir in [ckpt_path.parent, ckpt_path.parent.parent, ckpt_path.parent.parent.parent]:
-                lm_file = search_dir / "labels.json"
-                if lm_file.exists():
-                    with open(lm_file) as f:
-                        label_map = json.load(f)
-                    break
+        # Infer classes and num_classes directly from checkpoint
+        if not label_map and meta.get("classes"):
+            label_map = {c: i for i, c in enumerate(meta["classes"])}
 
         if label_map:
             cfg["num_classes"] = len(label_map)
             cfg["classes"] = label_map
-        if model_key == "hubert":
+        else:
+            head_weight = state_dict.get("classifier.weight", state_dict.get("fc.weight"))
+            if head_weight is not None:
+                cfg["num_classes"] = head_weight.shape[0]
+
+        # Infer pooling mechanism directly from state_dict keys
+        if any("weighted_pooler" in k for k in state_dict.keys()):
             cfg["layer_pooling"] = "weighted"
+        elif "layer_pooling" not in cfg or cfg["layer_pooling"] == "weighted":
+            cfg["layer_pooling"] = "mean"
 
         model = build_model(cfg).to(DEVICE)
-        ckpt_dir = ckpt_path if ckpt_path.is_dir() else ckpt_path.parent
-        load_checkpoint_model(ckpt_dir, model)
+        model.load_state_dict(state_dict)
         model.eval()
 
         bundle = (model, cfg, label_map)
         LOADED_MODELS_CACHE[model_id] = bundle
-        logger.info("Successfully loaded and cached model: %s", model_id)
+        logger.info(
+            "Successfully loaded and cached model %s (num_classes=%d, pooling=%s)",
+            model_id,
+            cfg["num_classes"],
+            cfg.get("layer_pooling", "none"),
+        )
         return bundle
     except Exception as e:
-        logger.error("Error loading model %s: %s", model_id, e)
-        return None, None, None
+        logger.exception("Error loading model %s from %s: %s", model_id, ckpt_path, e)
+        raise RuntimeError(f"Failed to load model {model_id}: {e}")
 
 
 # FastAPI App Initialization
