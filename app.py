@@ -44,14 +44,21 @@ DEVICE = torch.device("mps" if torch.backends.mps.is_available() else ("cuda" if
 
 # Model registry paths
 MODEL_CHECKPOINTS = {
+    "Hindi Emotion Specialist (MFCC + CNN-BiLSTM, 74.4% Accuracy)": (
+        PROJECT_ROOT / "outputs" / "hindi" / "mfcc_cnn_bilstm" / "checkpoints" / "best_model" / "model.pt",
+        "mfcc_cnn_bilstm",
+    ),
     "Universal HuBERT (11,318 clips, Multi-Corpus)": (
-        PROJECT_ROOT / "outputs" / "combined" / "universal_hubert_weighted_frozen" / "checkpoints" / "best_model" / "model.pt"
+        PROJECT_ROOT / "outputs" / "combined" / "universal_hubert_weighted_frozen" / "checkpoints" / "best_model" / "model.pt",
+        "hubert",
     ),
     "CREMA-D HuBERT (7,442 clips, Single-Model Champion)": (
-        PROJECT_ROOT / "outputs" / "cremad" / "hubert" / "checkpoints" / "best_model" / "model.pt"
+        PROJECT_ROOT / "outputs" / "cremad" / "hubert" / "checkpoints" / "best_model" / "model.pt",
+        "hubert",
     ),
     "RAVDESS Transfer HuBERT (Weighted Layer Pooling)": (
-        PROJECT_ROOT / "outputs" / "ravdess_enhanced" / "hubert_transfer_cremad_weighted" / "checkpoints" / "best_model" / "model.pt"
+        PROJECT_ROOT / "outputs" / "ravdess_enhanced" / "hubert_transfer_cremad_weighted" / "checkpoints" / "best_model" / "model.pt",
+        "hubert",
     ),
 }
 
@@ -63,31 +70,56 @@ def get_model(model_name: str) -> Tuple[Optional[torch.nn.Module], Optional[Dict
     if model_name in LOADED_MODELS:
         return LOADED_MODELS[model_name]
 
-    ckpt_path = MODEL_CHECKPOINTS.get(model_name)
-    if ckpt_path is None or not ckpt_path.exists():
-        # Fallback to any existing checkpoint
-        for name, path in MODEL_CHECKPOINTS.items():
-            if path.exists():
-                ckpt_path = path
+    entry = MODEL_CHECKPOINTS.get(model_name)
+    if entry is None:
+        for name, item in MODEL_CHECKPOINTS.items():
+            if item[0].exists():
+                entry = item
                 break
+    if entry is None:
+        return None, None, None
 
+    ckpt_path, model_key = entry
     if ckpt_path and ckpt_path.exists():
         try:
-            logger.info("Loading model checkpoint from: %s", ckpt_path)
-            label_map = None
+            logger.info("Loading model checkpoint [%s] from: %s", model_key, ckpt_path)
+            config_file = None
             for search_dir in [ckpt_path.parent, ckpt_path.parent.parent, ckpt_path.parent.parent.parent]:
-                lm_file = search_dir / "labels.json"
-                if lm_file.exists():
-                    with open(lm_file) as f:
-                        label_map = json.load(f)
+                cf = search_dir / "config.yaml"
+                if cf.exists():
+                    config_file = cf
                     break
 
-            cfg = load_model_config("hubert")
+            from ser.core.registry import build_model
+            cfg = load_model_config(model_key)
+            if config_file:
+                import yaml
+                with open(config_file) as f:
+                    saved_cfg = yaml.safe_load(f)
+                if saved_cfg:
+                    cfg.update(saved_cfg)
+
+            label_map = None
+            data_dir = cfg.get("data_dir")
+            if data_dir and (Path(data_dir) / "metadata" / "labels.json").exists():
+                with open(Path(data_dir) / "metadata" / "labels.json") as f:
+                    label_map = json.load(f)
+            else:
+                for search_dir in [ckpt_path.parent, ckpt_path.parent.parent, ckpt_path.parent.parent.parent]:
+                    lm_file = search_dir / "labels.json"
+                    if lm_file.exists():
+                        with open(lm_file) as f:
+                            label_map = json.load(f)
+                        break
+
             if label_map:
                 cfg["num_classes"] = len(label_map)
                 cfg["classes"] = label_map
-            cfg["layer_pooling"] = "weighted"
-            model = load_checkpoint_model(ckpt_path, cfg, DEVICE)
+            if model_key == "hubert":
+                cfg["layer_pooling"] = "weighted"
+            model = build_model(cfg).to(DEVICE)
+            ckpt_dir = ckpt_path if ckpt_path.is_dir() else ckpt_path.parent
+            load_checkpoint_model(ckpt_dir, model)
             LOADED_MODELS[model_name] = (model, cfg, label_map)
             return model, cfg, label_map
         except Exception as e:

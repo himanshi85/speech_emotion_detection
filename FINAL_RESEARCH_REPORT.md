@@ -86,9 +86,12 @@ Inspection of the learned softmax layer weights across the 12 transformer hidden
 
 ---
 
-## 4. Cross-Lingual Evaluation (English $\rightarrow$ Hindi)
+## 4. Hindi Speech Emotion Benchmark: Zero-Shot vs. Supervised Adaptation
 
-To test whether emotional prosody learned from Western English speech generalizes to Indic speech, we evaluated our Universal HuBERT model (trained exclusively on English speech) zero-shot on the **unseen Hindi test split** across shared canonical emotions:
+To evaluate cross-lingual generalization and native Indic speech emotion recognition, we curated 862 standardized clips across 3 prominent Indic speech repositories (Project Vaani, Indian TTS Emotion, and RapidOrc) into `data/hindi/`.
+
+### 1. Zero-Shot Cross-Lingual Evaluation (English Foundation $\rightarrow$ Hindi)
+Evaluating the English-trained Universal HuBERT model zero-shot on the unseen Hindi test split across shared canonical emotions:
 
 ```text
 =================== CROSS-CORPUS SUMMARY ===================
@@ -96,9 +99,19 @@ source_dataset target_dataset  num_shared_classes  accuracy  macro_f1      uar
       combined          hindi                   4   0.27619  0.244301 0.317556
 ============================================================
 ```
+- **Zero-Shot Transfer**: Achieves **27.62% Accuracy** and **31.76% UAR** (above 25% chance baseline) without seeing a single Hindi word or speaker during training.
 
-- **Zero-Shot Transfer**: Achieves **27.62% Accuracy** and **31.76% UAR** on completely unseen Hindi speech without any Hindi training data.
-- **Acoustic Bridge**: Fundamental emotions (anger, sadness, neutral) share universal physiological pitch and energy contours across languages, providing a strong pretraining prior for cross-lingual fine-tuning.
+### 2. Supervised In-Domain Hindi Benchmark (Zero-Shot $\rightarrow$ 75.19%)
+When native acoustic models are trained directly on the Hindi training split, performance leaps by **+47.57%**:
+
+| Model Architecture | Training Strategy | Test Accuracy | Macro-F1 | Test UAR | Status |
+| :--- | :--- | :---: | :---: | :---: | :--- |
+| **Ensemble (Top 2)** | Soft-Voting (CNN-BiLSTM + LSTM) | **75.19%** | **0.7136** | **70.56%** | **Hindi Benchmark Champion (3.8x chance)** |
+| **MFCC + CNN-BiLSTM** | Supervised (924K params, 25 ep) | **74.42%** | **0.7201** | **70.85%** | **Single Model Champion** |
+| **MFCC + LSTM** | Supervised (833K params, 14 ep) | **63.57%** | **0.5572** | **57.87%** | **Classical Baseline** |
+| *Universal HuBERT* | Zero-Shot Transfer (0 ep) | 27.62% | 0.2443 | 31.76% | Unadapted Cross-Lingual Baseline |
+
+**Key Takeaway**: While zero-shot cross-lingual transfer demonstrates that basic emotional valence carries across languages, supervised acoustic adaptation on native speech is necessary to achieve production-grade accuracy (**75.19%**).
 
 ---
 

@@ -1,0 +1,36 @@
+{
+  "ensemble_models": [
+    "outputs/hindi/mfcc_cnn_bilstm",
+    "outputs/hindi/mfcc_lstm"
+  ],
+  "weights": [
+    0.6,
+    0.4
+  ],
+  "split": "test",
+  "ensemble_metrics": {
+    "accuracy": 0.751937984496124,
+    "macro_precision": 0.7413609872137972,
+    "macro_recall": 0.7055599472990778,
+    "macro_f1": 0.7136094694617257,
+    "weighted_precision": 0.7545176764009617,
+    "weighted_recall": 0.751937984496124,
+    "weighted_f1": 0.7472875384742068,
+    "uar": 0.7055599472990778,
+    "war": 0.751937984496124
+  },
+  "individual_metrics": {
+    "outputs/hindi/mfcc_cnn_bilstm": {
+      "accuracy": 0.7441860465116279,
+      "macro_f1": 0.7200728287240402,
+      "uar": 0.7085309617918314,
+      "weight": 0.6
+    },
+    "outputs/hindi/mfcc_lstm": {
+      "accuracy": 0.6356589147286822,
+      "macro_f1": 0.5571599169262721,
+      "uar": 0.5786561264822134,
+      "weight": 0.4
+    }
+  }
+}

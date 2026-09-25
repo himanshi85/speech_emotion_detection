@@ -253,7 +253,7 @@ def analyze_audio_file(
 
         with torch.no_grad():
             from ser.evaluation.runner import _forward_batch
-            outputs, _ = _forward_batch(model, batch, device)
+            outputs, _ = _forward_batch(model, batch, device, None)
             logits = outputs["logits"] if isinstance(outputs, dict) else (outputs.logits if hasattr(outputs, "logits") else outputs)
             probs = torch.softmax(logits, dim=-1).cpu().numpy()[0]
 

@@ -41,13 +41,13 @@ class WaveformCollator:
     def __call__(self, batch: List[Dict[str, Any]]) -> Dict[str, Any]:
         waveforms = [item["waveform"] for item in batch]
         encoded = _encode_waveforms(self.feature_extractor, waveforms)
-        labels = torch.tensor([item["label"] for item in batch], dtype=torch.long)
+        labels = torch.tensor([item.get("label", 0) for item in batch], dtype=torch.long)
         meta = {
-            "filepath": [item["filepath"] for item in batch],
-            "filename": [item["filename"] for item in batch],
-            "actor_id": [item["actor_id"] for item in batch],
-            "emotion": [item["emotion"] for item in batch],
-            "split": batch[0]["split"],
+            "filepath": [item.get("filepath", "") for item in batch],
+            "filename": [item.get("filename", "") for item in batch],
+            "actor_id": [item.get("actor_id", 0) for item in batch],
+            "emotion": [item.get("emotion", "") for item in batch],
+            "split": batch[0].get("split", "test") if batch else "test",
         }
         return {
             "input_values": encoded["input_values"],
@@ -79,13 +79,13 @@ class MFCCCollator:
             padded[i, :, :t] = mfcc
             mask[i, :t] = 1
 
-        labels = torch.tensor([item["label"] for item in batch], dtype=torch.long)
+        labels = torch.tensor([item.get("label", 0) for item in batch], dtype=torch.long)
         meta = {
-            "filepath": [item["filepath"] for item in batch],
-            "filename": [item["filename"] for item in batch],
-            "actor_id": [item["actor_id"] for item in batch],
-            "emotion": [item["emotion"] for item in batch],
-            "split": batch[0]["split"],
+            "filepath": [item.get("filepath", "") for item in batch],
+            "filename": [item.get("filename", "") for item in batch],
+            "actor_id": [item.get("actor_id", 0) for item in batch],
+            "emotion": [item.get("emotion", "") for item in batch],
+            "split": batch[0].get("split", "test") if batch else "test",
         }
         return {
             "mfcc": padded,

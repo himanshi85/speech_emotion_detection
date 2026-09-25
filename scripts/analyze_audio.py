@@ -73,20 +73,42 @@ def main() -> int:
 
     if ckpt_path and ckpt_path.exists():
         try:
-            # Look for labels.json
+            config_file = None
             for search_dir in [ckpt_path.parent, ckpt_path.parent.parent, ckpt_path.parent.parent.parent]:
-                lm_file = search_dir / "labels.json"
-                if lm_file.exists():
-                    with open(lm_file) as f:
-                        label_map = json.load(f)
+                cf = search_dir / "config.yaml"
+                if cf.exists():
+                    config_file = cf
                     break
 
+            from ser.core.registry import build_model
             cfg = load_model_config(args.model_key)
+            if config_file:
+                import yaml
+                with open(config_file) as f:
+                    saved_cfg = yaml.safe_load(f)
+                if saved_cfg:
+                    cfg.update(saved_cfg)
+
+            data_dir = cfg.get("data_dir")
+            if data_dir and (Path(data_dir) / "metadata" / "labels.json").exists():
+                with open(Path(data_dir) / "metadata" / "labels.json") as f:
+                    label_map = json.load(f)
+            else:
+                for search_dir in [ckpt_path.parent, ckpt_path.parent.parent, ckpt_path.parent.parent.parent]:
+                    lm_file = search_dir / "labels.json"
+                    if lm_file.exists():
+                        with open(lm_file) as f:
+                            label_map = json.load(f)
+                        break
+
             if label_map:
                 cfg["num_classes"] = len(label_map)
                 cfg["classes"] = label_map
-            cfg["layer_pooling"] = "weighted"
-            model = load_checkpoint_model(ckpt_path, cfg, device)
+            if args.model_key == "hubert":
+                cfg["layer_pooling"] = "weighted"
+            model = build_model(cfg).to(device)
+            ckpt_dir = ckpt_path if ckpt_path.is_dir() else ckpt_path.parent
+            load_checkpoint_model(ckpt_dir, model)
         except Exception as e:
             # Fallback if checkpoint cannot be loaded
             model = None

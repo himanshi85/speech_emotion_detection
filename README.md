@@ -274,12 +274,16 @@ All evaluations are conducted strictly on **unseen actors or unseen prompts** (d
 
 *862 standardized 16 kHz audio clips across authentic Indic speech corpora (Project Vaani, Indian TTS Emotion, and RapidOrc) unified into 5 emotion classes (`neutral`, `calm`, `happy`, `sad`, `angry`).*
 
-| Evaluation Regime | Source Model | Target Corpus | Test Accuracy | Macro-F1 | Test UAR | Status |
+| Evaluation Regime | Architecture / Strategy | Target Corpus | Test Accuracy | Macro-F1 | Test UAR | Status |
 | :--- | :--- | :--- | :---: | :---: | :---: | :--- |
-| **Zero-Shot Cross-Lingual** | **Universal HuBERT (English)** | **Hindi (Unseen Test)** | **27.62%** | **0.2443** | **31.76%** | Zero target fine-tuning (above 25% chance) |
+| **Ensemble (Top 2)** | Soft-Voting (CNN-BiLSTM + LSTM) | **Hindi (Unseen Test)** | **75.19%** | **0.7136** | **70.56%** | **Hindi Benchmark Champion (3.8x chance)** |
+| **Supervised** | **MFCC + CNN-BiLSTM** | **Hindi (Unseen Test)** | **74.42%** | **0.7201** | **70.85%** | **Single Model Champion (924K params)** |
+| **Supervised** | **MFCC + LSTM** | **Hindi (Unseen Test)** | **63.57%** | **0.5572** | **57.87%** | **Classical Baseline** |
+| *Zero-Shot Cross-Lingual* | Universal HuBERT (English) | Hindi (Unseen Test) | 27.62% | 0.2443 | 31.76% | Zero target fine-tuning (above 25% chance) |
 
 <p align="center">
-  <img src="outputs/cross_corpus/universal_hubert_to_hindi/to_hindi/confusion_matrix.png" width="55%" alt="Zero-Shot Universal HuBERT to Hindi Confusion Matrix" />
+  <img src="outputs/hindi/ensemble/confusion_matrix.png" width="48%" alt="Hindi Ensemble Confusion Matrix" />
+  <img src="outputs/cross_corpus/universal_hubert_to_hindi/to_hindi/confusion_matrix.png" width="48%" alt="Zero-Shot Universal HuBERT to Hindi Confusion Matrix" />
 </p>
 
 ---

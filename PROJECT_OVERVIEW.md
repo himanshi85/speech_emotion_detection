@@ -349,7 +349,19 @@ Evaluating the English-trained **Universal HuBERT Foundation Model** on the unse
 
 *Chance baseline on 4 balanced classes is 25.0%. Universal HuBERT exceeds chance baseline zero-shot despite substantial acoustic, phonological, and cultural shifts.*
 
+### Supervised In-Domain Hindi Benchmark (Zero-Shot vs. Trained Enhancement)
+
+By training native acoustic feature architectures directly on the Hindi training split, classification accuracy leaps from **27.62%** (zero-shot) to **75.19%** (ensemble soft-voting) on the unseen Hindi test split:
+
+| Model Architecture | Training Strategy | Test Accuracy | Test Macro-F1 | Test UAR | Status | Output Directory |
+|---|---|:---:|:---:|:---:|:---:|---|
+| **Ensemble (Top 2)** | Soft-Voting (CNN-BiLSTM + LSTM) | **75.19%** | **0.7136** | **70.56%** | **Hindi Champion (3.8x chance)** | [`outputs/hindi/ensemble/`](outputs/hindi/ensemble/) |
+| **MFCC + CNN-BiLSTM** | Supervised (924K params, 25 ep) | **74.42%** | **0.7201** | **70.85%** | **Single Model Champion** | [`outputs/hindi/mfcc_cnn_bilstm/`](outputs/hindi/mfcc_cnn_bilstm/) |
+| **MFCC + LSTM** | Supervised (833K params, 14 ep) | **63.57%** | **0.5572** | **57.87%** | **Classical Baseline** | [`outputs/hindi/mfcc_lstm/`](outputs/hindi/mfcc_lstm/) |
+| *Universal HuBERT (Zero-Shot)* | Cross-Lingual Transfer (0 ep) | 27.62% | 0.2443 | 31.76% | Unadapted Baseline | [`outputs/cross_corpus/universal_hubert_to_hindi/`](outputs/cross_corpus/universal_hubert_to_hindi/) |
+
 <p align="center">
+  <img src="outputs/hindi/ensemble/confusion_matrix.png" width="48%" alt="Hindi Ensemble Confusion Matrix" />
   <img src="outputs/cross_corpus/universal_hubert_to_hindi/to_hindi/confusion_matrix.png" width="48%" alt="Universal HuBERT to Hindi Zero-Shot Confusion Matrix" />
 </p>
 

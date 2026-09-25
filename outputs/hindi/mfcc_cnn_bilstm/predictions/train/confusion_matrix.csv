@@ -1,0 +1,6 @@
+,Neutral,Calm,Happy,Sad,Angry
+Neutral,232,0,1,4,17
+Calm,4,107,0,1,0
+Happy,1,0,52,0,0
+Sad,8,5,0,98,0
+Angry,0,0,0,0,74
