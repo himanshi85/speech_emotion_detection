@@ -27,8 +27,7 @@ import soundfile as sf
 import torch
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse
-from fastapi.staticfiles import StaticFiles
+from fastapi.responses import JSONResponse
 
 from ser.core.config import load_model_config
 from ser.core.registry import build_model
@@ -446,18 +445,31 @@ async def analyze_audio_endpoint(
             os.remove(tmp_path)
 
 
-# Mount static web frontend
-STATIC_DIR = Path(__file__).resolve().parent / "static"
-if STATIC_DIR.exists():
-    app.mount("/", StaticFiles(directory=str(STATIC_DIR), html=True), name="static")
+@app.get("/")
+def root():
+    """Root status endpoint directing users to the Next.js frontend studio."""
+    return {
+        "service": "Speech Emotion Recognition — Inference API Microservice",
+        "status": "online",
+        "device": str(DEVICE),
+        "frontend_studio": "http://localhost:3000",
+        "docs": "http://localhost:8000/docs",
+        "endpoints": {
+            "health": "GET /health",
+            "models": "GET /models",
+            "predict": "POST /predict",
+        },
+    }
 
 
 def start_server(host: str = "127.0.0.1", port: int = 8000):
     import uvicorn
-    print(f"\n=======================================================")
-    print(f"  Speech Emotion & Audio Behaviour Intelligence GUI")
-    print(f"  URL: http://{host}:{port}")
-    print(f"=======================================================\n")
+    print("\n" + "=" * 60)
+    print("  Speech Emotion Recognition — Inference API Microservice")
+    print(f"  API Backend:     http://{host}:{port}")
+    print("  Frontend Studio: http://localhost:3000")
+    print("  API Docs:        http://" + f"{host}:{port}/docs")
+    print("=" * 60 + "\n")
     uvicorn.run(app, host=host, port=port)
 
 

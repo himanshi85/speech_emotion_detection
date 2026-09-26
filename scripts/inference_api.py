@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """
-Speech Emotion Recognition — Inference API Server
-=================================================
-Runs FastAPI backend serving:
-1. /health, /models, /predict for the Next.js Studio (port 3000)
-2. /api/models, /api/analyze for the Glassmorphic AURA Web GUI (port 8000)
+Speech Emotion Recognition — Inference API Microservice
+========================================================
+Runs high-performance FastAPI backend serving REST endpoints:
+- GET  /health   -> Accelerator health check (mps/cuda/cpu)
+- GET  /models   -> Available model catalog
+- POST /predict  -> Audio ingestion, VAD, emotion classification, and behavioural report
+Dedicated backend for the Next.js Frontend Studio (http://localhost:3000).
 """
 
 from __future__ import annotations

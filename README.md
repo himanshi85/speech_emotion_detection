@@ -318,32 +318,29 @@ Overall Behaviour:   Engaged Speaker
 
 ---
 
-## Interactive Web Platforms (GUI)
+## Interactive Web Platforms
 
-The repository provides two deployment interfaces for testing, interactive demonstration, and live audio intelligence:
+The system deploys a decoupled, high-performance web architecture:
 
-### 1. Modern Glassmorphic Web GUI (`run_gui.py`) — Recommended
-Built with **FastAPI**, **HTML5 Canvas**, and modern Vanilla CSS/JS:
-- **Live HTML5 Canvas Oscilloscope**: Dynamic frequency bar audio visualizer synced with microphone recording.
-- **Radial Confidence Gauge**: Animated SVG confidence meter.
-- **Model Selector**: Instantly toggle between the *Hindi Emotion Specialist (75.2%)*, *Universal HuBERT*, *CREMA-D HuBERT*, and *RAVDESS Transfer HuBERT*.
-- **Quick Test Chips**: One-click evaluation on authentic sample Hindi speech audio clips.
-- **Acoustic Behaviour Report Card**: Interactive diagnostic tiles with one-click clipboard copying and JSON export.
+### 1. Next.js Frontend Studio (`frontend/`, port 3000)
+Built with **Next.js 16**, **React 19**, **Tailwind CSS v4**, and **Lucide icons**:
+- **Live Waveform Visualizer**: Real-time microphone recording and audio visualizer canvas.
+- **Model Selector**: Dynamically toggle between the *Hindi Emotion Specialist (75.2%)*, *Universal HuBERT*, *CREMA-D HuBERT*, and *RAVDESS Transfer HuBERT*.
+- **Acoustic Behaviour Report Card**: Live telemetry displaying speaking speed, pause frequency, RMS energy, and pitch intonation.
+- **Quickstart**:
+  ```bash
+  cd frontend
+  npm run dev
+  # Accessible at http://localhost:3000
+  ```
 
-```bash
-# Launch modern Web GUI
-python run_gui.py
-# Opens dashboard at http://127.0.0.1:8000
-```
-
-### 2. Gradio 6.0 Web Dashboard (`app.py`)
-- Standard ML research interface with microphone recording, file upload, and emotion probability distribution.
-
-```bash
-# Launch Gradio dashboard
-python app.py
-# Opens dashboard at http://127.0.0.1:7860
-```
+### 2. FastAPI Inference Microservice (`scripts/inference_api.py`, port 8000)
+- REST API microservice serving `/health`, `/models`, and `/predict` endpoints for real-time inference.
+- **Quickstart**:
+  ```bash
+  python scripts/inference_api.py --host 127.0.0.1 --port 8000
+  # API docs at http://127.0.0.1:8000/docs
+  ```
 
 ---
 

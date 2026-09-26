@@ -384,15 +384,16 @@ In addition to categorical emotion classification, the platform features a real-
   python scripts/analyze_audio.py --audio sample.wav
   python scripts/analyze_audio.py --audio sample.wav --json
   ```
-- **Modern Web GUI (FastAPI + HTML5/CSS3/Canvas)**:
+- **Next.js Frontend Studio**:
   ```bash
-  python run_gui.py
-  # Serves at http://127.0.0.1:8000 with live audio oscilloscope and glassmorphic diagnostics
+  cd frontend
+  npm run dev
+  # Serves at http://localhost:3000 with real-time waveform visualizer and behavioral report
   ```
-- **Gradio 6.0 Web Dashboard**:
+- **FastAPI Inference Microservice**:
   ```bash
-  python app.py
-  # Serves at http://127.0.0.1:7860
+  python scripts/inference_api.py --host 127.0.0.1 --port 8000
+  # Serves REST API at http://127.0.0.1:8000 (/health, /models, /predict)
   ```
 
 ---
@@ -430,8 +431,9 @@ For the complete technical dissertation covering the theoretical foundation, Bas
 - [x] **Phase 8: Authentic Hindi Speech Corpus & Cross-Lingual Evaluation — COMPLETED**
   - Standardized 862 Hindi clips from Vaani, Indian-TTS, and Audio-Emotion corpora.
   - Zero-shot cross-lingual transfer evaluated under `outputs/cross_corpus/universal_hubert_to_hindi/`.
-- [x] **Phase 9: Audio Behaviour Analysis Engine & Gradio WebUI — COMPLETED**
+- [x] **Phase 9: Audio Behaviour Analysis Engine & Next.js Studio — COMPLETED**
   - Comprehensive acoustic feature extraction engine (`src/ser/features/behavior.py`) for tempo, pauses, pitch, and energy.
-  - Interactive WebUI with microphone input and diagnostic report generation (`app.py`).
+  - Interactive Next.js Frontend Studio with live microphone recording, waveform canvas, and diagnostic report generation (`frontend/`).
 - [x] **Phase 10: Master Research Report & Publication Documentation — COMPLETED**
-  - Complete 7-section master report in `FINAL_RESEARCH_REPORT.md`.
+  - Complete master report in `FINAL_RESEARCH_REPORT.md` and literature registry in `reports/literature_survey_references.md`.
+
