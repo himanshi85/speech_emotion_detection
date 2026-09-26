@@ -38,6 +38,8 @@ from ser.training.trainer import load_checkpoint_model
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger("gui_server")
 
+import time
+
 DEVICE = torch.device("mps" if torch.backends.mps.is_available() else ("cuda" if torch.cuda.is_available() else "cpu"))
 
 # Model registry definitions
@@ -48,6 +50,8 @@ MODELS_CATALOG = {
         "accuracy": "75.2% Test Accuracy",
         "language": "Hindi / Indic Accents",
         "model_key": "mfcc_cnn_bilstm",
+        "input_type": "mfcc",
+        "architecture": "MFCC(40) -> CNN(64) -> BiLSTM(128x2) -> Dense(5) [75.2% Acc]",
         "checkpoint_path": PROJECT_ROOT / "outputs" / "hindi" / "mfcc_cnn_bilstm" / "checkpoints" / "best_model" / "model.pt",
         "classes": ["neutral", "calm", "happy", "sad", "angry"],
         "recommended": True,
@@ -58,6 +62,8 @@ MODELS_CATALOG = {
         "accuracy": "68.3% Multi-Corpus",
         "language": "English (Universal)",
         "model_key": "hubert",
+        "input_type": "waveform",
+        "architecture": "HuBERT-Base (960h) -> Weighted Layer Pooling -> Dense(6) [68.3% Multi-Corpus]",
         "checkpoint_path": PROJECT_ROOT / "outputs" / "combined" / "universal_hubert_weighted_frozen" / "checkpoints" / "best_model" / "model.pt",
         "classes": ["neutral", "happy", "sad", "angry", "fear", "disgust"],
         "recommended": False,
@@ -68,6 +74,8 @@ MODELS_CATALOG = {
         "accuracy": "75.6% Test Accuracy",
         "language": "English (Diverse Actors)",
         "model_key": "hubert",
+        "input_type": "waveform",
+        "architecture": "HuBERT-Base -> Mean Pooling -> Dense(6) [75.6% Acc]",
         "checkpoint_path": PROJECT_ROOT / "outputs" / "cremad" / "hubert" / "checkpoints" / "best_model" / "model.pt",
         "classes": ["neutral", "happy", "sad", "angry", "fear", "disgust"],
         "recommended": False,
@@ -78,8 +86,34 @@ MODELS_CATALOG = {
         "accuracy": "73.8% Test Accuracy",
         "language": "English (Studio Acting)",
         "model_key": "hubert",
+        "input_type": "waveform",
+        "architecture": "HuBERT-Base (Transfer CREMA-D) -> Weighted Pooling -> Dense(8) [73.8% Acc]",
         "checkpoint_path": PROJECT_ROOT / "outputs" / "ravdess_enhanced" / "hubert_transfer_cremad_weighted" / "checkpoints" / "best_model" / "model.pt",
         "classes": ["neutral", "calm", "happy", "sad", "angry", "fearful", "disgust", "surprised"],
+        "recommended": False,
+    },
+    "mfcc_lstm": {
+        "id": "mfcc_lstm",
+        "name": "Hindi MFCC + LSTM Baseline",
+        "accuracy": "63.6% Test Accuracy",
+        "language": "Hindi / Indic Accents",
+        "model_key": "mfcc_lstm",
+        "input_type": "mfcc",
+        "architecture": "MFCC(40) -> LSTM(128x2) -> Dense(5) [63.6% Acc]",
+        "checkpoint_path": PROJECT_ROOT / "outputs" / "hindi" / "mfcc_lstm" / "checkpoints" / "best_model" / "model.pt",
+        "classes": ["neutral", "calm", "happy", "sad", "angry"],
+        "recommended": False,
+    },
+    "wav2vec2_xlsr_300m": {
+        "id": "wav2vec2_xlsr_300m",
+        "name": "Wav2Vec2-XLS-R-300M (Multilingual)",
+        "accuracy": "62.4% Test Accuracy",
+        "language": "Multilingual (128 Languages)",
+        "model_key": "wav2vec2_xlsr_300m",
+        "input_type": "waveform",
+        "architecture": "Wav2Vec2-XLS-R-300M -> Masked Mean Pool -> Dense(7)",
+        "checkpoint_path": PROJECT_ROOT / "outputs" / "savee" / "wav2vec2_xlsr_300m" / "checkpoints" / "best_model" / "model.pt",
+        "classes": ["neutral", "happy", "sad", "angry", "fear", "disgust", "surprised"],
         "recommended": False,
     },
 }
@@ -164,6 +198,108 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.get("/health")
+def health_check():
+    """Health check endpoint for Next.js frontend."""
+    return {"status": "ok", "device": str(DEVICE)}
+
+
+@app.get("/models")
+def list_models_for_nextjs():
+    """Returns model list in format expected by Next.js SerStudio frontend."""
+    result = []
+    for k, v in MODELS_CATALOG.items():
+        result.append({
+            "key": v["id"],
+            "display_name": v["name"],
+            "input_type": v.get("input_type", "waveform"),
+            "architecture": v.get("architecture", v["name"]),
+            "checkpoint_available": v["checkpoint_path"].exists(),
+        })
+    return result
+
+
+@app.post("/predict")
+async def predict_endpoint(
+    model_key: str = Form(...),
+    file: UploadFile = File(...),
+):
+    """Inference endpoint conforming to Next.js SerStudio AnalysisReport contract."""
+    start_time = time.time()
+    logger.info("Received /predict request: model_key=%s, filename=%s", model_key, file.filename)
+
+    meta = MODELS_CATALOG.get(model_key)
+    if not meta:
+        for k, v in MODELS_CATALOG.items():
+            if k == model_key or v.get("model_key") == model_key:
+                meta = v
+                model_key = k
+                break
+    if not meta:
+        meta = MODELS_CATALOG["hindi_mfcc_cnn_bilstm"]
+        model_key = "hindi_mfcc_cnn_bilstm"
+
+    suffix = Path(file.filename or "recording.wav").suffix or ".wav"
+    with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
+        tmp_path = Path(tmp.name)
+        shutil.copyfileobj(file.file, tmp)
+
+    try:
+        file_size = tmp_path.stat().st_size
+        if file_size == 0:
+            raise HTTPException(status_code=400, detail="Uploaded audio recording is empty (0 bytes).")
+
+        model, cfg, label_map = get_or_load_model(model_key)
+        metrics = analyze_audio_file(
+            audio_path=tmp_path,
+            model=model,
+            cfg=cfg,
+            device=DEVICE,
+            label_mapping=label_map,
+        )
+        inference_time = time.time() - start_time
+
+        prob_list = []
+        label_to_id = {k: v for k, v in (label_map or {}).items()}
+        for i, (emo_name, prob_val) in enumerate(metrics.probabilities.items()):
+            lid = label_to_id.get(emo_name, i)
+            prob_list.append({
+                "emotion": emo_name,
+                "label_id": lid,
+                "probability": round(float(prob_val), 4),
+            })
+        prob_list.sort(key=lambda x: x["probability"], reverse=True)
+
+        pred_label_id = label_to_id.get(metrics.emotion, 0)
+        summary_str = (
+            f"Predicted emotion: {metrics.emotion.capitalize()} ({metrics.confidence * 100.0:.1f}% confidence). "
+            f"Acoustic behavioural profile: {metrics.overall_behaviour}. "
+            f"Speech tempo: {metrics.speaking_speed} ({metrics.syllables_per_second:.1f} syll/sec, {int(round(metrics.words_per_minute))} WPM). "
+            f"Pauses: {metrics.pause_frequency} ({metrics.pauses_per_minute:.1f}/min, {metrics.pause_ratio * 100.0:.1f}% silence). "
+            f"Energy: {metrics.energy} ({metrics.rms_db:.1f} dB RMS). "
+            f"Pitch: {metrics.pitch_variation} ({metrics.pitch_mean_hz:.1f} Hz mean, {metrics.pitch_std_hz:.1f} Hz std)."
+        )
+
+        return JSONResponse(content={
+            "model_key": model_key,
+            "display_name": meta["name"],
+            "predicted_emotion": metrics.emotion,
+            "predicted_label_id": pred_label_id,
+            "confidence": round(float(metrics.confidence), 4),
+            "probabilities": prob_list,
+            "inference_time_sec": round(inference_time, 3),
+            "audio_duration_sec": round(metrics.audio_duration_seconds, 2),
+            "sample_rate": 16000,
+            "summary": summary_str,
+        })
+    except Exception as e:
+        logger.exception("Error in /predict endpoint: %s", e)
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        if tmp_path.exists():
+            os.remove(tmp_path)
 
 
 @app.get("/api/models")

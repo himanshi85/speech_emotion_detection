@@ -149,16 +149,30 @@ Overall Behaviour:   Engaged Speaker
 
 ---
 
-## 6. Interactive WebUI Platform (`app.py`)
+## 6. Interactive User Interfaces & API Deployment
 
-An interactive web application was developed using **Gradio 6.0**:
-- **Microphone & File Upload**: Real-time voice recording and `.wav`/`.mp3` processing.
-- **Model Selector**: Switch dynamically between *Universal HuBERT*, *CREMA-D HuBERT*, and *RAVDESS Transfer HuBERT*.
-- **Live Output Gauges**: Real-time emotion distribution, speaking speed, pause frequency, vocal loudness, pitch stability, and the full downloadable report card.
-- **Quickstart**:
+The platform provides a dual-interface deployment architecture:
+
+### 1. Next.js 16 + React 19 Frontend Studio (`frontend/`, port 3000)
+- **High-Performance Audio Studio**: Built with Next.js 16 (Turbopack), React 19, Tailwind CSS v4, and Lucide icons.
+- **Audio Workstation**: Live microphone recording with audio visualizer waveform canvas, file upload drag-and-drop, and dynamic playback.
+- **REST Integration**: Seamlessly communicates with the backend inference server (`http://localhost:8000`), fetching `/health`, `/models`, and `/predict`.
+- **Telemetry & Report Card**: Displays predicted emotion probability distributions, confidence gauges, latency measurements, and the full clinical/commercial behavioural synthesis report card.
+- **Launch Command**:
   ```bash
-  python app.py
-  # Opens interactive dashboard at http://127.0.0.1:7860
+  cd frontend
+  npm run dev
+  # Accessible at http://localhost:3000
+  ```
+
+### 2. FastAPI Real-Time Inference Microservice (`scripts/inference_api.py`, port 8000)
+- Exposes high-throughput REST endpoints:
+  - `GET /health` -> Server status and PyTorch accelerator (`mps` / `cuda` / `cpu`).
+  - `GET /models` -> Catalog of trained foundation and Hindi acoustic models.
+  - `POST /predict` -> Ingests audio files, performs zero-copy tensor normalization and VAD trimming, evaluates the model, applies prosodic calibration, and returns the structured `AnalysisReport`.
+- **Launch Command**:
+  ```bash
+  python scripts/inference_api.py --host 127.0.0.1 --port 8000
   ```
 
 ---
@@ -169,22 +183,35 @@ An interactive web application was developed using **Gradio 6.0**:
 # 1. Run complete unit test suite (15 passing tests)
 pytest tests/
 
-# 2. Preprocess Hindi Speech Corpus
-python scripts/preprocessing/preprocess_hindi.py
+# 2. Launch FastAPI Inference Backend (Port 8000)
+python scripts/inference_api.py --host 127.0.0.1 --port 8000
 
-# 3. Evaluate Zero-Shot Cross-Lingual Model on Hindi
+# 3. Launch Next.js Frontend Studio (Port 3000)
+cd frontend && npm run dev
+
+# 4. Evaluate Zero-Shot Cross-Lingual Model on Hindi
 python scripts/evaluate_cross_corpus.py \
   --model_ckpt outputs/combined/universal_hubert_weighted_frozen/checkpoints/best_model/model.pt \
   --source_dataset combined \
   --target_datasets hindi \
   --target_split test
 
-# 4. Generate Audio Behaviour Analysis Report for any audio file
+# 5. Generate Audio Behaviour Analysis Report for any audio file
 python scripts/analyze_audio.py --audio data/hindi/audio/hindi_00001.wav
-
-# 5. Launch Interactive WebUI
-python app.py
 ```
+
+---
+
+## 8. Academic Literature Survey & Citations
+
+A dedicated literature registry has been curated in [reports/literature_survey_references.md](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/reports/literature_survey_references.md), synthesizing **39 peer-reviewed papers** across Indic speech emotion recognition, speech foundation models (emotion2vec, BEATs, HuBERT, Wav2Vec 2.0), and behavioural feature engineering.
+
+Key benchmark anchors include:
+- **Kotian & Singh (Univ. of Mumbai, 2026)**: *Evaluating the Impact of Behavioural Features on Hindi Speech Emotion Recognition* (validates multimodal behavioural feature fusion).
+- **Kotian & Singh (2026)**: *Benchmarking Classical, Deep Learning and Transformer Models for Hindi Speech Emotion Recognition* (validates CNN-BiLSTM benchmarks for Hindi).
+- **Chauhan & Sharma (MNIT Jaipur, IEEE 2023)**: *MNITJ-SEHSD: A Hindi Emotional Speech Database* (establishes canonical Indic emotion taxonomies).
+- **Ma et al. (Alibaba, ACL 2024)**: *emotion2vec: Self-Supervised Pre-Training for Speech Emotion Representation* (establishes foundation model representation principles).
+- **Chen et al. (Microsoft, ICML 2023)**: *BEATs: Audio Pre-Training with Acoustic Tokenizers*.
 
 ---
 
@@ -194,3 +221,4 @@ This project successfully proves that:
 1. **Transfer Learning + Learnable Weighted Layer Pooling** resolves the small-sample overfitting bottleneck on small speech datasets, allowing lightweight 94M Base models to achieve competitive performance against published Large models.
 2. Emotional prosody representations generalize across languages, providing a zero-shot foundation for Indic speech emotion recognition.
 3. Combining deep learning emotion recognition with acoustic prosody extraction yields actionable, industry-grade behavioral intelligence.
+
