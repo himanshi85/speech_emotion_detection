@@ -3,26 +3,26 @@
 **Author**: Himanshi Patel  
 **Affiliation**: Department of Computer Science and Engineering  
 **Project Repository**: `speech_emotion_detection` (Branch: `develop-v3`)  
-**Target Domains**: Speech Processing, Affective Computing, Natural Language Processing, Multimodal Deep Learning  
+**Target Domains**: Speech Signal Processing, Affective Computing, Natural Language Processing, Multimodal Deep Learning  
 
 ---
 
 ## Abstract
 
-Speech Emotion Recognition (SER) plays a transformative role in human-computer interaction, mental healthcare diagnostics, telephonic customer intelligence, and automated voice analysis. However, contemporary SER research suffers from four critical systemic limitations: (1) widespread reliance on randomized dataset splits that cause severe speaker identity leakage, inflating benchmark accuracies by 15% to 35%; (2) acute vulnerability to small-sample acoustic overfitting on constrained datasets; (3) a near-exclusive focus on English laboratory datasets with minimal transferability to low-resource, morphologically rich Indic languages such as Hindi; and (4) an overemphasis on isolated discrete emotion classification at the expense of actionable vocal behavioural intelligence.
+Speech Emotion Recognition (SER) is an active area of investigation within human-computer interaction, psychiatric diagnostics, and automated voice analysis. However, contemporary SER research faces several methodological constraints. First, the widespread use of randomized dataset partitioning causes speaker identity leakage, which inflates experimental accuracy by 15% to 35% compared to real-world performance on unseen speakers. Second, deep architectures remain susceptible to acoustic overfitting when trained on constrained speech cohorts. Third, the literature exhibits a pronounced focus on Germanic and Romance languages, offering limited empirical evidence on cross-lingual transferability to morphologically rich Indic languages such as Hindi. Finally, categorical classification schemes fail to provide actionable acoustic metrics concerning speaker vocal dynamics.
 
-To address these challenges, this study presents a unified, multi-corpus and multilingual benchmarking framework evaluating **8 distinct acoustic and self-supervised deep learning architectures** across **5 diverse speech corpora** totaling **12,180 standardized audio clips** (CREMA-D, RAVDESS, SAVEE, TESS, and authentic Hindi speech). We enforce strict, zero-leakage evaluation protocols, establishing speaker-independent partitions (with unseen test actors) and prompt-independent splits (with unseen test vocabulary). We propose a **Learnable Weighted Layer Pooling** mechanism across the 12 transformer hidden layers of self-supervised foundation backbones (HuBERT and Wav2Vec 2.0), discovering that intermediate layers (Layers 9–11) capture over 33% of the total emotional discrimination weight, drastically outperforming the final classification layer alone. 
+To address these limitations, this study presents a standardized, multi-corpus and cross-lingual benchmarking framework evaluating eight acoustic and self-supervised deep learning architectures across five speech corpora totaling 12,180 standardized audio recordings (CREMA-D, RAVDESS, SAVEE, TESS, and native Hindi speech). We enforce speaker-independent partitions (with unseen test actors) and prompt-independent splits (with unseen vocabulary) to prevent data leakage. We propose a Learnable Weighted Layer Pooling mechanism across the 12 transformer hidden layers of self-supervised foundation backbones (HuBERT and Wav2Vec 2.0). Empirical probing reveals that intermediate layers (Layers 9 to 11) capture 33.3% of the total emotional discrimination weight, outperforming the final classification layer.
 
-Furthermore, we investigate cross-lingual transfer dynamics between high-resource English speech models and native Indic Hindi speech. Zero-shot transfer from a multi-corpus English foundation model achieves **27.62% accuracy** and **31.76% Unweighted Average Recall (UAR)** on unseen Hindi utterances, which surges to **75.19% accuracy** and **70.56% UAR** when adapted with our specialized CNN-BiLSTM architecture. Finally, we augment discrete classification with an **Audio Behaviour Analysis Engine** extracting syllabic speaking speed, pause frequency, RMS vocal loudness, and fundamental pitch intonation ($F_0$), synthesizing clinical and commercial behavioural profiles. The entire pipeline is packaged into a high-performance Apple Silicon (`mps`) accelerated FastAPI backend and a clean, minimal white-mode Next.js studio featuring real-time audio waveform visualization.
+Additionally, cross-lingual transfer from an English multi-corpus foundation model yields 27.62% accuracy and 31.76% Unweighted Average Recall (UAR) on native Hindi speech under a zero-shot regime. Supervised adaptation using a specialized CNN-BiLSTM architecture increases test accuracy to 75.19% and UAR to 70.56%. Furthermore, we introduce an Audio Behaviour Analysis Engine that extracts syllabic speaking rate, pause frequency, root-mean-square (RMS) energy, and fundamental frequency ($F_0$) intonation to generate structured behavioral profiles. The full system is deployed as an Apple Silicon accelerated microservice paired with a minimal web application featuring real-time audio waveform visualization.
 
-**Keywords**: Speech Emotion Recognition (SER), Self-Supervised Learning (SSL), Learnable Weighted Layer Pooling, Hindi Speech Emotion, Cross-Lingual Transfer, Behavioural Prosody, Zero-Leakage Evaluation, HuBERT, Wav2Vec 2.0, CNN-BiLSTM.
+**Keywords**: Speech Emotion Recognition, Self-Supervised Learning, Learnable Layer Pooling, Hindi Speech Emotion, Cross-Lingual Transfer, Vocal Behaviour, Speaker Disjoint Split, HuBERT, Wav2Vec 2.0, CNN-BiLSTM.
 
 ---
 
 ## 1. Introduction & Research Motivation
 
-### 1.1 The Landscape of Affective Computing
-Human voice transmission carries two simultaneous streams of information: the linguistic content (what is spoken) and the paralinguistic or prosodic envelope (how it is spoken). Affective computing and Speech Emotion Recognition (SER) aim to computationally decode this paralinguistic layer to infer subjective emotional states—such as anger, joy, sadness, fear, or neutrality—directly from raw acoustics [6], [16]. While commercial automatic speech recognition (ASR) has achieved human parity on clear speech, SER remains an open scientific frontier due to speaker idiosyncrasies, cross-cultural variances, linguistic divergences, and contextual ambiguity [1], [13].
+### 1.1 Affective Computing and Paralinguistic Cues
+Spoken human communication comprises both lexical content (the verbal message) and paralinguistic modulations (vocal tone, cadence, and inflection) [6], [16]. Speech Emotion Recognition (SER) aims to identify affective states (such as anger, joy, sadness, fear, or neutrality) from acoustic speech signals. While automatic speech recognition (ASR) systems have matured significantly, SER remains challenging because emotional expression varies substantially across speakers, regional dialects, and recording conditions [1], [13].
 
 ```
 +---------------------------------------------------------------------------------------------------+
@@ -39,40 +39,40 @@ Human voice transmission carries two simultaneous streams of information: the li
 +---------------------------------------------------------------------------------------------------+
 ```
 
-### 1.2 The Systemic Problem of Speaker Identity Leakage
-A critical vulnerability in contemporary SER literature is the widespread adoption of randomized sample-level cross-validation splits [14], [16]. In such setups, speech clips from the same actor appear in both the training and testing folds. Because deep neural networks excel at modeling speaker identity and vocal tract morphology, models frequently memorize actor-specific acoustic footprints rather than learning generalized emotional intonations. When evaluated on truly unseen speakers, their performance collapses precipitously. Robust, clinical-grade SER demands **strict speaker-independent** partitions where test actors are never seen during model training [15], [30].
+### 1.2 The Problem of Speaker Identity Leakage
+A critical limitation in existing SER benchmarks is the use of randomized cross-validation [14], [16]. When speech segments from the same speaker appear in both the training and testing partitions, neural models tend to memorize speaker-specific vocal tract characteristics rather than generalizable emotional features. Consequently, models that report over 90% accuracy in random split evaluations frequently suffer substantial performance drops when tested on novel speakers. Valid evaluation necessitates strict speaker-independent partitions in which test speakers are entirely withheld during training [15], [30].
 
-### 1.3 The Indic & Low-Resource Language Deficit
-The vast majority of publicly accessible SER benchmarks are grounded in Germanic or Romance languages, particularly English (e.g., IEMOCAP, RAVDESS, CREMA-D) and German (e.g., EMO-DB) [16], [28]. Indic languages, spoken by over 1.4 billion people worldwide, remain critically underrepresented [1], [3]. Hindi, in particular, exhibits distinct tonal subtleties, retroflex phonemes, vowel length contrasts, and unique prosodic stress contours that differ substantially from Anglo-Saxon speech patterns [2], [4]. Understanding whether pre-trained English foundation representations transfer cross-lingually to Hindi—and quantifying the performance gap between zero-shot inference and supervised adaptation—is of paramount academic and industrial importance [1], [18].
+### 1.3 Indic and Low-Resource Language Representation
+Most accessible SER benchmarks rely on English (e.g., IEMOCAP, RAVDESS, CREMA-D) or German (e.g., EMO-DB) [16], [28]. Indic languages, spoken by over 1.4 billion individuals, remain underrepresented in speech research [1], [3]. Hindi exhibits distinctive phonological properties, including phonemic vowel length contrasts, retroflex consonants, and syllable-timed stress patterns, which diverge from English speech dynamics [2], [4]. Establishing whether pre-trained English acoustic models transfer to Hindi speech, and measuring the quantitative improvement achievable through supervised adaptation, is essential for multilingual affective computing [1], [18].
 
-### 1.4 Beyond Categorical Classification: Vocal Behavioural Intelligence
-Standard SER systems output a static categorical probability vector (e.g., $P(\text{Happy}) = 0.85$). However, in practical psychiatric screening, tele-counseling, customer support, and telephonic sales intelligence, a categorical label alone is insufficient [5], [11]. Clinicians and analysts require interpretable acoustic metrics:
-- Is the speaker exhibiting accelerated speech velocity indicating anxiety or mania?
-- Is there an elevated frequency of hesitation pauses suggesting uncertainty or cognitive load?
-- Does vocal intensity drop below normative baselines, indicative of depressive withdrawal?
-- Is the fundamental frequency contour ($F_0$) flat (blunted affect) or highly erratic (emotional lability)?
+### 1.4 Integrating Objective Vocal Metrics
+Standard SER architectures typically output discrete emotion class probabilities, such as $P(\text{Happy}) = 0.85$. However, clinical diagnostic applications, tele-counseling, and automated conversational systems benefit from continuous, interpretable acoustic measurements [5], [11]:
+1. Speech velocity (syllables per second) indicates psychomotor state.
+2. Pause frequency and duration reflect hesitation or cognitive processing load.
+3. Vocal energy variation indicates engagement level.
+4. Fundamental pitch ($F_0$) variation differentiates dynamic intonation from flattened vocal affect.
 
-Bridging discrete classification with **objective behavioural prosody synthesis** is essential for real-world deployment [1], [11].
+Coupling categorical emotion classification with systematic behavioral feature extraction provides a more informative assessment of speech recordings [1], [11].
 
 ### 1.5 Research Questions ($RQ$)
-This research is structured around four primary scientific inquiries:
-- **$RQ_1$ (Layer Pooling Dynamics)**: Does learnable weighted pooling across all hidden layers of self-supervised speech transformers outperform standard mean pooling or top-layer classification, and which layers encode peak emotional prosody?
-- **$RQ_2$ (Speaker Diversity Law)**: How does the number of unique speakers in the training cohort govern generalized out-of-domain test performance when evaluated on strictly disjoint test actors?
-- **$RQ_3$ (Cross-Lingual Transfer to Indic Speech)**: Can universal English speech representations transfer zero-shot to authentic native Hindi speech, and what acoustic adaptation strategies yield optimal performance?
-- **$RQ_4$ (Multimodal Behavioural Synthesis)**: How can algorithmic extraction of syllabic speaking rate, pause frequency, loudness dynamics, and pitch modulation be unified with neural classification to generate actionable diagnostic telemetry?
+This study addresses four primary research questions:
+- **$RQ_1$ (Layer Pooling Dynamics)**: Does learnable weighted pooling across all transformer hidden layers outperform standard mean pooling or top-layer classification, and which layers encode the most discriminative emotional information?
+- **$RQ_2$ (Speaker Diversity Law)**: What is the relationship between the number of training speakers and out-of-domain generalization performance on strictly unseen actors?
+- **$RQ_3$ (Cross-Lingual Transfer)**: To what degree do representations trained on English speech transfer to native Hindi recordings, and what performance gains occur with targeted supervised adaptation?
+- **$RQ_4$ (Behavioural Prosody Synthesis)**: How can algorithmic extraction of syllabic tempo, pause metrics, energy levels, and pitch contours be combined with neural predictions to provide structured voice analysis?
 
-### 1.6 Key Novel Contributions
-1. **Curated Multi-Corpus Ecosystem (12,180 Audio Clips)**: Unified five distinct speech corpora (CREMA-D, RAVDESS, SAVEE, TESS, and native Hindi SER) into a standardized 16 kHz mono 16-bit PCM pipeline with strict zero-leakage partitions.
-2. **Learnable Weighted Layer Pooling Mechanism**: Formulated and trained softmax-parameterized layer aggregation across 12 transformer hidden states, proving that intermediate layers (Layers 9–11) encode prosodic culmination.
-3. **Cross-Corpus Transfer & Multi-Corpus Universal Foundation**: Trained and released the Universal HuBERT Weighted model achieving **68.31% Accuracy** across **1,701 strictly unseen multi-corpus test utterances**, outperforming single-corpus models on cross-dataset evaluation.
-4. **Empirical Cross-Lingual Hindi Benchmark**: Quantified zero-shot cross-lingual transfer (27.62% Acc / 31.76% UAR) and engineered a specialized Hindi CNN-BiLSTM architecture reaching **75.19% accuracy** (+47.57% absolute gain).
-5. **Integrated Behavioural Intelligence Engine & Minimal Modern Studio**: Built an algorithmic prosody engine (pYIN pitch tracking, syllabic tempo estimation, pause detection) paired with a clean white-mode Next.js studio and real-time audio waveform visualizer.
+### 1.6 Contributions
+1. **Multi-Corpus Dataset Curation (12,180 Audio Clips)**: Unified five speech corpora (CREMA-D, RAVDESS, SAVEE, TESS, and native Hindi SER) into a 16 kHz mono 16-bit PCM pipeline with strict zero-leakage evaluation protocols.
+2. **Learnable Weighted Layer Pooling Formulation**: Implemented and probed a softmax-parameterized layer pooling mechanism across 12 transformer encoder blocks, identifying that intermediate layers (Layers 9 to 11) capture the highest concentration of emotional prosody.
+3. **Multi-Corpus Universal Foundation Model**: Trained and evaluated a multi-corpus HuBERT model achieving 68.31% accuracy across 1,701 unseen test utterances from multiple corpora.
+4. **Cross-Lingual Hindi Benchmark**: Quantified zero-shot cross-lingual performance (27.62% accuracy, 31.76% UAR) and trained a specialized Hindi CNN-BiLSTM model reaching 75.19% accuracy and 70.56% UAR.
+5. **Integrated Behaviour Engine and Web Application**: Developed an acoustic analysis engine that extracts speech rate, pause ratios, energy, and pitch contours, integrated into a clean, minimal web studio with live waveform visualization.
 
 ---
 
-## 2. Academic Literature Survey & Theoretical Foundations
+## 2. Literature Survey & Theoretical Foundations
 
-The theoretical grounding of this investigation synthesizes **39 peer-reviewed publications** from our research library across four core themes, summarized below and cataloged in [reports/literature_survey_references.md](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/reports/literature_survey_references.md).
+This investigation synthesizes 39 peer-reviewed publications from our reference library across four primary research domains, cataloged in detail in [reports/literature_survey_references.md](file:///Users/prarthanapatel/Desktop/Himanshi/speech_emotion_detection-develop-v3/reports/literature_survey_references.md).
 
 ```
 +---------------------------------------------------------------------------------------------------+
@@ -91,31 +91,31 @@ The theoretical grounding of this investigation synthesizes **39 peer-reviewed p
 +---------------------------------------------------------------------------------------------------+
 ```
 
-### 2.1 Indic & Hindi Speech Emotion Recognition
-Early speech emotion recognition research in India relied predominantly on small, non-public laboratory recordings evaluated using shallow machine learning classifiers such as Support Vector Machines (SVM) and Multi-Layer Perceptrons (MLP) [4], [18]. 
+### 2.1 Indic and Hindi Speech Emotion Recognition
+Early speech emotion recognition research in India relied predominantly on small private datasets evaluated with conventional classifiers such as Support Vector Machines (SVM) and Multi-Layer Perceptrons [4], [18].
 
-In a landmark contemporary study, **Kotian & Singh (2026)** [1] investigated the impact of integrating behavioral features with deep learning for Hindi SER. Their experiments demonstrated that combining prosodic metrics (speaking rate, pitch perturbation, pause ratio) with acoustic spectral representations improved Hindi SER classification accuracy to 83.9% and Macro-F1 to 0.81, confirming that pure acoustic spectrograms miss crucial temporal dynamics. In their companion work, **Kotian & Singh (2026)** [2] benchmarked classical, deep learning, and transformer architectures on authentic Hindi speech, identifying that CNN-BiLSTM hybrids achieve an exceptional accuracy-to-compute ratio on low-resource Indic corpora, outperforming standard fine-tuned transformers constrained by limited training samples.
+Kotian and Singh (2026) [1] demonstrated that concatenating prosodic-behavioral descriptors (speaking rate, pitch perturbation, pause ratio, and energy dynamics) with spectral features increased classification accuracy to 83.9% and Macro-F1 to 0.81 on Hindi speech. In a subsequent benchmarking study, Kotian and Singh (2026) [2] compared classical, deep learning, and transformer architectures, finding that CNN-BiLSTM networks provided an optimal balance of accuracy and computational efficiency for Hindi speech under constrained sample sizes.
 
-Concurrently, **Chauhan & Sharma (2023)** [3] established the MNITJ-SEHSD benchmark at MNIT Jaipur, providing standardizations for Hindi emotional speech and identifying significant acoustic overlap between anger and disgust due to shared high-energy vocalizations in Indic phonology. **Kawade & Jagtap (2024)** [5] explored cross-lingual acoustic modeling across Indian languages (Hindi, Marathi, and Tamil), noting that while pitch contours transfer partially, vowel nasalization and syllable-timed cadence in Indic languages require local supervised calibration.
+Chauhan and Sharma (2023) [3] introduced the MNITJ-SEHSD database, standardizing an Indic emotion corpus and highlighting acoustic overlap between anger and disgust resulting from shared high vocal intensity. Kawade and Jagtap (2024) [5] evaluated cross-lingual acoustic modeling across Hindi, Marathi, and Tamil, observing that while global pitch trends transfer across languages, syllable timing and vowel nasalization require local supervised fine-tuning.
 
-### 2.2 Self-Supervised Speech Foundation Models (SSL)
-The emergence of self-supervised learning has revolutionized acoustic speech processing. Models such as **Wav2Vec 2.0 (Baevski et al., 2020)** [9] and **HuBERT (Hsu et al., 2021)** [8] are pre-trained on thousands of hours of unlabeled speech (e.g., LibriSpeech) using masked contrastive predictive coding or masked cluster prediction.
+### 2.2 Self-Supervised Speech Representation Models
+Self-supervised learning has established powerful baseline representations for speech tasks. Models such as Wav2Vec 2.0 (Baevski et al., 2020) [9] and HuBERT (Hsu et al., 2021) [8] learn representations from thousands of hours of unlabeled audio through contrastive loss or masked cluster prediction.
 
-However, recent findings by **Ma et al. (ACL 2024)** on *emotion2vec* [6] and **Chen et al. (ICML 2023)** on *BEATs* [7] demonstrate that standard ASR pre-trained models discard emotional information in their upper layers as they converge toward discrete phonetic transcription. In *emotion2vec*, Ma et al. revealed that self-supervised representations tailored for emotion must preserve utterance-level prosody and temporal variations. Similarly, **Pasad et al. (2021)** [24] conducted layer-wise probing of Wav2Vec 2.0, establishing that acoustic and prosodic properties peak in intermediate transformer layers, whereas upper layers become overly specialized for lexical decoding. This theoretical insight directly underpins our **Learnable Weighted Layer Pooling** architecture.
+However, recent studies by Ma et al. (ACL 2024) on *emotion2vec* [6] and Chen et al. (ICML 2023) on *BEATs* [7] demonstrate that standard speech models optimize for phonetic invariance, which can suppress emotional cues in upper transformer layers. Probing studies by Pasad et al. (2021) [24] confirmed that acoustic and prosodic properties are concentrated within intermediate transformer layers, whereas the final layers focus on lexical identity. These findings motivate the Learnable Weighted Layer Pooling approach used in this work.
 
 ### 2.3 Vocal Behavioural Feature Integration
-The integration of interpretable paralinguistic descriptors has long been championed by the speech science community. **Eyben et al. (2016)** introduced the *Geneva Minimalistic Acoustic Parameter Set (eGeMAPS)* [12], standardizing 88 acoustic parameters covering frequency, energy, spectral, and temporal domains. 
+Standardized acoustic parameter sets have long provided interpretable metrics for speech analysis. Eyben et al. (2016) defined the Geneva Minimalistic Acoustic Parameter Set (eGeMAPS) [12], standardizing 88 acoustic descriptors across frequency, energy, and temporal domains.
 
-In a major recent breakthrough, **Chowdhury et al. (Nature Scientific Reports, 2025)** [11] demonstrated that combining acoustic prosody (fundamental frequency jitter, shimmer, speaking cadence) with neural emotion recognition significantly enhances diagnostic accuracy in clinical depression and anxiety assessments. Their findings emphasize that speech rate (syllables per second) and pause frequency serve as direct physiological markers of psychomotor agitation or retardation, providing an empirical foundation for our dual-branch architecture.
+Chowdhury et al. (2025) [11] showed that integrating acoustic prosody (pitch variability, speaking rate, and pause intervals) with deep learning architectures improved diagnostic reliability in clinical speech evaluations. Their work confirmed that syllable tempo and pause frequency correlate with physiological arousal and depressive symptoms, supporting the inclusion of behavioral feature extraction alongside neural classification.
 
-### 2.4 Speaker Disjoint Protocols & Out-of-Domain Generalization
-The critical flaw of speaker identity leakage was systematically exposed by **Wang & Yang (PLOS ONE, 2025)** [14]. In an extensive review across major SER benchmarks, they proved that random 80/20 train/test splits overestimate true generalization by up to 34.2 percentage points because classifiers exploit unique vocal tract resonances to identify speakers. When evaluated on unseen speakers, accuracy plummeted. **Hashem et al. (2023)** [15] and **Akçay & Oğuz (2020)** [16] similarly argue that only speaker-independent partitions reflect real-world clinical or telephonic efficacy. Consequently, this study enforces strict zero-leakage partitions across every evaluation fold.
+### 2.4 Speaker Disjoint Protocols and Generalization
+Wang and Yang (2025) [14] examined the effect of speaker identity leakage in SER, showing that random train/test splits can inflate accuracy scores by up to 34.2 percentage points because classifiers exploit speaker-specific spectral patterns. Hashem et al. (2023) [15] and Akçay and Oğuz (2020) [16] similarly emphasized that only speaker-disjoint evaluation protocols reflect genuine clinical or real-world capability. Consequently, this study enforces speaker-independent partitions across all datasets.
 
 ---
 
 ## 3. Dataset Ecosystem & Zero-Leakage Splitting Protocols
 
-To ensure rigorous evaluation, five distinct corpora totaling **12,180 audio files** were curated, preprocessed, and partitioned. Every audio file was resampled to a standardized **16,000 Hz, single-channel (mono), 16-bit PCM WAV** format with Voice Activity Detection (VAD) silence trimming and peak amplitude normalization.
+To ensure rigorous evaluation, five distinct corpora comprising 12,180 audio files were curated, preprocessed, and partitioned. Audio files were resampled to a standardized format: 16,000 Hz sampling rate, single-channel (mono), 16-bit PCM WAV, with Voice Activity Detection (VAD) silence trimming and amplitude normalization.
 
 ```
 +---------------------------------------------------------------------------------------------------+
@@ -133,144 +133,143 @@ To ensure rigorous evaluation, five distinct corpora totaling **12,180 audio fil
 +---------------------------------------------------------------------------------------------------+
 ```
 
-### 3.1 CREMA-D (Crowd-sourced Emotional Multimodal Actors Dataset)
-- **Scale**: 7,442 audio clips spoken by 91 professional actors (48 male, 43 female) spanning African American, Asian, Caucasian, and Hispanic ethnicities.
-- **Emotions (6)**: *Anger, Disgust, Fear, Happy, Neutral, Sad*.
-- **Partitioning Protocol**: Strict **Actor-Disjoint Split**. 64 actors were allocated to training (5,230 clips), 14 actors to validation (1,154 clips), and 13 actors to testing (1,058 clips). Zero vocal overlap exists between folds.
+### 3.1 CREMA-D
+- **Scale**: 7,442 recordings spoken by 91 professional actors (48 male, 43 female) of diverse ethnic backgrounds.
+- **Classes (6)**: Anger, Disgust, Fear, Happy, Neutral, Sad.
+- **Protocol**: Actor-Disjoint Split. 64 actors were allocated to training (5,230 clips), 14 actors to validation (1,154 clips), and 13 actors to testing (1,058 clips). No speaker appears in multiple splits.
 
-### 3.2 RAVDESS (Ryerson Audio-Visual Database of Emotional Speech and Song)
-- **Scale**: 1,440 speech recordings by 24 professional actors (12 male, 12 female) reciting two phonetically balanced statements.
-- **Emotions (8)**: *Neutral, Calm, Happy, Sad, Angry, Fearful, Disgust, Surprised*.
-- **Partitioning Protocol**: Strict **Actor-Independent Split**. Actors 1–16 form the training partition (960 clips), Actors 17–20 form the validation partition (240 clips), and Actors 21–24 form the held-out test partition (240 clips).
+### 3.2 RAVDESS
+- **Scale**: 1,440 speech recordings by 24 professional actors (12 male, 12 female).
+- **Classes (8)**: Neutral, Calm, Happy, Sad, Angry, Fearful, Disgust, Surprised.
+- **Protocol**: Actor-Independent Split. Actors 1 to 16 form the training set (960 clips), Actors 17 to 20 form the validation set (240 clips), and Actors 21 to 24 form the test set (240 clips).
 
-### 3.3 SAVEE (Surrey Audio-Visual Expressed Emotion)
+### 3.3 SAVEE
 - **Scale**: 480 utterances recorded by 4 British English male actors (`DC`, `JE`, `JK`, `KL`).
-- **Emotions (7)**: *Anger, Disgust, Fear, Happiness, Sadness, Surprise, Neutral*.
-- **Partitioning Protocol**: Strict **Speaker-Disjoint Split**. Actors `DC` and `JE` form training (240 clips), Actor `JK` forms validation (120 clips), and Actor `KL` forms the test partition (120 clips).
+- **Classes (7)**: Anger, Disgust, Fear, Happiness, Sadness, Surprise, Neutral.
+- **Protocol**: Speaker-Disjoint Split. Actors `DC` and `JE` form the training set (240 clips), Actor `JK` forms validation (120 clips), and Actor `KL` forms the test set (120 clips).
 
-### 3.4 TESS (Toronto Emotional Speech Set)
-- **Scale**: 2,800 recordings from two actresses reciting a set of 200 target carrier words in the phrase "Say the word [word]".
-- **Emotions (7)**: *Anger, Disgust, Fear, Happiness, Pleasant Surprise, Sadness, Neutral*.
-- **Partitioning Protocol**: Strict **Prompt-Independent Split**. Because TESS features only 2 speakers, standard actor splits are impossible. Instead, vocabulary words were partitioned: 140 words (1,960 clips) for training, 30 words (420 clips) for validation, and 30 words (420 clips) for testing. Models must generalize to completely unseen lexical vocabulary.
+### 3.4 TESS
+- **Scale**: 2,800 recordings from two actresses speaking 200 target carrier words.
+- **Classes (7)**: Anger, Disgust, Fear, Happiness, Pleasant Surprise, Sadness, Neutral.
+- **Protocol**: Prompt-Independent Split. Because TESS contains only two speakers, words were partitioned: 140 words (1,960 clips) for training, 30 words (420 clips) for validation, and 30 words (420 clips) for testing. Models must generalize to unseen vocabulary.
 
 ### 3.5 Native Indic Hindi Speech Emotion Corpus
-- **Scale**: 862 audio clips curated and standardized across three authentic Indic repositories: Project Vaani (IISc/Google Indic speech), Indian TTS Emotion Corpus, and the RapidOrc Hindi Speech set.
-- **Emotions (5 Canonical Indic Classes)**: *Anger, Calm, Happy, Neutral, Sad*.
-- **Partitioning Protocol**: Partitioned into 603 training clips (70%), 129 validation clips (15%), and 130 held-out test clips (15%) across distinct speaker utterances.
+- **Scale**: 862 audio clips curated from Project Vaani, Indian TTS Emotion, and RapidOrc repositories.
+- **Classes (5)**: Anger, Calm, Happy, Neutral, Sad.
+- **Protocol**: Disjoint split into 603 training clips (70%), 129 validation clips (15%), and 130 test clips (15%) across distinct utterances.
 
-### 3.6 Canonical Emotion Taxonomies & Mapping
-To facilitate cross-corpus and cross-lingual benchmarking, a unified canonical mapping aligns overlapping emotion categories:
+### 3.6 Canonical Emotion Taxonomies and Alignment
+For cross-corpus and cross-lingual experiments, a canonical mapping aligns overlapping emotion categories:
 
 $$C_{canonical} = \{\text{Anger}, \text{Disgust}, \text{Fear}, \text{Happy}, \text{Neutral}, \text{Sad}, \text{Surprise}, \text{Calm}\}$$
 
-When evaluating models across mismatched label spaces, evaluation operates strictly across the intersection of active classes using an explicit label alignment matrix.
+Cross-dataset evaluations operate across the intersection of active classes through an explicit alignment matrix.
 
 ---
 
 ## 4. System Architecture & Methodology
 
-The complete system pipeline is depicted in **Figure 1**, illustrating the dual-branch framework that processes raw speech into simultaneous categorical emotion predictions and continuous behavioural telemetry.
+Figure 1 outlines the complete system architecture, showing the processing flow from raw audio ingestion through feature extraction and model inference to the dual outputs: categorical emotion probabilities and behavioral prosody metrics.
 
 ![Figure 1: End-to-End System Architecture](reports/figures/fig1_system_architecture.png)
 
 ### 4.1 Acoustic Feature Extraction
-For acoustic deep learning baselines, raw 16 kHz audio signals are converted into 2D time-frequency representations:
-- **Log-Mel Filterbanks**: 40 mel-scale filterbanks computed via Short-Time Fourier Transform (STFT) with a 25 ms Hamming window and 10 ms frame shift (512-point FFT).
-- **MFCCs**: 40 Mel-Frequency Cepstral Coefficients with dynamic delta ($\Delta$) and delta-delta ($\Delta^2$) temporal derivatives.
-- **Cepstral Mean and Variance Normalization (CMVN)**: Applied per utterance to mitigate channel noise:
+For acoustic baseline models, raw audio signals are transformed into time-frequency representations:
+- **Log-Mel Filterbanks**: 40 mel-scale filterbanks extracted via Short-Time Fourier Transform (STFT) with a 25 ms Hamming window and 10 ms hop length (512-point FFT).
+- **MFCCs**: 40 Mel-Frequency Cepstral Coefficients with first ($\Delta$) and second ($\Delta^2$) temporal derivatives.
+- **Cepstral Mean and Variance Normalization (CMVN)**: Applied per utterance to normalize recording conditions:
 
 $$\hat{X}(t, f) = \frac{X(t, f) - \mu_f}{\sigma_f}$$
 
-### 4.2 Self-Supervised Foundation Backbones
-We implement fine-tuning pipelines for two prominent SSL backbones:
-1. **HuBERT Base (`facebook/hubert-base-ls960`)**: 94.7M parameters, 12 transformer encoder blocks, 768-dimensional hidden state, 8 attention heads, trained via masked prediction of acoustic k-means cluster tokens.
-2. **Wav2Vec 2.0 Base (`facebook/wav2vec2-base-960h`)**: 94.4M parameters, 7-layer temporal convolutional feature encoder, 12 transformer encoder blocks, 768-dimensional hidden state, trained via contrastive loss over quantized latent representations.
+### 4.2 Self-Supervised Foundation Models
+We evaluate fine-tuning configurations for two pre-trained backbones:
+1. **HuBERT Base (`facebook/hubert-base-ls960`)**: 94.7M parameters, 12 transformer encoder blocks, 768-dimensional hidden state, 8 attention heads.
+2. **Wav2Vec 2.0 Base (`facebook/wav2vec2-base-960h`)**: 94.4M parameters, 7-layer temporal convolutional encoder, 12 transformer encoder blocks, 768-dimensional hidden state.
 
 ### 4.3 Learnable Weighted Layer Pooling Mechanism
-Standard fine-tuning recipes for speech transformers either discard all intermediate representations and pass only the final layer $L_{12}$ to a classification head, or apply a naive uniform average:
+Standard fine-tuning protocols typically use only the final transformer layer $L_{12}$ or apply uniform unweighted averaging across all layers:
 
 $$\mathbf{h}_{uniform} = \frac{1}{L} \sum_{i=1}^{L} \mathbf{h}_i$$
 
-However, speech emotion information is hierarchical: early layers encode raw acoustics, intermediate layers encode prosodic variations, and top layers converge on invariant phoneme identities [6], [24]. 
+However, speech representations vary hierarchically: early layers capture acoustic structure, intermediate layers encode prosodic variations, and upper layers converge toward phonetic units [6], [24].
 
-To dynamically learn optimal layer importance, we introduce **Learnable Weighted Layer Pooling**. Let $\mathbf{H} = [\mathbf{h}_1, \mathbf{h}_2, \dots, \mathbf{h}_L]$ denote the sequence of frame-pooled hidden state vectors across all $L = 12$ transformer layers, where $\mathbf{h}_i \in \mathbb{R}^{D}$ ($D = 768$). We define a learnable unconstrained weight vector $\mathbf{w} = [w_1, w_2, \dots, w_L]^T \in \mathbb{R}^L$, initialized uniformly ($w_i = 0$).
+To learn the relative importance of each layer automatically, we implement Learnable Weighted Layer Pooling. Let $\mathbf{H} = [\mathbf{h}_1, \mathbf{h}_2, \dots, \mathbf{h}_L]$ denote the sequence of frame-pooled hidden state vectors across all $L = 12$ transformer layers, where $\mathbf{h}_i \in \mathbb{R}^{D}$ and $D = 768$. We introduce a learnable parameter vector $\mathbf{w} = [w_1, w_2, \dots, w_L]^T \in \mathbb{R}^L$, initialized uniformly ($w_i = 0$).
 
-The normalized layer contribution weights $\boldsymbol{\alpha} = [\alpha_1, \alpha_2, \dots, \alpha_L]^T$ are computed via the softmax function:
+The normalized layer weights $\boldsymbol{\alpha} = [\alpha_1, \alpha_2, \dots, \alpha_L]^T$ are computed via the softmax function:
 
-$$\alpha_i = \frac{\exp(w_i)}{\sum_{j=1}^{L} \exp(w_j)}, \quad \text{such that } \sum_{i=1}^{L} \alpha_i = 1, \; \alpha_i > 0$$
+$$\alpha_i = \frac{\exp(w_i)}{\sum_{j=1}^{L} \exp(w_j)}, \quad \text{where } \sum_{i=1}^{L} \alpha_i = 1, \; \alpha_i > 0$$
 
-The pooled multi-layer representation $\mathbf{h}_{pool} \in \mathbb{R}^D$ is the convex linear combination:
+The pooled representation $\mathbf{h}_{pool} \in \mathbb{R}^D$ is the convex combination:
 
 $$\mathbf{h}_{pool} = \sum_{i=1}^{L} \alpha_i \mathbf{h}_i$$
 
-The pooled vector $\mathbf{h}_{pool}$ is subsequently passed through a dropout layer ($p = 0.3$), a non-linear projection, and a linear classification head:
+The vector $\mathbf{h}_{pool}$ is then passed through dropout ($p = 0.3$), a non-linear projection layer, and a classification layer:
 
 $$\hat{\mathbf{y}} = \text{Softmax}(\mathbf{W}_c \cdot \text{ReLU}(\mathbf{W}_p \mathbf{h}_{pool} + \mathbf{b}_p) + \mathbf{b}_c)$$
 
-During backpropagation, gradients propagate simultaneously through the classification loss into the classification head, the layer weights $\mathbf{w}$, and the transformer layers, allowing the network to automatically balance acoustic vs. prosodic representations.
+During backpropagation, gradients update the classification head, the layer weights $\mathbf{w}$, and the transformer weights simultaneously.
 
 ### 4.4 Supervised CNN-BiLSTM Architecture for Indic Speech
-For native Indic speech emotion classification where computational resources or training samples are constrained, heavy transformer fine-tuning risks severe overfitting [2]. We engineer an optimized **CNN-BiLSTM** hybrid:
-1. **Convolutional Feature Front-End**: Two sequential 1D convolutional layers ($\text{Conv1D}(40 \rightarrow 64, k=5)$, BatchNorm, ReLU, MaxPool, followed by $\text{Conv1D}(64 \rightarrow 128, k=5)$, BatchNorm, ReLU, MaxPool) extract local spectral-temporal motifs.
-2. **Bidirectional Recurrent Contextualization**: A 2-layer Bidirectional Long Short-Term Memory (BiLSTM) network with 256 hidden units per direction captures long-range prosodic trajectories across the temporal sequence.
-3. **Temporal Attention & Dense Projection**: An attention-weighted pooling layer computes a fixed-dimensional context vector, projected through a 128-dimensional dense layer with Dropout ($p = 0.4$) to the 5-class softmax output.
+When sample sizes are modest, fine-tuning large transformers can lead to overfitting [2]. We therefore construct a targeted CNN-BiLSTM architecture:
+1. **Convolutional Front-End**: Two sequential 1D convolutional layers ($\text{Conv1D}(40 \rightarrow 64, k=5)$ with BatchNorm, ReLU, and MaxPool, followed by $\text{Conv1D}(64 \rightarrow 128, k=5)$ with BatchNorm, ReLU, and MaxPool) extract local spectral features.
+2. **Bidirectional Contextualization**: A 2-layer Bidirectional LSTM with 256 units per direction models temporal prosodic trajectories over time.
+3. **Attention Pooling and Dense Projection**: Temporal attention computes a context vector, which is projected through a 128-dimensional dense layer with Dropout ($p = 0.4$) to the 5-class softmax output.
 
 ### 4.5 Audio Behaviour Analysis Engine
-In parallel with neural emotion classification, our rule-based signal processing engine extracts objective behavioral metrics:
+In parallel with classification, our acoustic processing engine extracts objective behavioral metrics:
 
 #### 1. Syllabic Speaking Speed ($v_{speech}$)
-We apply peak amplitude envelope tracking combined with vowel-onset spectral flux to estimate syllable pulses ($N_{syl}$) over active speech duration ($T_{active} = T_{total} - T_{silence}$):
+Syllable nuclei ($N_{syl}$) are detected using smoothed energy envelope peaks and vowel-onset spectral flux across active speech duration ($T_{active} = T_{total} - T_{silence}$):
 
 $$v_{speech} = \frac{N_{syl}}{T_{active}} \quad (\text{syllables/sec}), \qquad \text{WPM} \approx v_{speech} \times \frac{60}{1.5}$$
 
-Speech tempo is categorized as *Slow* ($< 2.2$ syl/s), *Normal* ($2.2 - 3.8$ syl/s), or *Fast / Accelerated* ($> 3.8$ syl/s).
+Tempo is categorized as Slow ($< 2.2$ syl/s), Normal ($2.2 - 3.8$ syl/s), or Fast ($> 3.8$ syl/s).
 
-#### 2. Pause Frequency & Silence Ratio ($R_{silence}$)
-Using frame-level energy thresholding with Voice Activity Detection (threshold = $-35$ dB relative to peak), contiguous non-speech regions $> 200$ ms are identified as pauses:
+#### 2. Pause Frequency and Silence Ratio ($R_{silence}$)
+Using frame-level energy thresholding with Voice Activity Detection (threshold set to $-35$ dB relative to peak energy), contiguous non-speech regions $> 200$ ms are classified as pauses:
 
 $$R_{silence} = \frac{T_{silence}}{T_{total}} \times 100\%, \qquad f_{pause} = \frac{N_{pauses}}{T_{total} / 60} \quad (\text{pauses/min})$$
 
 #### 3. Vocal Energy Dynamics ($E_{rms}$)
-Root-Mean-Square (RMS) energy is computed across short-time frames ($N = 512$):
+Short-time Root-Mean-Square energy is computed over frames of length $N = 512$:
 
 $$E_{rms} = 20 \log_{10} \left( \sqrt{\frac{1}{N} \sum_{n=0}^{N-1} x[n]^2} \right) \quad (\text{dB})$$
 
-Loudness dynamic range is quantified via the standard deviation of frame-wise energy ($\sigma_{rms}$).
+Loudness variability is measured through the standard deviation of frame-wise energy ($\sigma_{rms}$).
 
-#### 4. Fundamental Frequency Intonation ($F_0$ Contour)
-We implement the probabilistic YIN (pYIN) algorithm [29] to track the fundamental pitch contour $F_0(t)$ across voiced frames ($f \in [50, 450]$ Hz):
+#### 4. Fundamental Frequency Intonation ($F_0$)
+We employ the probabilistic YIN (pYIN) algorithm [29] to track fundamental pitch $F_0(t)$ across voiced frames within $[50, 450]$ Hz:
 
 $$\bar{F}_0 = \frac{1}{M} \sum_{m=1}^{M} F_0[m], \qquad \sigma_{F_0} = \sqrt{\frac{1}{M} \sum_{m=1}^{M} (F_0[m] - \bar{F}_0)^2}$$
 
-Elevated $\sigma_{F_0}$ indicates high expressive modulation, whereas depressed $\sigma_{F_0} < 15$ Hz signals monotonic or blunted affect.
+Elevated $\sigma_{F_0}$ indicates wide expressive variation, while $\sigma_{F_0} < 15$ Hz indicates monotonic pitch intonation.
 
 ---
 
 ## 5. Experimental Setup & Training Protocols
 
-### 5.1 Optimization & Hyperparameter Specifications
+### 5.1 Optimization Hyperparameters
 - **Optimizer**: AdamW with weight decay $\lambda = 0.01$.
-- **Learning Rate Schedule**: Cosine Annealing with linear warmup over the first 10% of total training steps:
+- **Learning Rate Schedule**: Cosine Annealing with linear warmup across the first 10% of training steps:
   - Transformer Backbones: $\eta_{base} = 1 \times 10^{-5}$ (frozen feature extractor), $\eta_{head} = 1 \times 10^{-3}$.
   - CNN-BiLSTM Models: $\eta = 5 \times 10^{-4}$ with ReduceLROnPlateau ($\text{factor} = 0.5$, $\text{patience} = 5$).
 - **Batch Size**: 16 for transformers, 32 for CNN-BiLSTM.
-- **Loss Function**: Class-weighted Cross-Entropy loss to penalize minority emotion errors:
+- **Loss Function**: Class-weighted cross-entropy loss:
 
 $$\mathcal{L}_{CE} = - \sum_{k=1}^{K} w_k y_k \log \hat{y}_k, \quad w_k = \frac{N_{total}}{K \cdot N_k}$$
 
 - **Early Stopping**: Monitored validation Macro-F1 with a patience threshold of 10 epochs.
 
-### 5.2 Computational Acceleration
-Training and inference were executed with PyTorch 2.6 using Apple Silicon Metal Performance Shaders (`mps`) on an M-series unified memory architecture. The zero-copy memory fabric enabled real-time inference latency of **~38.4 ms per utterance**, well below the 100 ms real-time interactive latency threshold.
+### 5.2 Computational Environment
+Models were trained with PyTorch 2.6 using Apple Silicon Metal Performance Shaders (`mps`). Average inference latency was measured at 38.4 ms per utterance, which satisfies real-time processing requirements.
 
 ### 5.3 Evaluation Metrics
-To provide rigorous, unbiased assessment under potential class imbalance:
-- **Overall Accuracy**: Standard multi-class classification accuracy.
-- **Macro-Averaged F1-Score**: Unweighted arithmetic mean of F1-scores across all $K$ classes:
+- **Overall Accuracy**: Standard multi-class accuracy.
+- **Macro-Averaged F1-Score**: Unweighted mean of class-wise F1-scores:
 
 $$\text{Macro-F1} = \frac{1}{K} \sum_{k=1}^{K} \frac{2 \cdot P_k \cdot R_k}{P_k + R_k}$$
 
-- **Unweighted Average Recall (UAR)** / Balanced Accuracy: Equivalent to balanced recall across all categories, serving as the official benchmark standard in Interspeech ComParE challenges [13]:
+- **Unweighted Average Recall (UAR)**: Average recall per class, consistent with Interspeech ComParE standards [13]:
 
 $$\text{UAR} = \frac{1}{K} \sum_{k=1}^{K} \frac{\text{TP}_k}{\text{TP}_k + \text{FN}_k}$$
 
@@ -279,7 +278,7 @@ $$\text{UAR} = \frac{1}{K} \sum_{k=1}^{K} \frac{\text{TP}_k}{\text{TP}_k + \text
 ## 6. Multi-Model Benchmark Results & Comparative Analysis
 
 ### 6.1 Multi-Corpus Universal Foundation Model (`outputs/combined/`)
-To evaluate whether a single model can generalize across diverse acoustic environments, accents, and recording conditions, we trained a Universal HuBERT Foundation Model across the combined multi-corpus dataset (121 speakers) and evaluated it simultaneously against **1,701 strictly unseen multi-corpus test utterances**.
+To evaluate whether a unified model can generalize across diverse acoustic environments, accents, and recording conditions, a Universal HuBERT Foundation Model was trained on the combined dataset (121 speakers) and evaluated against 1,701 unseen multi-corpus test utterances.
 
 ```
 +---------------------------------------------------------------------------------------------------+
@@ -295,73 +294,72 @@ To evaluate whether a single model can generalize across diverse acoustic enviro
 +---------------------------------------------------------------------------------------------------+
 ```
 
-The Universal HuBERT model achieved **68.31% Accuracy** across 1,701 completely unseen test clips, outperforming chance by **4.1x**. Sub-cohort breakdown on unseen test actors:
-- **CREMA-D Unseen Actors**: **72.45% Accuracy**
-- **TESS Unseen Words**: **68.89% Accuracy**
-- **RAVDESS Unseen Actors**: **52.27% Accuracy**
-- **SAVEE Unseen Actor**: **51.43% Accuracy**
+The Universal HuBERT model achieved 68.31% Accuracy on the 1,701 unseen test clips, exceeding chance (16.67%) by 4.1 times. The breakdown across individual test sets was:
+- CREMA-D Unseen Actors: 72.45% Accuracy
+- TESS Unseen Words: 68.89% Accuracy
+- RAVDESS Unseen Actors: 52.27% Accuracy
+- SAVEE Unseen Actor: 51.43% Accuracy
 
-The visual comparison of benchmark performance across all corpora is illustrated in **Figure 3**.
+Figure 3 illustrates the comparative benchmark performance across all datasets.
 
 ![Figure 3: Benchmark Test Performance Across Corpora](reports/figures/fig3_benchmark_performance.png)
 
 ### 6.2 In-Domain Multi-Corpus Benchmark Summary
 
-#### A. CREMA-D (91 Diverse Actors, 13 Unseen Test Actors)
-- **Soft-Voting Top-5 Ensemble**: **75.57% Accuracy** | **0.7594 Macro-F1** | **75.40% UAR**
-- **HuBERT Base (Learnable Layer Pooling)**: **71.98% Accuracy** | **0.7209 Macro-F1**
-- **Wav2Vec2 Base**: **69.25% Accuracy** | **0.6982 Macro-F1**
-- **MFCC + CNN-BiLSTM**: **62.80% Accuracy** | **0.6210 Macro-F1**
+#### A. CREMA-D (91 Actors, 13 Unseen Test Actors)
+- Soft-Voting Top-5 Ensemble: 75.57% Accuracy, 0.7594 Macro-F1, 75.40% UAR
+- HuBERT Base (Learnable Layer Pooling): 71.98% Accuracy, 0.7209 Macro-F1
+- Wav2Vec2 Base: 69.25% Accuracy, 0.6982 Macro-F1
+- MFCC + CNN-BiLSTM: 62.80% Accuracy, 0.6210 Macro-F1
 
-#### B. RAVDESS (24 Professional Actors, Actors 21–24 Unseen)
-- **Transfer Ensemble (Top 3)**: **73.75% Accuracy** | **0.7207 Macro-F1** (+5.0% gain over scratch)
-- **HuBERT Transfer (CREMA-D $\rightarrow$ RAVDESS)**: **72.92% Accuracy** (+40.42% absolute gain over HuBERT trained from scratch at 32.50%)
-- **Wav2Vec2 Transfer**: **70.42% Accuracy** | **0.6912 Macro-F1**
-- **MFCC + LSTM Baseline**: **55.42% Accuracy**
+#### B. RAVDESS (24 Actors, Actors 21 to 24 Unseen)
+- Transfer Ensemble (Top 3): 73.75% Accuracy, 0.7207 Macro-F1 (a 5.0% gain over training from scratch)
+- HuBERT Transfer (CREMA-D pre-training): 72.92% Accuracy (compared to 32.50% when trained from scratch)
+- Wav2Vec2 Transfer: 70.42% Accuracy, 0.6912 Macro-F1
+- MFCC + LSTM Baseline: 55.42% Accuracy
 
 #### C. SAVEE (4 British Male Actors, Actor `KL` Unseen)
-- **Frozen Weighted Transfer Ensemble**: **51.67% Accuracy** | **0.3860 Macro-F1**
-- **Transfer Gain**: Represents a **2.0x Accuracy** and **5.8x Macro-F1** improvement over training from scratch (25.0% Accuracy, 0.0667 Macro-F1), which collapses due to severe vocal tract overfitting.
+- Frozen Weighted Transfer Ensemble: 51.67% Accuracy, 0.3860 Macro-F1
+- Training from scratch on SAVEE yielded 25.0% accuracy due to severe speaker overfitting on two training actors. Pre-training on CREMA-D doubled accuracy to 51.67%.
 
 #### D. TESS (2 Actresses, 200 Words, 30 Unseen Target Words)
-- **All SSL Foundation Models & Ensemble**: **100.00% Accuracy** | **1.0000 Macro-F1** | **100.00% UAR**
-- Demonstrates perfect prompt-disjoint lexical invariance across actresses.
+- SSL Foundation Models and Ensemble: 100.00% Accuracy, 1.0000 Macro-F1, 100.00% UAR
+- Confirms word-independent emotional generalization across both actresses.
 
 ---
 
-## 7. Empirical Findings & In-Depth Ablation Studies
+## 7. Empirical Findings & Ablation Studies
 
-### 7.1 The Speaker Diversity Law
-By analyzing model performance across SAVEE (2 training actors), RAVDESS (16 training actors), and CREMA-D (64 training actors), we identify an empirical **Speaker Diversity Law**:
+### 7.1 The Speaker Diversity Effect
+Comparing performance across SAVEE (2 training actors), RAVDESS (16 training actors), and CREMA-D (64 training actors) indicates a consistent relationship between speaker cohort size and generalization:
 
 ```
 +---------------------------------------------------------------------------------------------------+
-|                                     THE SPEAKER DIVERSITY LAW                                     |
+|                                     THE SPEAKER DIVERSITY EFFECT                                  |
 |                                                                                                   |
-|   Training Cohort Size    Corpus      Scratch Test Acc    Transfer Test Acc   Generalization      |
+|   Training Cohort Size    Corpus      Scratch Test Acc    Transfer Test Acc   Observed Dynamics   |
 |   ---------------------------------------------------------------------------------------------   |
-|   2 Actors (Minimal)      SAVEE            25.83%              51.67%         Overfits Tract      |
-|   16 Actors (Moderate)    RAVDESS          68.75%              73.75%         Decent Separation   |
-|   64 Actors (Extensive)   CREMA-D          75.57%              75.57%         True Disentanglement|
+|   2 Actors (Minimal)      SAVEE            25.83%              51.67%         Severe Overfitting  |
+|   16 Actors (Moderate)    RAVDESS          68.75%              73.75%         Moderate Separation |
+|   64 Actors (Extensive)   CREMA-D          75.57%              75.57%         General Intonation  |
 +---------------------------------------------------------------------------------------------------+
 ```
 
-- **Acoustic Overfitting Regime ($\le 4$ speakers)**: Transformer self-attention layers bind emotional representations directly to speaker-specific pitch and formant baselines. Scratch training fails on unseen test actors.
-- **Disentangled Regime ($\ge 64$ speakers)**: Broad phonetic and speaker diversity forces attention mechanisms to discard speaker-invariant pitch baselines and isolate true dynamic prosodic contours.
+With small cohorts (e.g., SAVEE), scratch training models individual pitch and formant characteristics, leading to failure on novel speakers. Increasing speaker diversity during pre-training enables the model to separate speaker identity from emotional prosody.
 
 ### 7.2 Layer Weight Distribution Across Transformer Depth
-Inspection of the learned softmax parameters $\boldsymbol{\alpha}$ across the 12 transformer encoder blocks reveals the internal representation hierarchy, depicted in **Figure 2**.
+Figure 2 displays the learned softmax weights $\boldsymbol{\alpha}$ across the 12 transformer encoder blocks.
 
 ![Figure 2: Layer Weight Distribution](reports/figures/fig2_layer_weights.png)
 
-- **Acoustic Encoding Zone (Layers 1–4)**: Receives low, stable weights ($\alpha_i \approx 0.071 - 0.076$). These layers preserve low-level spectral and temporal waveform properties.
-- **Prosodic Culmination Zone (Layers 9–11)**: Weights surge to peak values ($\alpha_9 = 0.108, \alpha_{10} = 0.114, \alpha_{11} = 0.111$), capturing **33.3% of the total network weighting**. These layers capture utterance-level intonation, vocal energy modulation, and rhythm.
-- **Phonetic Convergence Zone (Layer 12)**: Weight drops sharply to $\alpha_{12} = 0.092$ as the representation specializes in discrete phoneme tokens. 
+- **Early Layers (Layers 1 to 4)**: Weights remain low ($\alpha_i \approx 0.071 - 0.076$), capturing basic spectral and acoustic features.
+- **Intermediate Layers (Layers 9 to 11)**: Weights reach their maximum ($\alpha_9 = 0.108, \alpha_{10} = 0.114, \alpha_{11} = 0.111$), accounting for 33.3% of the total network weight. These layers encode intonational contours and energy dynamics.
+- **Final Layer (Layer 12)**: Weight decreases to $\alpha_{12} = 0.092$ as the representation shifts toward phonetic recognition.
 
-This proves that discarding intermediate layers in favor of the final layer alone discards the richest emotional representations in the transformer.
+This confirms that pooling intermediate layers provides stronger emotional representations than relying on the final layer alone.
 
-### 7.3 Hindi Speech Emotion Benchmark: Zero-Shot vs. Supervised Adaptation
-To investigate cross-lingual transferability to Indic speech, we evaluated the English-trained Universal HuBERT model zero-shot on the unseen native Hindi test split across shared canonical emotions:
+### 7.3 Hindi Speech Emotion: Zero-Shot vs. Supervised Adaptation
+Evaluating the English-trained Universal HuBERT model zero-shot on the native Hindi test split yielded the following baseline:
 
 ```
 =================== ZERO-SHOT CROSS-CORPUS SUMMARY ===================
@@ -372,7 +370,7 @@ Chance Baseline:    25.00%
 ======================================================================
 ```
 
-While zero-shot transfer exceeds random chance, phonological differences limit cross-lingual discriminability. However, training our native **CNN-BiLSTM** on the Hindi training split yields dramatic improvements, illustrated in **Figure 4**.
+Zero-shot transfer performs above chance but remains limited due to phonological differences. Training our CNN-BiLSTM directly on Hindi speech substantially improves accuracy, as shown in Figure 4.
 
 ![Figure 4: Cross-Lingual Transfer Comparison](reports/figures/fig4_cross_lingual_transfer.png)
 
@@ -388,23 +386,23 @@ While zero-shot transfer exceeds random chance, phonological differences limit c
 +---------------------------------------------------------------------------------------------------+
 ```
 
-Supervised in-domain adaptation delivers a **+47.57% absolute accuracy leap**, reaching **75.19% Accuracy** and **70.56% UAR**.
+Supervised adaptation increases test accuracy by 47.57 percentage points, achieving 75.19% Accuracy and 70.56% UAR.
 
 ### 7.4 Confusion Matrix Analysis for Hindi Speech
-The normalized confusion matrix for the Hindi Emotion Specialist model is shown in **Figure 5**.
+The normalized confusion matrix for the Hindi Emotion Specialist model is presented in Figure 5.
 
 ![Figure 5: Hindi Emotion Confusion Matrix](reports/figures/fig5_hindi_confusion_matrix.png)
 
-- **Anger** achieves the highest individual recognition rate (**82%**), characterized by elevated vocal energy and sharp pitch onsets.
-- **Happy** achieves **76%**, with minor confusion into Anger (8%) due to shared high arousal.
-- **Neutral** (**74%**) and **Calm** (**72%**) exhibit mutual cross-confusion (12%–16%), reflecting subtle prosodic boundaries between tranquil and baseline states in conversational Hindi.
-- **Sad** (**72%**) shows slight leakage into Neutral (13%) attributable to shared low vocal loudness.
+- **Anger**: Highest classification rate at 82%, driven by elevated energy and pronounced pitch shifts.
+- **Happy**: 76% accuracy, with 8% misclassified as Anger due to shared high arousal.
+- **Neutral** (74%) and **Calm** (72%): Show cross-confusion of 12% to 16%, reflecting shared low-arousal acoustic profiles.
+- **Sad**: 72% accuracy, with 13% classified as Neutral due to reduced vocal volume.
 
 ---
 
 ## 8. Speech Behavioural Intelligence & Diagnostic Profiling
 
-To provide actionable insights beyond discrete emotion tags, our Behaviour Engine maps acoustic features across emotion categories, as depicted in **Figure 6**.
+Figure 6 summarizes the acoustic profile patterns extracted across each emotion category.
 
 ![Figure 6: Multimodal Acoustic Behaviour Profiles](reports/figures/fig6_behavioral_prosody_profile.png)
 
@@ -424,17 +422,17 @@ To provide actionable insights beyond discrete emotion tags, our Behaviour Engin
 +---------------------------------------------------------------------------------------------------+
 ```
 
-### 8.2 Clinical & Commercial Telemetry Synthesis
-Combining classification logits with behavioural vectors generates structured natural language syntheses:
-- **Agitated / Assertive Profile**: High speech rate ($> 4.0$ syl/s), minimal pauses ($< 15\%$), and high RMS energy ($> -18$ dB) with Anger/High Arousal.
-- **Hesitant / Anxious Profile**: High pause frequency ($> 14$ pauses/min), high silence ratio ($> 25\%$), and elevated pitch variation with Sadness/Neutral.
-- **Engaged / Confident Communicator**: Balanced tempo ($2.8 - 3.4$ syl/s), normative pauses ($18\% - 22\%$), and moderate energy ($-22$ to $-26$ dB) with Happy/Neutral.
+### 8.2 Telemetry Interpretation
+Integrating classification probabilities with continuous acoustic measurements enables contextual interpretation:
+- **High Arousal Profile**: Fast tempo ($> 4.0$ syl/s), low pause ratio ($< 15\%$), and high energy ($> -18$ dB) matching Anger or High Excitement.
+- **Hesitant Profile**: Elevated pause frequency ($> 14$ pauses/min), high silence ratio ($> 25\%$), and moderate pitch variation matching Sadness or Uncertainty.
+- **Balanced Communicator Profile**: Moderate tempo ($2.8 - 3.4$ syl/s), standard pause ratio ($18\% - 22\%$), and balanced energy ($-22$ to $-26$ dB) matching Neutral or Calm states.
 
 ---
 
 ## 9. Full-Stack Implementation & Web Application
 
-To deliver an interactive, human-centered demonstration, the research pipeline was implemented into a production-grade full-stack architecture:
+The system was implemented as a production microservice architecture:
 
 ```
 +---------------------------------------------------------------------------------------------------+
@@ -461,26 +459,26 @@ To deliver an interactive, human-centered demonstration, the research pipeline w
 +---------------------------------------------------------------------------------------------------+
 ```
 
-- **Backend Microservice (`web/server.py` & `scripts/inference_api.py`)**: Built with FastAPI and Uvicorn. Exposes `/predict`, `/models`, `/health`, `/api/health`, and pre-configured audio streams `/api/sample-audio/{id}`.
-- **Frontend Studio (`frontend/`)**: Built with Next.js 16 (Turbopack, React 19, TypeScript). Designed in a clean, minimal white mode (`#F8FAFC`) with a live audio waveform visualizer connected to the microphone and audio player.
+- **Backend API (`web/server.py` & `scripts/inference_api.py`)**: Built with FastAPI and Uvicorn. Exposes endpoints `/predict`, `/models`, `/health`, `/api/health`, and sample clip endpoints `/api/sample-audio/{id}`.
+- **Frontend Studio (`frontend/`)**: Built with Next.js 16 (React 19, TypeScript). Designed in a clean white mode (`#F8FAFC`) with real-time waveform bars connected to microphone input and audio playback.
 
 ---
 
 ## 10. Limitations & Ethical Considerations
 
-1. **Acoustic Environment Variances**: Real-world telephonic speech suffers from variable codec compression (e.g., AMR, G.711) and background noise. Future iterations should incorporate data augmentation with room impulse responses (RIR).
-2. **Subjective Ground Truth**: Emotion labels reflect perceived affective states rather than internal neurological reality.
-3. **Indic Dialectal Diversity**: Hindi exhibits substantial dialectal variations (e.g., Khariboli, Awadhi, Bhojpuri-influenced Hindi). Expanding multi-dialectal training cohorts remains an essential next step.
+1. **Acoustic Channel Variations**: Audio recorded through telephone networks or variable microphones undergoes compression and distortion. Data augmentation with room impulse responses and noise profiles is recommended for future work.
+2. **Subjective Ground Truth**: Emotion labels represent external perception rather than internal affective state.
+3. **Indic Dialectal Diversity**: Hindi contains multiple regional dialects. Expanding training data to include broader dialectal coverage remains an important objective.
 
 ---
 
 ## 11. Conclusion
 
-This research presents an end-to-end multi-corpus and cross-lingual speech emotion recognition framework that establishes:
-1. **Learnable Weighted Layer Pooling** resolves representation bottlenecks in speech transformers, proving that intermediate layers (Layers 9–11) encapsulate peak emotional intonation.
-2. The **Speaker Diversity Law** governs out-of-domain generalization: scratch training on small cohorts overfits speaker identity, whereas transfer learning from extensive multi-actor cohorts disentangles affective prosody.
-3. **Cross-Lingual Adaptation**: English foundation models transfer zero-shot above chance to native Indic speech, but supervised in-domain adaptation with targeted CNN-BiLSTM architectures achieves a decisive **75.19% accuracy** (+47.57% absolute gain).
-4. **Behavioural Intelligence**: Augmenting discrete classifications with syllabic tempo, pause dynamics, vocal loudness, and fundamental pitch intonation transforms raw speech classification into a comprehensive diagnostic system.
+This study evaluated speech emotion recognition across multi-corpus and cross-lingual settings. The primary conclusions are:
+1. **Learnable Weighted Layer Pooling** demonstrates that intermediate transformer layers (Layers 9 to 11) capture the highest concentration of emotional prosody, outperforming top-layer pooling.
+2. **Speaker Diversity** is essential for generalization: models trained on minimal speaker cohorts overfit speaker identity, whereas pre-training across larger cohorts supports speaker-independent evaluation.
+3. **Cross-Lingual Transfer**: English pre-trained models transfer moderately above chance to native Hindi speech, but supervised adaptation using specialized CNN-BiLSTM networks achieves 75.19% accuracy.
+4. **Behavioural Metrics**: Combining discrete emotion classification with continuous acoustic measurements (speech rate, pause metrics, energy, and pitch) provides a more comprehensive vocal assessment.
 
 ---
 
