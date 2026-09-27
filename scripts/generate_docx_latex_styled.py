@@ -1,16 +1,15 @@
 """
-Script to generate an authentic LaTeX-styled publication-grade Microsoft Word (.docx) manuscript.
-Strictly follows IEEE Transactions on Affective Computing specifications:
-- 100% Pure Black Text (RGB: 0, 0, 0) across all elements (no grays, slates, blues, or highlights)
-- Authentic IEEE Header & Footer layout:
-  * First page: No running header; formal unnumbered author/project footnote at bottom
-  * Page 2 onwards: Clean running header with thin border rule and dynamic Word page numbering; running footer
-- IEEE Roman-numeral section hierarchy with centered major headings
-- Indented academic abstract block with 'Abstract—' and 'Index Terms—'
-- Authentic LaTeX Booktabs tables in pure black & white (no colored cell fills)
-- Native Office Math Markup Language (OMML) display equations with right-aligned numbering
-- Embedded high-resolution figures with IEEE captions
-- 30 verified authentic peer-reviewed citations with hanging indent
+Script to generate a clean, publication-grade Microsoft Word (.docx) research report.
+- Strictly pure black text (RGB: 0, 0, 0) throughout.
+- Clean and minimal headers/footers:
+  * Header: Completely empty (NO lines, NO IEEE banners, NO text).
+  * Footer: Simple centered page number (NO lines, NO IEEE text).
+- Professional academic title and author block (Himanshi Patel).
+- Indented abstract and keywords block.
+- Native Office Math Markup Language (OMML) display equations with right-aligned numbering.
+- LaTeX Booktabs tables in clean black & white with zero vertical lines.
+- Centered high-resolution figures with clear academic captions.
+- 30 verified authentic peer-reviewed citations with hanging indents.
 
 Author: Himanshi Patel
 Department of Computer Science and Engineering
@@ -20,7 +19,7 @@ import os
 from pathlib import Path
 import docx
 from docx.shared import Inches, Pt, RGBColor
-from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_TAB_ALIGNMENT
+from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.oxml import parse_xml, OxmlElement
 from docx.oxml.ns import nsdecls, qn
@@ -46,9 +45,9 @@ def set_cell_margins(cell, top=70, bottom=70, left=90, right=90):
 
 def set_booktabs_borders_bw(table):
     """
-    Applies strict LaTeX booktabs borders in pure black:
+    Applies clean LaTeX booktabs borders:
     Thick top border (1.5pt solid black), medium header bottom border (0.75pt solid black),
-    thick bottom border (1.5pt solid black), thin internal row border (0.25pt solid black),
+    thick bottom border (1.5pt solid black), thin internal row border (0.25pt),
     and zero vertical lines.
     """
     tblPr = table._tbl.tblPr
@@ -56,7 +55,7 @@ def set_booktabs_borders_bw(table):
         f'<w:tblBorders {nsdecls("w")}>'
         f'  <w:top w:val="single" w:sz="12" w:space="0" w:color="000000"/>'
         f'  <w:bottom w:val="single" w:sz="12" w:space="0" w:color="000000"/>'
-        f'  <w:insideH w:val="single" w:sz="4" w:space="0" w:color="CCCCCC"/>'
+        f'  <w:insideH w:val="single" w:sz="4" w:space="0" w:color="D1D5DB"/>'
         f'  <w:left w:val="none"/>'
         f'  <w:right w:val="none"/>'
         f'  <w:insideV w:val="none"/>'
@@ -108,7 +107,7 @@ def add_omml_equation_block(doc, omml_xml, eq_num=""):
     doc.add_paragraph().paragraph_format.space_after = Pt(2)
 
 
-def build_perfect_latex_word_manuscript():
+def build_clean_word_report():
     doc = docx.Document()
 
     # --- Page Setup: Letter with 1.0 inch academic margins ---
@@ -118,84 +117,21 @@ def build_perfect_latex_word_manuscript():
     section.left_margin = Inches(1.0)
     section.right_margin = Inches(1.0)
 
-    # Enable distinct first page header and footer
-    section.different_first_page_header_footer = True
-
-    # 1. First Page Header: MUST BE EMPTY in academic journals
-    # (Default first page header paragraph has no runs)
-
-    # 2. First Page Footer: Formal IEEE manuscript footnote with top border rule
-    fp_footer = section.first_page_footer
-    p_fp = fp_footer.paragraphs[0]
-    p_fp.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-    p_fp.paragraph_format.line_spacing = 1.15
-    p_fp.paragraph_format.space_before = Pt(4)
-    p_fp.paragraph_format.space_after = Pt(0)
-    pPr_fp = p_fp._p.get_or_add_pPr()
-    pBdr_fp = parse_xml(
-        f'<w:pBdr {nsdecls("w")}><w:top w:val="single" w:sz="6" w:space="5" w:color="000000"/></w:pBdr>'
-    )
-    pPr_fp.append(pBdr_fp)
-
-    r_fp = p_fp.add_run(
-        "Manuscript submitted September 2026. This research investigation was conducted by Himanshi Patel with the "
-        "Department of Computer Science and Engineering. Project Repository: speech_emotion_detection (Branch: develop-v3). "
-        "E-mail: himanshipatel@academic.edu. Comprehensive experimental code, model checkpoints, and evaluation telemetry "
-        "are publicly accessible under open academic protocols."
-    )
-    r_fp.font.name = "Times New Roman"
-    r_fp.font.size = Pt(8)
-    r_fp.font.italic = True
-    r_fp.font.color.rgb = BLACK
-
-    # 3. Subsequent Pages Header (Page 2+): Running Journal Name on Left, Page Number on Right, with bottom border rule
+    # Clean header: completely empty, no lines, no IEEE banners
     header = section.header
     p_head = header.paragraphs[0]
-    p_head.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    p_head.paragraph_format.space_before = Pt(0)
-    p_head.paragraph_format.space_after = Pt(2)
-    p_head.paragraph_format.tab_stops.add_tab_stop(Inches(6.5), WD_TAB_ALIGNMENT.RIGHT)
-    pPr_h = p_head._p.get_or_add_pPr()
-    pBdr_h = parse_xml(
-        f'<w:pBdr {nsdecls("w")}><w:bottom w:val="single" w:sz="6" w:space="4" w:color="000000"/></w:pBdr>'
-    )
-    pPr_h.append(pBdr_h)
+    p_head.text = ""
 
-    r_h_left = p_head.add_run("IEEE TRANSACTIONS ON AFFECTIVE COMPUTING, VOL. XX, NO. X, SEPTEMBER 2026\t")
-    r_h_left.font.name = "Times New Roman"
-    r_h_left.font.size = Pt(8.5)
-    r_h_left.font.color.rgb = BLACK
-
-    r_h_p = p_head.add_run("Page ")
-    r_h_p.font.name = "Times New Roman"
-    r_h_p.font.size = Pt(8.5)
-    r_h_p.font.color.rgb = BLACK
-
-    fld_page = parse_xml(r'<w:fldSimple xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" w:instr="PAGE"/>')
-    p_head._p.append(fld_page)
-
-    # 4. Subsequent Pages Footer (Page 2+): Running Author Title on Left, Date on Right, with top border rule
+    # Clean footer: simple centered page number, no lines, no IEEE text
     footer = section.footer
     p_foot = footer.paragraphs[0]
-    p_foot.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    p_foot.paragraph_format.space_before = Pt(2)
+    p_foot.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_foot.paragraph_format.space_before = Pt(6)
     p_foot.paragraph_format.space_after = Pt(0)
-    p_foot.paragraph_format.tab_stops.add_tab_stop(Inches(6.5), WD_TAB_ALIGNMENT.RIGHT)
-    pPr_f = p_foot._p.get_or_add_pPr()
-    pBdr_f = parse_xml(
-        f'<w:pBdr {nsdecls("w")}><w:top w:val="single" w:sz="6" w:space="4" w:color="000000"/></w:pBdr>'
-    )
-    pPr_f.append(pBdr_f)
-
-    r_f_left = p_foot.add_run("PATEL: MULTI-CORPUS AND MULTILINGUAL SPEECH EMOTION RECOGNITION\t")
-    r_f_left.font.name = "Times New Roman"
-    r_f_left.font.size = Pt(8)
-    r_f_left.font.color.rgb = BLACK
-
-    r_f_right = p_foot.add_run("SEPTEMBER 2026")
-    r_f_right.font.name = "Times New Roman"
-    r_f_right.font.size = Pt(8)
-    r_f_right.font.color.rgb = BLACK
+    
+    # Append dynamic page number field in pure black
+    fld_page = parse_xml(r'<w:fldSimple xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" w:instr="PAGE"/>')
+    p_foot._p.append(fld_page)
 
     # Set Default Document Font
     normal_style = doc.styles['Normal']
@@ -203,29 +139,12 @@ def build_perfect_latex_word_manuscript():
     normal_style.font.size = Pt(10)
     normal_style.font.color.rgb = BLACK
 
-    # --- Title Banner ---
-    top_banner = doc.add_paragraph()
-    top_banner.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    top_banner.paragraph_format.space_before = Pt(0)
-    top_banner.paragraph_format.space_after = Pt(10)
-    pPr_tb = top_banner._p.get_or_add_pPr()
-    pBdr_tb = parse_xml(
-        f'<w:pBdr {nsdecls("w")}><w:bottom w:val="single" w:sz="8" w:space="5" w:color="000000"/></w:pBdr>'
-    )
-    pPr_tb.append(pBdr_tb)
-
-    r_tb = top_banner.add_run("IEEE TRANSACTIONS ON AFFECTIVE COMPUTING  •  RESEARCH MANUSCRIPT")
-    r_tb.font.name = "Times New Roman"
-    r_tb.font.size = Pt(9)
-    r_tb.font.bold = True
-    r_tb.font.color.rgb = BLACK
-
     # --- Document Title ---
     p_title = doc.add_paragraph()
     p_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_title.paragraph_format.space_before = Pt(6)
-    p_title.paragraph_format.space_after = Pt(8)
-    p_title.paragraph_format.line_spacing = 1.2
+    p_title.paragraph_format.space_before = Pt(10)
+    p_title.paragraph_format.space_after = Pt(10)
+    p_title.paragraph_format.line_spacing = 1.25
     run_title = p_title.add_run(
         "Multi-Corpus and Multilingual Speech Emotion Recognition with Audio Behavioural Intelligence: "
         "A Cross-Lingual Evaluation and Learnable Weighted Layer Pooling Study"
@@ -249,7 +168,7 @@ def build_perfect_latex_word_manuscript():
     p_affil = doc.add_paragraph()
     p_affil.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_affil.paragraph_format.space_before = Pt(0)
-    p_affil.paragraph_format.space_after = Pt(14)
+    p_affil.paragraph_format.space_after = Pt(16)
     run_affil = p_affil.add_run(
         "Department of Computer Science and Engineering\n"
         "Project Repository: speech_emotion_detection (Branch: develop-v3)  •  E-mail: himanshipatel@academic.edu"
@@ -259,7 +178,7 @@ def build_perfect_latex_word_manuscript():
     run_affil.font.italic = True
     run_affil.font.color.rgb = BLACK
 
-    # --- Abstract & Index Terms (Authentic IEEE Indented Block) ---
+    # --- Abstract & Keywords Block ---
     p_abs = doc.add_paragraph()
     p_abs.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
     p_abs.paragraph_format.left_indent = Inches(0.35)
@@ -270,7 +189,7 @@ def build_perfect_latex_word_manuscript():
 
     run_abs_tag = p_abs.add_run("Abstract: ")
     run_abs_tag.font.name = "Times New Roman"
-    run_abs_tag.font.size = Pt(9)
+    run_abs_tag.font.size = Pt(9.5)
     run_abs_tag.font.bold = True
     run_abs_tag.font.color.rgb = BLACK
 
@@ -298,7 +217,7 @@ def build_perfect_latex_word_manuscript():
         "as an Apple Silicon accelerated microservice paired with a minimal web application featuring real-time audio waveform visualization."
     )
     run_abs_body.font.name = "Times New Roman"
-    run_abs_body.font.size = Pt(9)
+    run_abs_body.font.size = Pt(9.5)
     run_abs_body.font.color.rgb = BLACK
 
     p_kw = doc.add_paragraph()
@@ -307,11 +226,11 @@ def build_perfect_latex_word_manuscript():
     p_kw.paragraph_format.right_indent = Inches(0.35)
     p_kw.paragraph_format.line_spacing = 1.15
     p_kw.paragraph_format.space_before = Pt(2)
-    p_kw.paragraph_format.space_after = Pt(14)
+    p_kw.paragraph_format.space_after = Pt(16)
 
-    run_kw_tag = p_kw.add_run("Index Terms: ")
+    run_kw_tag = p_kw.add_run("Keywords: ")
     run_kw_tag.font.name = "Times New Roman"
-    run_kw_tag.font.size = Pt(9)
+    run_kw_tag.font.size = Pt(9.5)
     run_kw_tag.font.bold = True
     run_kw_tag.font.color.rgb = BLACK
 
@@ -320,33 +239,32 @@ def build_perfect_latex_word_manuscript():
         "Hindi Speech Emotion, Cross-Lingual Transfer, Vocal Behaviour, Speaker Disjoint Split, HuBERT, Wav2Vec 2.0, CNN-BiLSTM."
     )
     run_kw_body.font.name = "Times New Roman"
-    run_kw_body.font.size = Pt(9)
+    run_kw_body.font.size = Pt(9.5)
     run_kw_body.font.color.rgb = BLACK
 
-    # --- Section Generator Helpers (IEEE Standard Centered Major Headings) ---
-    def add_sec_heading(roman_title):
+    # --- Section Generator Helpers ---
+    def add_sec_heading(title):
         p = doc.add_paragraph()
-        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p.alignment = WD_ALIGN_PARAGRAPH.LEFT
         p.paragraph_format.space_before = Pt(14)
         p.paragraph_format.space_after = Pt(5)
         p.paragraph_format.keep_with_next = True
-        run = p.add_run(roman_title.upper())
+        run = p.add_run(title)
         run.font.name = "Times New Roman"
-        run.font.size = Pt(10.5)
+        run.font.size = Pt(11)
         run.font.bold = True
         run.font.color.rgb = BLACK
 
-    def add_subsec_heading(letter_title):
+    def add_subsec_heading(title):
         p = doc.add_paragraph()
         p.alignment = WD_ALIGN_PARAGRAPH.LEFT
         p.paragraph_format.space_before = Pt(9)
         p.paragraph_format.space_after = Pt(3)
         p.paragraph_format.keep_with_next = True
-        run = p.add_run(letter_title)
+        run = p.add_run(title)
         run.font.name = "Times New Roman"
         run.font.size = Pt(10)
         run.font.bold = True
-        run.font.italic = True
         run.font.color.rgb = BLACK
 
     def add_body_p(text, indent=True):
@@ -381,12 +299,12 @@ def build_perfect_latex_word_manuscript():
             cap_p.paragraph_format.right_indent = Inches(0.3)
             cap_run = cap_p.add_run(caption_text)
             cap_run.font.name = "Times New Roman"
-            cap_run.font.size = Pt(8.5)
+            cap_run.font.size = Pt(9)
             cap_run.font.italic = True
             cap_run.font.color.rgb = BLACK
 
-    # --- Section I: Introduction ---
-    add_sec_heading("I. Introduction & Research Motivation")
+    # --- Section 1: Introduction ---
+    add_sec_heading("1. Introduction & Research Motivation")
     add_body_p(
         "Spoken human communication comprises both lexical content (the verbal message) and paralinguistic modulations "
         "(vocal tone, cadence, and inflection) [6], [16]. Speech Emotion Recognition (SER) aims to identify affective states "
@@ -395,7 +313,7 @@ def build_perfect_latex_word_manuscript():
         "speakers, regional dialects, and recording conditions [1], [13]."
     )
 
-    add_subsec_heading("A. The Problem of Speaker Identity Leakage")
+    add_subsec_heading("1.1 The Problem of Speaker Identity Leakage")
     add_body_p(
         "A critical limitation in existing SER benchmarks is the use of randomized cross-validation [14], [16]. When speech segments "
         "from the same speaker appear in both the training and testing partitions, neural models tend to memorize speaker-specific vocal tract "
@@ -404,7 +322,7 @@ def build_perfect_latex_word_manuscript():
         "speaker-independent partitions in which test speakers are entirely withheld during training [15], [30]."
     )
 
-    add_subsec_heading("B. Indic and Low-Resource Language Representation")
+    add_subsec_heading("1.2 Indic and Low-Resource Language Representation")
     add_body_p(
         "Most accessible SER benchmarks rely on English (e.g., IEMOCAP, RAVDESS, CREMA-D) or German (e.g., EMO-DB) [16], [28]. "
         "Indic languages, spoken by over 1.4 billion individuals, remain underrepresented in speech research [1], [3]. Hindi exhibits "
@@ -413,7 +331,7 @@ def build_perfect_latex_word_manuscript():
         "and measuring the quantitative improvement achievable through supervised adaptation, is essential for multilingual affective computing [1], [18]."
     )
 
-    add_subsec_heading("C. Integrating Objective Vocal Metrics")
+    add_subsec_heading("1.3 Integrating Objective Vocal Metrics")
     add_body_p(
         "Standard SER architectures typically output discrete emotion class probabilities, such as P(Happy) = 0.85. However, clinical diagnostic "
         "applications, tele-counseling, and automated conversational systems benefit from continuous, interpretable acoustic measurements [5], [11]:"
@@ -436,7 +354,7 @@ def build_perfect_latex_word_manuscript():
         "Coupling categorical emotion classification with systematic behavioral feature extraction provides a more informative assessment of speech recordings [1], [11]."
     )
 
-    add_subsec_heading("D. Research Questions (RQ)")
+    add_subsec_heading("1.4 Research Questions (RQ)")
     add_body_p("This study addresses four primary research questions:")
     p_rq = doc.add_paragraph()
     p_rq.paragraph_format.left_indent = Inches(0.25)
@@ -452,13 +370,13 @@ def build_perfect_latex_word_manuscript():
     run_rq.font.size = Pt(9.5)
     run_rq.font.color.rgb = BLACK
 
-    # --- Section II: Literature Survey ---
-    add_sec_heading("II. Related Work & Literature Survey")
+    # --- Section 2: Literature Survey ---
+    add_sec_heading("2. Related Work & Literature Survey")
     add_body_p(
         "This investigation synthesizes 39 peer-reviewed publications across four core theoretical domains:"
     )
 
-    add_subsec_heading("A. Indic and Hindi Speech Emotion Recognition")
+    add_subsec_heading("2.1 Indic and Hindi Speech Emotion Recognition")
     add_body_p(
         "Early speech emotion recognition research in India relied predominantly on small private datasets evaluated with conventional "
         "classifiers such as Support Vector Machines (SVM) and Multi-Layer Perceptrons [4], [18]. Kotian and Singh (2026) [1] demonstrated "
@@ -474,7 +392,7 @@ def build_perfect_latex_word_manuscript():
         "require local supervised fine-tuning."
     )
 
-    add_subsec_heading("B. Self-Supervised Speech Representation Models")
+    add_subsec_heading("2.2 Self-Supervised Speech Representation Models")
     add_body_p(
         "Self-supervised learning has established powerful baseline representations for speech tasks. Models such as Wav2Vec 2.0 (Baevski et al., 2020) [9] "
         "and HuBERT (Hsu et al., 2021) [8] learn representations from thousands of hours of unlabeled audio through contrastive loss or masked cluster prediction. "
@@ -484,26 +402,26 @@ def build_perfect_latex_word_manuscript():
         "the Learnable Weighted Layer Pooling approach used in this work."
     )
 
-    add_subsec_heading("C. Vocal Behavioural Feature Integration")
+    add_subsec_heading("2.3 Vocal Behavioural Feature Integration")
     add_body_p(
         "Standardized acoustic parameter sets have long provided interpretable metrics for speech analysis. Eyben et al. (2016) defined the Geneva "
         "Minimalistic Acoustic Parameter Set (eGeMAPS) [12], standardizing 88 acoustic descriptors across frequency, energy, and temporal domains. "
         "Chowdhury et al. (2025) [11] showed that integrating acoustic prosody with deep learning architectures improved diagnostic reliability in clinical speech evaluations."
     )
 
-    add_subsec_heading("D. Speaker Disjoint Protocols and Generalization")
+    add_subsec_heading("2.4 Speaker Disjoint Protocols and Generalization")
     add_body_p(
         "Wang and Yang (2025) [14] examined the effect of speaker identity leakage in SER, showing that random train/test splits can inflate accuracy scores "
         "by up to 34.2 percentage points because classifiers exploit speaker-specific spectral patterns. Hashem et al. (2023) [15] and Akcay and Oguz (2020) [16] "
         "similarly emphasized that only speaker-disjoint evaluation protocols reflect genuine clinical or real-world capability."
     )
 
-    # --- Section III: Dataset Ecosystem ---
-    add_sec_heading("III. Dataset Ecosystem & Partitioning Protocols")
+    # --- Section 3: Dataset Ecosystem ---
+    add_sec_heading("3. Dataset Ecosystem & Partitioning Protocols")
     add_body_p(
         "To ensure rigorous evaluation, five distinct corpora comprising 12,180 audio files were curated, preprocessed, and partitioned. "
         "Audio files were resampled to a standardized format: 16,000 Hz sampling rate, single-channel (mono), 16-bit PCM WAV, with Voice Activity "
-        "Detection (VAD) silence trimming and amplitude normalization. Table I summarizes the dataset ecosystem."
+        "Detection (VAD) silence trimming and amplitude normalization. Table 1 summarizes the dataset ecosystem."
     )
 
     # Table 1: Dataset Ecosystem
@@ -511,16 +429,11 @@ def build_perfect_latex_word_manuscript():
     p_cap1.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_cap1.paragraph_format.space_before = Pt(8)
     p_cap1.paragraph_format.space_after = Pt(2)
-    p_cap1_run1 = p_cap1.add_run("TABLE I\n")
-    p_cap1_run1.font.name = "Times New Roman"
-    p_cap1_run1.font.size = Pt(9)
-    p_cap1_run1.font.bold = True
-    p_cap1_run1.font.color.rgb = BLACK
-
-    p_cap1_run2 = p_cap1.add_run("STANDARDIZED DATASET ECOSYSTEM AND PARTITIONING SPECIFICATIONS")
-    p_cap1_run2.font.name = "Times New Roman"
-    p_cap1_run2.font.size = Pt(8)
-    p_cap1_run2.font.color.rgb = BLACK
+    p_cap1_run = p_cap1.add_run("Table 1: Standardized Dataset Ecosystem and Partitioning Specifications")
+    p_cap1_run.font.name = "Times New Roman"
+    p_cap1_run.font.size = Pt(9.5)
+    p_cap1_run.font.bold = True
+    p_cap1_run.font.color.rgb = BLACK
 
     tbl1_data = [
         ["Corpus", "Utterances", "Language", "Speakers / Scope", "Split Protocol", "Classes"],
@@ -553,17 +466,17 @@ def build_perfect_latex_word_manuscript():
 
     doc.add_paragraph().paragraph_format.space_after = Pt(4)
 
-    # --- Section IV: Methodology ---
-    add_sec_heading("IV. Methodology & Model Architecture")
+    # --- Section 4: Methodology ---
+    add_sec_heading("4. Methodology & Model Architecture")
     add_body_p(
         "The system architecture features a dual-branch processing pipeline: (1) a Neural Acoustic Classifier Branch processing audio "
         "through pre-trained self-supervised transformer backbones with learnable weighted layer pooling or CNN-BiLSTM networks, and "
         "(2) an Audio Behaviour Analysis Engine extracting continuous prosodic and temporal dynamics (F0 intonation, syllabic tempo, pause frequency, and RMS loudness)."
     )
 
-    add_figure("fig1_system_architecture.png", "Fig. 1.  End-to-End System Architecture with Dual-Branch Behavioural Prosody and Neural Classification Pipeline.", width_in=6.0)
+    add_figure("fig1_system_architecture.png", "Figure 1: End-to-End System Architecture with Dual-Branch Behavioural Prosody and Neural Classification Pipeline.", width_in=6.0)
 
-    add_subsec_heading("A. Learnable Weighted Layer Pooling")
+    add_subsec_heading("4.1 Learnable Weighted Layer Pooling")
     add_body_p(
         "Rather than using mean pooling over time and layers or relying exclusively on the final transformer output, we implement Learnable "
         "Weighted Layer Pooling across all L = 12 transformer hidden representations h_t^(l) in R^D (l in {1, ..., L}):"
@@ -733,7 +646,7 @@ def build_perfect_latex_word_manuscript():
     '''
     add_omml_equation_block(doc, omml_eq3, "3")
 
-    add_subsec_heading("B. Audio Behaviour Engine Telemetry")
+    add_subsec_heading("4.2 Audio Behaviour Engine Telemetry")
     add_body_p(
         "The Behaviour Engine calculates four primary continuous acoustic descriptors: (1) Syllabic Speaking Speed (R_speech = N_syl / T_active in syllables/second), "
         "(2) Pause Frequency and Silence Ratio (P_ratio = T_silence / T_total * 100%), (3) Vocal Energy Dynamics (RMS_dB = 20 * log10(RMS_t + eps)), and "
@@ -837,8 +750,8 @@ def build_perfect_latex_word_manuscript():
     '''
     add_omml_equation_block(doc, omml_eq5, "5")
 
-    # --- Section V: Experimental Setup ---
-    add_sec_heading("V. Experimental Setup & Evaluation Metrics")
+    # --- Section 5: Experimental Setup ---
+    add_sec_heading("5. Experimental Setup & Evaluation Metrics")
     add_body_p(
         "Models were trained using the AdamW optimizer with Cosine Annealing learning rate schedules. Transformer backbones utilized a base "
         "learning rate of 1e-5 (frozen feature extractor) and head rate of 1e-3. The CNN-BiLSTM was optimized at 5e-4 with ReduceLROnPlateau. "
@@ -918,10 +831,10 @@ def build_perfect_latex_word_manuscript():
     '''
     add_omml_equation_block(doc, omml_eq7, "7")
 
-    # --- Section VI: Results ---
-    add_sec_heading("VI. Benchmark Results & Comparative Analysis")
+    # --- Section 6: Results ---
+    add_sec_heading("6. Benchmark Results & Comparative Analysis")
 
-    add_subsec_heading("A. Universal Multi-Corpus Linear Probe Benchmark")
+    add_subsec_heading("6.1 Universal Multi-Corpus Linear Probe Benchmark")
     add_body_p(
         "To evaluate whether a unified representation can generalize across diverse acoustic environments, accents, and recording conditions, a Universal "
         "HuBERT Model was trained on the combined 4-corpus dataset (121 speakers across CREMA-D, RAVDESS, SAVEE, and TESS) and evaluated against "
@@ -929,7 +842,7 @@ def build_perfect_latex_word_manuscript():
         "Architecturally, this model employs a frozen self-supervised HuBERT-Base backbone (94.7M parameters) coupled with our Learnable Weighted "
         "Layer Pooling module and a linear classification head. Only 4,626 parameters were trained, representing approximately 0.005% of the total network parameters. "
         "Freezing the backbone avoids catastrophic forgetting of generic acoustic representations while providing an efficient linear probe evaluation of the pre-trained "
-        "features across diverse corpora. Table II reports the benchmark leaderboard."
+        "features across diverse corpora. Table 2 reports the benchmark leaderboard."
     )
 
     # Table 2: Multi-Corpus Leaderboard
@@ -937,16 +850,11 @@ def build_perfect_latex_word_manuscript():
     p_cap2.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_cap2.paragraph_format.space_before = Pt(8)
     p_cap2.paragraph_format.space_after = Pt(2)
-    p_cap2_run1 = p_cap2.add_run("TABLE II\n")
-    p_cap2_run1.font.name = "Times New Roman"
-    p_cap2_run1.font.size = Pt(9)
-    p_cap2_run1.font.bold = True
-    p_cap2_run1.font.color.rgb = BLACK
-
-    p_cap2_run2 = p_cap2.add_run("UNIVERSAL MULTI-CORPUS TEST LEADERBOARD (1,701 UNSEEN CLIPS)")
-    p_cap2_run2.font.name = "Times New Roman"
-    p_cap2_run2.font.size = Pt(8)
-    p_cap2_run2.font.color.rgb = BLACK
+    p_cap2_run = p_cap2.add_run("Table 2: Universal Multi-Corpus Test Leaderboard (1,701 Unseen Clips)")
+    p_cap2_run.font.name = "Times New Roman"
+    p_cap2_run.font.size = Pt(9.5)
+    p_cap2_run.font.bold = True
+    p_cap2_run.font.color.rgb = BLACK
 
     tbl2_data = [
         ["Model Architecture", "Test Accuracy", "Macro-F1", "Test UAR", "Chance Level"],
@@ -978,9 +886,9 @@ def build_perfect_latex_word_manuscript():
 
     doc.add_paragraph().paragraph_format.space_after = Pt(4)
 
-    add_figure("fig3_benchmark_performance.png", "Fig. 2.  Benchmark Accuracy and Macro-F1 across English and Hindi Speech Corpora.", width_in=5.8)
+    add_figure("fig3_benchmark_performance.png", "Figure 2: Benchmark Accuracy and Macro-F1 across English and Hindi Speech Corpora.", width_in=5.8)
 
-    add_subsec_heading("B. In-Domain Multi-Corpus Benchmark Summary")
+    add_subsec_heading("6.2 In-Domain Multi-Corpus Benchmark Summary")
     add_body_p(
         "Individual in-domain evaluations across all five corpora reveal consistent patterns:\n\n"
         "1. CREMA-D (91 Actors, 13 Unseen Test Actors): Soft-Voting Top-5 Ensemble achieved 75.57% Accuracy, 0.7594 Macro-F1, and 75.40% UAR. "
@@ -993,7 +901,7 @@ def build_perfect_latex_word_manuscript():
         "25.0% which suffered from vocal tract overfitting. Wav2Vec2-XLS-R-300M achieved 12.50% Accuracy (chance level is 14.29%).\n\n"
         "4. TESS (2 Actresses, 200 Words, 30 Unseen Target Words): All SSL foundation models achieved 100.00% Accuracy and 1.0000 Macro-F1. "
         "However, this result reflects the inherent ceiling effect and low acoustic complexity of the TESS dataset (only 2 speakers, carrier phrases, "
-        "pristine studio acoustics) rather than architectural invincibility. Table III reports the comprehensive multi-corpus benchmark."
+        "pristine studio acoustics) rather than architectural invincibility. Table 3 reports the comprehensive multi-corpus benchmark."
     )
 
     # Table 3: In-Domain Benchmark Leaderboard
@@ -1001,16 +909,11 @@ def build_perfect_latex_word_manuscript():
     p_cap3.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_cap3.paragraph_format.space_before = Pt(8)
     p_cap3.paragraph_format.space_after = Pt(2)
-    p_cap3_run1 = p_cap3.add_run("TABLE III\n")
-    p_cap3_run1.font.name = "Times New Roman"
-    p_cap3_run1.font.size = Pt(9)
-    p_cap3_run1.font.bold = True
-    p_cap3_run1.font.color.rgb = BLACK
-
-    p_cap3_run2 = p_cap3.add_run("IN-DOMAIN BENCHMARK LEADERBOARD ACROSS 5 EVALUATED CORPORA")
-    p_cap3_run2.font.name = "Times New Roman"
-    p_cap3_run2.font.size = Pt(8)
-    p_cap3_run2.font.color.rgb = BLACK
+    p_cap3_run = p_cap3.add_run("Table 3: In-Domain Benchmark Leaderboard Across 5 Evaluated Corpora")
+    p_cap3_run.font.name = "Times New Roman"
+    p_cap3_run.font.size = Pt(9.5)
+    p_cap3_run.font.bold = True
+    p_cap3_run.font.color.rgb = BLACK
 
     tbl3_data = [
         ["Dataset", "Best Model", "Accuracy", "Macro-F1", "UAR", "Chance"],
@@ -1041,7 +944,7 @@ def build_perfect_latex_word_manuscript():
 
     doc.add_paragraph().paragraph_format.space_after = Pt(4)
 
-    add_subsec_heading("C. Technical Analysis of Wav2Vec2-XLS-R-300M Failure")
+    add_subsec_heading("6.3 Technical Analysis of Wav2Vec2-XLS-R-300M Failure")
     add_body_p(
         "Across all evaluated corpora, Wav2Vec2-XLS-R-300M performed near random chance (13.33% on RAVDESS, 24.43% on CREMA-D, 12.50% on SAVEE, "
         "and 19.76% on TESS), underperforming even shallow MFCC baselines. Three primary technical factors explain this behavior:\n\n"
@@ -1049,16 +952,16 @@ def build_perfect_latex_word_manuscript():
         "In cross-lingual speech recognition, speaker-specific pitch variations and emotional intonations are treated as nuisance parameters and filtered out "
         "to achieve cross-lingual phonetic invariance. Consequently, the frozen representations suppress paralinguistic and affective cues.\n\n"
         "2. Top-Layer Emotional Depletion: Unlike our HuBERT framework which incorporates learnable layer pooling across intermediate depths, the frozen XLS-R "
-        "baseline extracted features exclusively from its 24th (final) layer. As demonstrated in Section VII-B, top transformer layers specialize in discrete "
+        "baseline extracted features exclusively from its 24th (final) layer. As demonstrated in Section 7.2, top transformer layers specialize in discrete "
         "phonetic tokens and exhibit lower emotional sensitivity than intermediate layers.\n\n"
         "3. Capacity-to-Sample Mismatch: Projecting a frozen 1024-dimensional representation from a 317M-parameter model onto tiny target datasets "
         "(e.g., 384 SAVEE clips or 960 RAVDESS clips) without layer-wise adaptation or fine-tuning creates an acute representation mismatch that prevents effective linear separation."
     )
 
-    # --- Section VII: Ablation Studies ---
-    add_sec_heading("VII. Empirical Findings & Ablation Studies")
+    # --- Section 7: Ablation Studies ---
+    add_sec_heading("7. Empirical Findings & Ablation Studies")
 
-    add_subsec_heading("A. The Speaker Diversity Effect")
+    add_subsec_heading("7.1 The Speaker Diversity Effect")
     add_body_p(
         "Comparing performance across SAVEE (2 training actors), RAVDESS (16 training actors), and CREMA-D (64 training actors) indicates a consistent "
         "relationship between speaker cohort size and generalization capability. Models trained from scratch on SAVEE collapsed to 25.83% test accuracy "
@@ -1067,9 +970,9 @@ def build_perfect_latex_word_manuscript():
         "enables the network to separate speaker identity from emotional prosody."
     )
 
-    add_figure("fig2_layer_weights.png", "Fig. 3.  Empirical Layer Weight Distribution in Learnable Weighted Layer Pooling (Layers 9 to 11 account for 31.95%, total sum = 100.00%).", width_in=5.8)
+    add_figure("fig2_layer_weights.png", "Figure 3: Empirical Layer Weight Distribution in Learnable Weighted Layer Pooling (Layers 9 to 11 account for 31.95%, total sum = 100.00%).", width_in=5.8)
 
-    add_subsec_heading("B. Layer Weight Distribution Across Transformer Depth")
+    add_subsec_heading("7.2 Layer Weight Distribution Across Transformer Depth")
     add_body_p(
         "Figure 3 illustrates the learned softmax weights alpha across the 12 transformer encoder blocks of the Universal HuBERT model:\n\n"
         "• Early Layers (Layers 1 to 4): Weights remain basal (alpha_1 = 0.0707, alpha_2 = 0.0710, alpha_3 = 0.0711, alpha_4 = 0.0712, "
@@ -1081,7 +984,7 @@ def build_perfect_latex_word_manuscript():
         "contours and macro-energy modulations.\n"
         "• Final Layer (Layer 12): Weight decreases to alpha_12 = 0.1053 (10.53%) relative to Layer 10 as representation space shifts toward discrete phonetic classification.\n"
         "• Normalization Verification: The complete 12-layer softmax distribution (7.07% + 7.10% + 7.11% + 7.12% + 7.13% + 7.17% + 7.25% + 7.57% + 10.02% + 11.07% + 10.86% + 10.53%) "
-        "sums strictly to 100.00% (sum_{i=1}^{12} alpha_i = 1.0000). Table IV details the layer weights."
+        "sums strictly to 100.00% (sum_{i=1}^{12} alpha_i = 1.0000). Table 4 details the layer weights."
     )
 
     # Table 4: Layer Weights
@@ -1089,16 +992,11 @@ def build_perfect_latex_word_manuscript():
     p_cap4.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_cap4.paragraph_format.space_before = Pt(8)
     p_cap4.paragraph_format.space_after = Pt(2)
-    p_cap4_run1 = p_cap4.add_run("TABLE IV\n")
-    p_cap4_run1.font.name = "Times New Roman"
-    p_cap4_run1.font.size = Pt(9)
-    p_cap4_run1.font.bold = True
-    p_cap4_run1.font.color.rgb = BLACK
-
-    p_cap4_run2 = p_cap4.add_run("LAYER-WISE SOFTMAX ATTENTION WEIGHT DISTRIBUTION (HUBERT-BASE)")
-    p_cap4_run2.font.name = "Times New Roman"
-    p_cap4_run2.font.size = Pt(8)
-    p_cap4_run2.font.color.rgb = BLACK
+    p_cap4_run = p_cap4.add_run("Table 4: Layer-Wise Softmax Attention Weight Distribution (HuBERT-Base)")
+    p_cap4_run.font.name = "Times New Roman"
+    p_cap4_run.font.size = Pt(9.5)
+    p_cap4_run.font.bold = True
+    p_cap4_run.font.color.rgb = BLACK
 
     tbl4_data = [
         ["Layer Index", "Softmax Weight", "Percentage", "Functional Acoustic Role"],
@@ -1140,7 +1038,7 @@ def build_perfect_latex_word_manuscript():
 
     doc.add_paragraph().paragraph_format.space_after = Pt(4)
 
-    add_subsec_heading("C. Cross-Lingual Adaptation to Indic Hindi Speech")
+    add_subsec_heading("7.3 Cross-Lingual Adaptation to Indic Hindi Speech")
     add_body_p(
         "Evaluating the English-trained Universal HuBERT model zero-shot on the native Hindi test split yielded 27.62% accuracy and 31.76% UAR "
         "(above the 25.0% chance level). While cross-lingual transfer occurred, linguistic differences limited precision. Training the specialized "
@@ -1148,11 +1046,11 @@ def build_perfect_latex_word_manuscript():
         "Figure 4 illustrates this comparison, and Figure 5 displays the corresponding normalized confusion matrix."
     )
 
-    add_figure("fig4_cross_lingual_transfer.png", "Fig. 4.  Cross-Lingual Adaptation to Indic Hindi Speech (Zero-Shot vs. Supervised Adaptation).", width_in=5.8)
-    add_figure("fig5_hindi_confusion_matrix.png", "Fig. 5.  Normalized Confusion Matrix for the Hindi Emotion Specialist Model.", width_in=4.8)
+    add_figure("fig4_cross_lingual_transfer.png", "Figure 4: Cross-Lingual Adaptation to Indic Hindi Speech (Zero-Shot vs. Supervised Adaptation).", width_in=5.8)
+    add_figure("fig5_hindi_confusion_matrix.png", "Figure 5: Normalized Confusion Matrix for the Hindi Emotion Specialist Model.", width_in=4.8)
 
-    # --- Section VIII: Behavioural Telemetry ---
-    add_sec_heading("VIII. Speech Behavioural Intelligence Profiling")
+    # --- Section 8: Behavioural Telemetry ---
+    add_sec_heading("8. Speech Behavioural Intelligence Profiling")
     add_body_p(
         "Figure 6 summarizes the objective acoustic patterns extracted across emotion categories by the Behaviour Engine:\n\n"
         "• Anger: Characterized by an accelerated speaking tempo (mean 4.2 syl/s), minimal hesitation (pause ratio 12.4%), high vocal intensity "
@@ -1163,10 +1061,10 @@ def build_perfect_latex_word_manuscript():
         "• Neutral / Calm: Displays balanced cadence (2.8 to 3.4 syl/s), standard pause ratio (18% to 22%), and stable loudness (-22 to -26 dB)."
     )
 
-    add_figure("fig6_behavioral_prosody_profile.png", "Fig. 6.  Multimodal Speech Behaviour Telemetry across Discrete Emotion Categories.", width_in=6.0)
+    add_figure("fig6_behavioral_prosody_profile.png", "Figure 6: Multimodal Speech Behaviour Telemetry across Discrete Emotion Categories.", width_in=6.0)
 
-    # --- Section IX: Deployment Architecture ---
-    add_sec_heading("IX. System Deployment Architecture")
+    # --- Section 9: Deployment Architecture ---
+    add_sec_heading("9. System Deployment Architecture")
     add_body_p(
         "The end-to-end framework is implemented as an Apple Silicon accelerated microservice paired with a minimal web application:\n\n"
         "• Frontend UI (Next.js / TypeScript): Minimal white-mode interface featuring a real-time Web Audio API frequency visualizer (AudioWaveformVisualizer) "
@@ -1175,8 +1073,8 @@ def build_perfect_latex_word_manuscript():
         "hardware acceleration (38.4 ms average inference latency)."
     )
 
-    # --- Section X: Discussion ---
-    add_sec_heading("X. Discussion & Limitations")
+    # --- Section 10: Discussion ---
+    add_sec_heading("10. Discussion & Limitations")
     add_body_p(
         "While the experimental results validate the efficacy of learnable layer pooling and disjoint evaluation protocols, several limitations should be noted:\n\n"
         "1. Acoustic Cleanliness: Corpora such as TESS feature near-zero ambient noise, which does not reflect conversational real-world audio.\n"
@@ -1185,8 +1083,8 @@ def build_perfect_latex_word_manuscript():
         "3. Pre-trained Audio Sampling: Standard foundation models operate at 16 kHz, which truncates ultra-high frequency acoustic cues (> 8 kHz)."
     )
 
-    # --- Section XI: Conclusion ---
-    add_sec_heading("XI. Conclusion")
+    # --- Section 11: Conclusion ---
+    add_sec_heading("11. Conclusion")
     add_body_p(
         "This research evaluated speech emotion recognition across multi-corpus and cross-lingual settings. The primary conclusions are:\n\n"
         "1. Learnable Weighted Layer Pooling demonstrates that intermediate transformer layers (Layers 9 to 11) capture the highest concentration "
@@ -1250,8 +1148,8 @@ def build_perfect_latex_word_manuscript():
 
     doc.save(str(DOCX_OUT))
     doc.save(str(DESKTOP_DOCX))
-    print(f"Successfully generated 100% black text IEEE Word manuscript: {DOCX_OUT} and {DESKTOP_DOCX}")
+    print(f"Successfully generated clean Word report: {DOCX_OUT} and {DESKTOP_DOCX}")
 
 
 if __name__ == "__main__":
-    build_perfect_latex_word_manuscript()
+    build_clean_word_report()
