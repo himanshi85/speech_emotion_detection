@@ -1,8 +1,9 @@
 "use client";
 
-import { Mic, Pause, Play, RotateCcw, Sparkles, Square, Volume2 } from "lucide-react";
+import { Mic, Pause, Play, RotateCcw, Square, Volume2 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { DotMatrixNumber } from "@/components/DotMatrixNumber";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
 
@@ -15,8 +16,7 @@ type Props = {
 function formatTime(totalSeconds: number) {
   const m = Math.floor(totalSeconds / 60);
   const s = Math.floor(totalSeconds % 60);
-  const ms = Math.floor((totalSeconds % 1) * 10);
-  return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}.${ms}`;
+  return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
 }
 
 export function AudioRecorder({ onRecordingReady, onClear, disabled }: Props) {
@@ -56,42 +56,24 @@ export function AudioRecorder({ onRecordingReady, onClear, disabled }: Props) {
       analyser.getByteFrequencyData(buffer);
       const { width, height } = canvas;
 
-      // Dark cyber-glass canvas background
-      ctx.fillStyle = "#070b13";
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
       ctx.fillRect(0, 0, width, height);
 
-      // Subtle horizontal center baseline
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(0, height / 2);
-      ctx.lineTo(width, height / 2);
-      ctx.stroke();
-
-      const numBars = 42;
-      const barWidth = width / numBars - 3;
-      const step = Math.floor(buffer.length / numBars);
+      const numBars = 48;
+      const barSpacing = 4;
+      const totalSpacing = (numBars - 1) * barSpacing;
+      const barWidth = Math.max(2, (width - totalSpacing) / numBars);
 
       for (let i = 0; i < numBars; i++) {
-        const val = buffer[i * step] / 255;
-        const barHeight = Math.max(val * (height * 0.85), 3);
-        const x = i * (barWidth + 3) + 2;
+        const binIndex = Math.floor((i / numBars) * (buffer.length * 0.5));
+        const raw = buffer[binIndex] || 0;
+        const norm = raw / 255;
+        const barHeight = Math.max(3, norm * (height - 8));
+        const x = i * (barWidth + barSpacing);
         const y = (height - barHeight) / 2;
 
-        const gradient = ctx.createLinearGradient(0, y, 0, y + barHeight);
-        if (status === "recording") {
-          gradient.addColorStop(0, "#00f0ff");
-          gradient.addColorStop(0.5, "#00f59b");
-          gradient.addColorStop(1, "#ccff00");
-          ctx.shadowColor = "#00f0ff";
-          ctx.shadowBlur = 6;
-        } else {
-          gradient.addColorStop(0, "rgba(148, 163, 184, 0.3)");
-          gradient.addColorStop(1, "rgba(203, 213, 225, 0.1)");
-          ctx.shadowBlur = 0;
-        }
-
-        ctx.fillStyle = gradient;
+        ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
         ctx.beginPath();
         ctx.roundRect(x, y, barWidth, barHeight, 2);
         ctx.fill();
@@ -101,7 +83,7 @@ export function AudioRecorder({ onRecordingReady, onClear, disabled }: Props) {
     };
 
     draw();
-  }, [status]);
+  }, []);
 
   const cleanupStream = useCallback(() => {
     stopVisualizer();
@@ -109,28 +91,28 @@ export function AudioRecorder({ onRecordingReady, onClear, disabled }: Props) {
       streamRef.current.getTracks().forEach((t) => t.stop());
       streamRef.current = null;
     }
-    analyserRef.current = null;
+    if (timerRef.current) {
+      window.clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
   }, [stopVisualizer]);
 
   useEffect(() => {
     return () => {
       cleanupStream();
-      if (timerRef.current) window.clearInterval(timerRef.current);
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
     };
-  }, [cleanupStream]);
-
-  const startTimer = (baseElapsed: number) => {
-    if (timerRef.current) window.clearInterval(timerRef.current);
-    startTimeRef.current = performance.now();
-    timerRef.current = window.setInterval(() => {
-      const now = performance.now();
-      const currentSpan = (now - startTimeRef.current) / 1000;
-      setElapsed(baseElapsed + currentSpan);
-    }, 100);
-  };
+  }, [cleanupStream, previewUrl]);
 
   const startRecording = async () => {
+    if (disabled) return;
     setError(null);
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+      setPreviewUrl(null);
+    }
+    chunksRef.current = [];
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
@@ -142,186 +124,186 @@ export function AudioRecorder({ onRecordingReady, onClear, disabled }: Props) {
       });
       streamRef.current = stream;
 
-      const audioCtx = new (window.AudioContext ||
-        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+      const audioCtx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
       const source = audioCtx.createMediaStreamSource(stream);
       const analyser = audioCtx.createAnalyser();
-      analyser.fftSize = 128;
+      analyser.fftSize = 256;
+      analyser.smoothingTimeConstant = 0.85;
       source.connect(analyser);
       analyserRef.current = analyser;
 
-      drawVisualizer();
+      const mimeType = [
+        "audio/webm;codecs=opus",
+        "audio/webm",
+        "audio/ogg;codecs=opus",
+        "audio/mp4",
+      ].find((t) => MediaRecorder.isTypeSupported(t)) || "";
 
-      const mimeType = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
-        ? "audio/webm;codecs=opus"
-        : "audio/webm";
-      const recorder = new MediaRecorder(stream, { mimeType });
-      chunksRef.current = [];
+      const mr = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+      mediaRecorderRef.current = mr;
 
-      recorder.ondataavailable = (ev) => {
-        if (ev.data.size > 0) chunksRef.current.push(ev.data);
+      mr.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) chunksRef.current.push(e.data);
       };
 
-      recorder.onstop = () => {
-        const blob = new Blob(chunksRef.current, { type: mimeType });
+      mr.onstop = () => {
+        const type = mr.mimeType || "audio/webm";
+        const ext = type.includes("ogg") ? "ogg" : type.includes("mp4") ? "mp4" : "webm";
+        const blob = new Blob(chunksRef.current, { type });
         const url = URL.createObjectURL(blob);
         setPreviewUrl(url);
-        onRecordingReady(blob, `recording-${Date.now()}.webm`);
+        onRecordingReady(blob, `live-capture-${Date.now()}.${ext}`);
         cleanupStream();
-        setStatus("idle");
       };
 
-      mediaRecorderRef.current = recorder;
-      recorder.start(250);
-      setElapsed(0);
+      mr.start(250);
+      startTimeRef.current = Date.now();
       setStatus("recording");
-      startTimer(0);
-    } catch {
-      setError("Microphone access was denied or not supported by this browser.");
+      drawVisualizer();
+
+      timerRef.current = window.setInterval(() => {
+        setElapsed((Date.now() - startTimeRef.current) / 1000);
+      }, 100);
+    } catch (err) {
+      cleanupStream();
+      setStatus("idle");
+      setError(err instanceof Error ? err.message : "Microphone permission required.");
     }
   };
 
   const pauseRecording = () => {
-    const rec = mediaRecorderRef.current;
-    if (!rec || rec.state !== "recording") return;
-    rec.pause();
-    pausedTimeRef.current = elapsed;
-    if (timerRef.current) {
-      window.clearInterval(timerRef.current);
-      timerRef.current = null;
+    if (mediaRecorderRef.current && status === "recording") {
+      mediaRecorderRef.current.pause();
+      pausedTimeRef.current = Date.now();
+      if (timerRef.current) window.clearInterval(timerRef.current);
+      stopVisualizer();
+      setStatus("paused");
     }
-    stopVisualizer();
-    setStatus("paused");
   };
 
   const resumeRecording = () => {
-    const rec = mediaRecorderRef.current;
-    if (!rec || rec.state !== "paused") return;
-    rec.resume();
-    startTimer(pausedTimeRef.current);
-    drawVisualizer();
-    setStatus("recording");
+    if (mediaRecorderRef.current && status === "paused") {
+      mediaRecorderRef.current.resume();
+      startTimeRef.current += Date.now() - pausedTimeRef.current;
+      setStatus("recording");
+      drawVisualizer();
+      timerRef.current = window.setInterval(() => {
+        setElapsed((Date.now() - startTimeRef.current) / 1000);
+      }, 100);
+    }
   };
 
   const stopRecording = () => {
-    const rec = mediaRecorderRef.current;
-    if (!rec || rec.state === "inactive") return;
-    rec.stop();
-    if (timerRef.current) {
-      window.clearInterval(timerRef.current);
-      timerRef.current = null;
+    if (mediaRecorderRef.current && (status === "recording" || status === "paused")) {
+      mediaRecorderRef.current.stop();
+      setStatus("idle");
     }
   };
 
   const discard = () => {
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
-      mediaRecorderRef.current.stop();
-    }
     cleanupStream();
-    if (previewUrl) {
-      URL.revokeObjectURL(previewUrl);
-      setPreviewUrl(null);
-    }
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setPreviewUrl(null);
     setElapsed(0);
     setStatus("idle");
     onClear();
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3.5">
       {/* Visualizer & Timer Display Card */}
-      <div className="relative overflow-hidden rounded-[24px] border border-white/[0.08] bg-[#090d16]/70 p-5 shadow-2xl backdrop-blur-2xl">
-        <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+      <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl">
+        <div className="flex items-center justify-between border-b border-white/6 pb-3">
           <div className="flex items-center gap-2">
             <span
               className={cn(
-                "flex h-2 w-2 rounded-full transition-all",
-                status === "recording" && "bg-rose-500 shadow-[0_0_8px_#f43f5e] animate-pulse",
-                status === "paused" && "bg-amber-400 shadow-[0_0_8px_#fbbf24]",
-                status === "idle" && "bg-slate-600",
+                "h-2 w-2 rounded-full transition-all",
+                status === "recording" && "bg-white shadow-[0_0_8px_#ffffff] animate-ping",
+                status === "paused" && "bg-amber-400",
+                status === "idle" && "bg-white/30",
               )}
             />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-300">
-              {status === "recording" && "LIVE AUDIO CAPTURE // ACTIVE"}
-              {status === "paused" && "BUFFER PAUSED"}
-              {status === "idle" && (previewUrl ? "SAMPLING READY" : "AUDIO SENSOR STANDBY")}
+            <span className="font-mono text-[9px] uppercase tracking-wider text-slate-400">
+              {status === "recording" && "Live Speech Recording"}
+              {status === "paused" && "Paused Buffer"}
+              {status === "idle" && (previewUrl ? "Recording Complete" : "Standby Sensor")}
             </span>
           </div>
 
-          <div className="flex items-center gap-1.5 font-mono text-sm font-bold tracking-wider text-cyan-400">
-            {formatTime(elapsed)}
+          <div className="flex items-center gap-1.5 font-mono text-xs text-white">
+            <DotMatrixNumber value={formatTime(elapsed)} size="xs" dotColor="#ffffff" />
           </div>
         </div>
 
         <div className="py-3">
-          <canvas ref={canvasRef} width={520} height={70} className="h-16 w-full rounded-xl border border-white/[0.04]" />
+          <canvas ref={canvasRef} width={520} height={60} className="h-14 w-full rounded-xl" />
         </div>
 
         {/* Action Controls */}
-        <div className="flex flex-wrap items-center justify-center gap-2.5 pt-2">
+        <div className="flex flex-wrap items-center justify-center gap-2.5 pt-1">
           {status === "idle" && !previewUrl && (
             <button
               type="button"
               disabled={disabled}
               onClick={startRecording}
-              className={cn(ui.btnPrimary, "w-full sm:w-auto shadow-[0_0_20px_rgba(204,255,0,0.3)]")}
+              className={cn(ui.btnPrimary, "w-full sm:w-auto")}
             >
               <Mic className="h-4 w-4" />
-              Engage Microphone
+              <span>Record Speech</span>
             </button>
           )}
 
           {status === "recording" && (
             <>
               <button type="button" onClick={pauseRecording} className={ui.btnSecondary}>
-                <Pause className="h-4 w-4" />
-                Hold
+                <Pause className="h-3.5 w-3.5" />
+                <span>Pause</span>
               </button>
-              <button type="button" onClick={stopRecording} className={ui.btnDanger}>
-                <Square className="h-4 w-4 fill-current" />
-                Complete Buffer
+              <button type="button" onClick={stopRecording} className={ui.btnPrimary}>
+                <Square className="h-3.5 w-3.5 fill-black" />
+                <span>Finish</span>
               </button>
             </>
           )}
 
           {status === "paused" && (
             <>
-              <button type="button" onClick={resumeRecording} className={ui.btnSuccess}>
-                <Play className="h-4 w-4" />
-                Resume
+              <button type="button" onClick={resumeRecording} className={ui.btnSecondary}>
+                <Play className="h-3.5 w-3.5" />
+                <span>Resume</span>
               </button>
-              <button type="button" onClick={stopRecording} className={ui.btnDanger}>
-                <Square className="h-4 w-4 fill-current" />
-                Complete Buffer
+              <button type="button" onClick={stopRecording} className={ui.btnPrimary}>
+                <Square className="h-3.5 w-3.5 fill-black" />
+                <span>Finish</span>
               </button>
             </>
           )}
 
           {previewUrl && status === "idle" && (
             <button type="button" onClick={discard} className={ui.btnSecondary}>
-              <RotateCcw className="h-4 w-4" />
-              Retake Audio
+              <RotateCcw className="h-3.5 w-3.5" />
+              <span>Record Again</span>
             </button>
           )}
         </div>
       </div>
 
       {previewUrl && status === "idle" && (
-        <div className="rounded-[20px] border border-cyan-500/20 bg-[#0c121e]/80 p-4 shadow-xl backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200">
-          <div className="mb-2.5 flex items-center justify-between text-xs font-semibold text-slate-300">
-            <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-cyan-400">
-              <Volume2 className="h-3.5 w-3.5" />
-              Captured Acoustic Waveform
+        <div className="rounded-[24px] border border-white/10 bg-white/[0.03] p-3.5 backdrop-blur-xl">
+          <div className="mb-2 flex items-center justify-between text-xs text-slate-300">
+            <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-slate-400">
+              <Volume2 className="h-3 w-3" />
+              Recorded Speech Preview
             </span>
-            <span className="font-mono text-xs text-slate-400">{formatTime(elapsed)}</span>
+            <span className="font-mono text-[11px] text-slate-400">{formatTime(elapsed)}</span>
           </div>
-          <audio controls src={previewUrl} preload="metadata" className="w-full" />
+          <audio controls src={previewUrl} preload="metadata" className="w-full h-8" />
         </div>
       )}
 
       {error && (
         <div className={ui.alertError}>
-          <p className="font-mono">{error}</p>
+          <p className="font-mono text-xs">{error}</p>
         </div>
       )}
     </div>

@@ -1,10 +1,9 @@
 "use client";
 
-import { FileAudio, Loader2, Music, Sparkles, UploadCloud, X, Zap } from "lucide-react";
+import { FileAudio, Loader2, Music, UploadCloud, X, Zap } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 
 import { cn } from "@/lib/cn";
-import { ui } from "@/lib/ui";
 import { API_BASE } from "@/lib/api";
 
 type Props = {
@@ -58,7 +57,6 @@ export function AudioUploader({ onFileReady, onClear, disabled }: Props) {
       const sampleFile = new File([blob], filename, { type: "audio/wav" });
       setSelected(sampleFile);
     } catch {
-      // Fallback: create synthetic test wave
       const buffer = new Float32Array(16000 * 2.5);
       for (let i = 0; i < buffer.length; i++) {
         buffer[i] = Math.sin((2 * Math.PI * 440 * i) / 16000) * 0.4;
@@ -71,7 +69,7 @@ export function AudioUploader({ onFileReady, onClear, disabled }: Props) {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3.5">
       {!file ? (
         <div
           onDragOver={(e) => {
@@ -87,33 +85,22 @@ export function AudioUploader({ onFileReady, onClear, disabled }: Props) {
             if (e.key === "Enter" || e.key === " ") inputRef.current?.click();
           }}
           className={cn(
-            "group relative flex min-h-[175px] cursor-pointer flex-col items-center justify-center rounded-[24px] border-2 border-dashed p-6 text-center transition-all duration-300",
+            "group relative flex min-h-[160px] cursor-pointer flex-col items-center justify-center rounded-[28px] border border-dashed p-6 text-center transition-all duration-300",
             dragOver
-              ? "border-cyan-400 bg-cyan-950/30 shadow-[0_0_30px_rgba(0,240,255,0.25)] scale-[1.01]"
-              : "border-white/[0.1] bg-[#090d16]/70 hover:border-cyan-400/50 hover:bg-[#0c121f]/90 hover:shadow-xl",
+              ? "border-white bg-white/10 shadow-[0_0_24px_rgba(255,255,255,0.2)] scale-[1.01]"
+              : "border-white/12 bg-white/[0.02] hover:border-white/25 hover:bg-white/[0.04]",
             disabled && "pointer-events-none opacity-40",
           )}
         >
-          <div className="mb-3.5 flex h-13 w-13 items-center justify-center rounded-2xl bg-gradient-to-tr from-cyan-500 to-lime-400 text-slate-950 shadow-[0_0_20px_rgba(0,240,255,0.35)] transition-transform duration-300 group-hover:scale-110">
-            <UploadCloud className="h-6 w-6" strokeWidth={2.2} />
+          <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-full bg-white text-black shadow-md transition-transform duration-300 group-hover:scale-105">
+            <UploadCloud className="h-5 w-5 stroke-[2]" />
           </div>
-          <p className="text-sm font-bold tracking-wide text-white transition-colors group-hover:text-cyan-300">
-            Ingest Speech Audio Stream
+          <p className="text-xs font-semibold text-white tracking-wide">
+            Select or drop speech audio
           </p>
-          <p className="mt-1 max-w-xs text-xs text-slate-400">
-            Drag & drop or <span className="font-semibold text-cyan-400 underline underline-offset-4">browse filesystem</span>
+          <p className="mt-1 text-[11px] text-slate-400">
+            WAV 16 kHz recommended, FLAC, MP3, M4A supported
           </p>
-
-          <div className="mt-3.5 flex flex-wrap items-center justify-center gap-1.5">
-            {["WAV (16kHz)", "FLAC", "MP3", "WEBM", "M4A"].map((ext) => (
-              <span
-                key={ext}
-                className="rounded-lg border border-white/[0.08] bg-white/[0.03] px-2 py-0.5 text-[9px] font-mono font-bold uppercase tracking-wider text-slate-400"
-              >
-                {ext}
-              </span>
-            ))}
-          </div>
 
           <input
             ref={inputRef}
@@ -128,76 +115,73 @@ export function AudioUploader({ onFileReady, onClear, disabled }: Props) {
           />
         </div>
       ) : (
-        <div className="rounded-[24px] border border-cyan-500/30 bg-[#0a0f1b]/80 p-5 shadow-2xl backdrop-blur-2xl transition-all animate-in fade-in zoom-in-95 duration-200">
-          <div className="mb-3.5 flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3.5">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 shadow-[0_0_12px_rgba(0,240,255,0.2)]">
-                <FileAudio className="h-5 w-5" strokeWidth={2} />
+        <div className="rounded-[28px] border border-white/10 bg-white/[0.03] p-4 backdrop-blur-xl">
+          <div className="flex items-center justify-between gap-3 mb-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-white border border-white/15">
+                <FileAudio className="h-4 w-4" />
               </div>
-              <div className="text-left">
-                <p className="max-w-[200px] truncate text-sm font-bold text-white sm:max-w-[280px]">
+              <div className="truncate">
+                <p className="truncate text-xs font-semibold text-white">
                   {file.name}
                 </p>
-                <div className="flex items-center gap-2 text-[11px] font-mono text-slate-400">
-                  <span>{(file.size / 1024 / 1024).toFixed(2)} MB</span>
-                  <span>//</span>
-                  <span className="font-bold text-emerald-400">READY FOR TENSOR INGESTION</span>
-                </div>
+                <p className="font-mono text-[10px] text-slate-400">
+                  {(file.size / 1024 / 1024).toFixed(2)} MB • Audio Loaded
+                </p>
               </div>
             </div>
 
             <button
               type="button"
               onClick={() => setSelected(null)}
-              className="rounded-xl border border-white/[0.08] bg-white/[0.04] p-2 text-slate-400 transition-colors hover:bg-rose-500/20 hover:border-rose-500/40 hover:text-rose-300"
+              className="h-8 w-8 rounded-full bg-white/6 hover:bg-white/12 text-slate-300 hover:text-white flex items-center justify-center transition-all border border-white/10"
               title="Remove audio file"
             >
-              <X className="h-4 w-4" />
+              <X className="h-3.5 w-3.5" />
             </button>
           </div>
 
           {previewUrl && (
-            <div className="rounded-xl border border-white/[0.06] bg-[#070b13] p-2.5 shadow-inner">
-              <audio controls src={previewUrl} preload="metadata" className="w-full" />
+            <div className="rounded-xl border border-white/6 bg-black/40 p-2">
+              <audio controls src={previewUrl} preload="metadata" className="w-full h-8" />
             </div>
           )}
         </div>
       )}
 
-      {/* Cyber Quick Test Chips */}
+      {/* Subtle Benchmark Audio Pills */}
       {!file && (
         <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
-          <span className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-400">
-            <Zap className="h-3 w-3 text-lime-400" />
-            Instant Ingestion Chips:
+          <span className="font-mono text-[9px] uppercase tracking-wider text-slate-400">
+            Benchmark Samples:
           </span>
           <div className="flex flex-wrap gap-1.5">
             <button
               type="button"
               disabled={disabled || loadingSample}
               onClick={() => handleLoadSample("hindi_1", "hindi-neutral-speech.wav")}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-white/[0.1] bg-[#0d1320]/80 px-3 py-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-slate-300 shadow-sm backdrop-blur-md transition-all hover:border-cyan-400/50 hover:bg-cyan-950/40 hover:text-cyan-300"
+              className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 font-mono text-[10px] text-slate-300 hover:text-white hover:bg-white/10 transition-all"
             >
-              {loadingSample ? <Loader2 className="h-3 w-3 animate-spin text-cyan-400" /> : <Music className="h-3 w-3 text-cyan-400" />}
-              Hindi Neutral
+              {loadingSample ? <Loader2 className="h-3 w-3 animate-spin text-white" /> : <Music className="h-3 w-3 text-slate-400" />}
+              Hindi #1 Neutral
             </button>
             <button
               type="button"
               disabled={disabled || loadingSample}
               onClick={() => handleLoadSample("hindi_7", "hindi-happy-speech.wav")}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-white/[0.1] bg-[#0d1320]/80 px-3 py-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-slate-300 shadow-sm backdrop-blur-md transition-all hover:border-lime-400/50 hover:bg-lime-950/40 hover:text-lime-300"
+              className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 font-mono text-[10px] text-slate-300 hover:text-white hover:bg-white/10 transition-all"
             >
-              {loadingSample ? <Loader2 className="h-3 w-3 animate-spin text-lime-400" /> : <Sparkles className="h-3 w-3 text-lime-400" />}
-              Hindi Expressive
+              {loadingSample ? <Loader2 className="h-3 w-3 animate-spin text-white" /> : <Zap className="h-3 w-3 text-slate-400" />}
+              Hindi #2 Expressive
             </button>
             <button
               type="button"
               disabled={disabled || loadingSample}
               onClick={() => handleLoadSample("hindi_15", "hindi-assertive-speech.wav")}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-white/[0.1] bg-[#0d1320]/80 px-3 py-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-slate-300 shadow-sm backdrop-blur-md transition-all hover:border-rose-400/50 hover:bg-rose-950/40 hover:text-rose-300"
+              className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 font-mono text-[10px] text-slate-300 hover:text-white hover:bg-white/10 transition-all"
             >
-              {loadingSample ? <Loader2 className="h-3 w-3 animate-spin text-rose-400" /> : <Zap className="h-3 w-3 text-rose-400" />}
-              Hindi Assertive
+              {loadingSample ? <Loader2 className="h-3 w-3 animate-spin text-white" /> : <Zap className="h-3 w-3 text-slate-400" />}
+              Hindi #3 Assertive
             </button>
           </div>
         </div>
