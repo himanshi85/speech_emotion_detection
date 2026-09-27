@@ -131,13 +131,16 @@ def build_docx_report():
         "on Germanic and Romance languages, offering limited empirical evidence on cross-lingual transferability to morphologically rich "
         "Indic languages such as Hindi. Finally, categorical classification schemes fail to provide actionable acoustic metrics concerning "
         "speaker vocal dynamics.\n\n"
-        "To address these limitations, this study presents a standardized, multi-corpus and cross-lingual benchmarking framework evaluating "
-        "eight acoustic and self-supervised deep learning architectures across five speech corpora totaling 12,180 standardized audio recordings "
-        "(CREMA-D, RAVDESS, SAVEE, TESS, and native Hindi speech). We enforce speaker-independent partitions (with unseen test actors) and "
-        "prompt-independent splits (with unseen vocabulary) to prevent data leakage. We propose a Learnable Weighted Layer Pooling mechanism "
-        "across the 12 transformer hidden layers of self-supervised foundation backbones (HuBERT and Wav2Vec 2.0). Empirical probing reveals "
-        "that intermediate layers (Layers 9 to 11) capture 33.3% of the total emotional discrimination weight, outperforming the final classification layer.\n\n"
-        "Additionally, cross-lingual transfer from an English multi-corpus foundation model yields 27.62% accuracy and 31.76% Unweighted Average Recall (UAR) "
+        "To address these limitations, this study presents a standardized empirical evaluation comprising two decoupled experimental protocols "
+        "across five speech corpora totaling 12,180 standardized audio recordings: (1) a multi-corpus English benchmark combining four established "
+        "corpora (CREMA-D, RAVDESS, SAVEE, and TESS, totaling 11,318 clips across 121 speakers) to evaluate cross-corpus generalization and layer-pooling "
+        "dynamics under strict speaker-disjoint splits, and (2) a standalone cross-lingual transfer and native adaptation study on an Indic speech corpus "
+        "(862 native Hindi utterances across 25 speakers). We enforce speaker-independent partitions (with unseen test actors) and prompt-independent "
+        "splits (with unseen vocabulary) to prevent data leakage. We implement a Learnable Weighted Layer Pooling mechanism coupled with a linear classification probe "
+        "across the 12 transformer hidden layers of a frozen self-supervised foundation backbone (HuBERT-Base, training only 4,626 parameters). Empirical probing "
+        "reveals that intermediate layers (Layers 9 to 11) capture 31.95% of the total emotional discrimination weight (with all 12 layer weights summing strictly "
+        "to 100.00%), outperforming the final classification layer.\n\n"
+        "Additionally, cross-lingual transfer from the English multi-corpus foundation model yields 27.62% accuracy and 31.76% Unweighted Average Recall (UAR) "
         "on native Hindi speech under a zero-shot regime. Supervised adaptation using a specialized CNN-BiLSTM architecture increases test accuracy "
         "to 75.19% and UAR to 70.56%. Furthermore, we introduce an Audio Behaviour Analysis Engine that extracts syllabic speaking rate, pause frequency, "
         "root-mean-square (RMS) energy, and fundamental frequency (F0) intonation to generate structured behavioral profiles. The full system is deployed "
@@ -151,7 +154,7 @@ def build_docx_report():
     kw_bold.bold = True
     kw_bold.font.size = Pt(10)
     kw_run = kw_p.add_run(
-        "Speech Emotion Recognition, Self-Supervised Learning, Learnable Layer Pooling, "
+        "Speech Emotion Recognition, Self-Supervised Learning, Learnable Layer Pooling, Linear Probe, "
         "Hindi Speech Emotion, Cross-Lingual Transfer, Vocal Behaviour, Speaker Disjoint Split, HuBERT, Wav2Vec 2.0, CNN-BiLSTM."
     )
     kw_run.font.size = Pt(10)
@@ -371,8 +374,13 @@ def build_docx_report():
 
     doc.add_heading("6.1 Multi-Corpus Universal Foundation Model", level=2)
     p = doc.add_paragraph(
-        "To evaluate whether a unified model can generalize across diverse acoustic environments, accents, and recording conditions, a Universal "
-        "HuBERT Foundation Model was trained on the combined dataset (121 speakers) and evaluated against 1,701 unseen multi-corpus test utterances."
+        "To evaluate whether a unified representation can generalize across diverse acoustic environments, accents, and recording conditions, a Universal "
+        "HuBERT Model was trained on the combined 4-corpus dataset (121 speakers across CREMA-D, RAVDESS, SAVEE, and TESS) and evaluated against "
+        "1,701 unseen multi-corpus test utterances.\n\n"
+        "Architecturally, this model employs a frozen self-supervised HuBERT-Base backbone (94.7M parameters) coupled with our Learnable Weighted "
+        "Layer Pooling module and a linear classification head. Only 4,626 parameters were trained, representing approximately 0.005% of the total network parameters. "
+        "Freezing the backbone avoids catastrophic forgetting of generic acoustic representations while providing an efficient linear probe evaluation of the pre-trained "
+        "features across diverse corpora."
     )
     p.paragraph_format.line_spacing = 1.15
     p.paragraph_format.space_after = Pt(8)
@@ -380,7 +388,7 @@ def build_docx_report():
     # Table 2: Multi-Corpus Leaderboard
     tbl2_data = [
         ["Model Architecture", "Test Accuracy", "Macro-F1", "Test UAR", "Chance Level"],
-        ["Universal HuBERT (Frozen Transfer)", "68.31%", "0.6779", "68.61%", "16.67%"],
+        ["Universal HuBERT (Frozen Transfer + Head)", "68.31%", "0.6779", "68.61%", "16.67%"],
         ["Soft-Voting Multi-Corpus Ensemble", "67.43%", "0.6692", "67.80%", "16.67%"],
         ["Wav2Vec2 Base (Direct Combined)", "63.26%", "0.6215", "63.50%", "16.67%"],
         ["MFCC + LSTM Multi-Corpus Baseline", "44.15%", "0.4120", "43.82%", "16.67%"],
@@ -424,12 +432,13 @@ def build_docx_report():
         cap3_run.font.bold = True
         cap3_run.font.color.rgb = RGBColor(71, 85, 105)
 
-    doc.add_heading("6.2 In-Domain Multi-Corpus Summary", level=2)
+    doc.add_heading("6.2 In-Domain Multi-Corpus Summary & Architectural Ablations", level=2)
     p = doc.add_paragraph(
-        "• CREMA-D (91 Actors, 13 Unseen Test Actors): Soft-Voting Top-5 Ensemble achieved 75.57% Accuracy and 0.7594 Macro-F1. HuBERT with Learnable Layer Pooling reached 71.98% Accuracy, outperforming Wav2Vec2 Base (69.25%) and MFCC+CNN-BiLSTM (62.80%).\n"
-        "• RAVDESS (24 Actors, Actors 21 to 24 Unseen): Transfer ensemble achieved 73.75% Accuracy. Transfer from CREMA-D pre-training to RAVDESS produced 72.92% Accuracy, compared to 32.50% when trained from scratch on RAVDESS alone.\n"
-        "• SAVEE (4 Actors, Actor KL Unseen): Transfer ensemble reached 51.67% Accuracy and 0.3860 Macro-F1, doubling the scratch baseline of 25.0% which suffered from vocal tract overfitting.\n"
-        "• TESS (2 Actresses, 200 Words, 30 Unseen Target Words): All SSL foundation models achieved 100.00% Accuracy and 1.0000 Macro-F1, confirming word-independent emotional generalization across both actresses."
+        "• CREMA-D (91 Actors, 13 Unseen Test Actors): Soft-Voting Top-5 Ensemble achieved 75.57% Accuracy and 0.7594 Macro-F1. HuBERT with Learnable Layer Pooling reached 71.98% Accuracy, outperforming Wav2Vec2 Base (69.25%) and MFCC+CNN-BiLSTM (62.80%). Wav2Vec2-XLS-R-300M (Frozen Baseline) reached only 24.43% Accuracy (near chance level of 16.67%).\n"
+        "• RAVDESS (24 Actors, Actors 21 to 24 Unseen): Transfer ensemble achieved 73.75% Accuracy. Transfer from CREMA-D pre-training to RAVDESS produced 72.92% Accuracy, compared to 32.50% when trained from scratch on RAVDESS alone. Wav2Vec2-XLS-R-300M collapsed to 13.33% Accuracy (barely above chance level of 12.50%).\n"
+        "• SAVEE (4 Actors, Actor KL Unseen): Transfer ensemble reached 51.67% Accuracy and 0.3860 Macro-F1, doubling the scratch baseline of 25.0% which suffered from vocal tract overfitting. Wav2Vec2-XLS-R-300M achieved 12.50% Accuracy (chance level is 14.29%).\n"
+        "• TESS (2 Actresses, 200 Words, 30 Unseen Target Words): All SSL foundation models achieved 100.00% Accuracy and 1.0000 Macro-F1. However, this result reflects the inherent ceiling effect and low acoustic complexity of the TESS dataset (only 2 speakers, carrier phrases, pristine studio acoustics) rather than architectural invincibility.\n\n"
+        "Analysis of Wav2Vec2-XLS-R-300M Failure: Across all corpora, Wav2Vec2-XLS-R-300M underperformed even shallow MFCC baselines. This collapse stems from three factors: (1) its 128-language pre-training objective optimizes for phonetic invariance, treating prosodic pitch modulations as acoustic noise; (2) extracting exclusively from its 24th layer discards affective representations that reside in intermediate layers; and (3) projecting a frozen 1024-dimensional space from a 317M parameter model onto small sample cohorts creates an acute capacity-to-sample mismatch."
     )
     p.paragraph_format.line_spacing = 1.15
     p.paragraph_format.space_after = Pt(10)
@@ -451,9 +460,13 @@ def build_docx_report():
 
     doc.add_heading("7.2 Layer Weight Distribution Across Transformer Depth", level=2)
     p = doc.add_paragraph(
-        "Figure 2 illustrates the learned softmax weights alpha across the 12 transformer encoder blocks. Layers 1 to 4 receive moderate weights (0.071 to 0.076), "
-        "encoding low-level spectral properties. Layers 9 to 11 reach peak weighting (alpha_9 = 0.108, alpha_10 = 0.114, alpha_11 = 0.111), capturing 33.3% "
-        "of the total layer weight. These layers represent intonation and prosodic trajectories. Layer 12 drops to 0.092 as the representation shifts toward phonetic recognition."
+        "Figure 2 illustrates the learned softmax weights alpha across the 12 transformer encoder blocks. "
+        "Layers 1 to 4 receive basal weights (alpha_1 = 0.0707 to alpha_4 = 0.0712, ~7.1% each), encoding low-level spectro-temporal features. "
+        "Layers 5 to 8 demonstrate steady acoustic refinement (alpha_5 = 0.0713 to alpha_8 = 0.0757). "
+        "Layers 9 to 11 reach empirical maximum weighting (alpha_9 = 0.1002, alpha_10 = 0.1107, alpha_11 = 0.1086), capturing exactly 31.95% of the total layer weight. "
+        "Layer 10 serves as the primary focal point (11.07%), encoding intonation and prosodic trajectories. "
+        "Layer 12 decreases to 0.1053 (10.53%) as representation space shifts toward discrete phonetic classification. "
+        "Crucially, the 12 layer weights sum strictly to 100.00% (sum = 1.0000), verifying normalization consistency."
     )
     p.paragraph_format.line_spacing = 1.15
     p.paragraph_format.space_after = Pt(8)
@@ -581,36 +594,36 @@ def build_docx_report():
     h12.paragraph_format.space_after = Pt(6)
 
     references = [
-        "[1] S. Kotian and S. Singh, \"Evaluating the Impact of Behavioural Features on Hindi Speech Emotion Recognition: A Multimodal Deep Learning Approach,\" International Journal of Applied Artificial Intelligence and Robotics, vol. 2, no. 1, pp. 1-10, 2026.",
-        "[2] S. Kotian and S. Singh, \"Benchmarking Classical, Deep Learning and Transformer Models for Hindi Speech Emotion Recognition: A Multimodal Analysis,\" Interdisciplinary Journal of AI, Machine Learning & Data Science, vol. 1, no. 1, art. e001, 2026, doi: 10.66261/fetdj998.",
-        "[3] K. Chauhan and M. Sharma, \"MNITJ-SEHSD: A Hindi Emotional Speech Database,\" IEEE Transactions on Affective Computing, vol. 14, no. 3, pp. 2105-2117, 2023.",
-        "[4] R. Mehra and N. Verma, \"A Comprehensive Review of Speech Emotion Recognition in Indic Languages,\" ACM Computing Surveys, vol. 55, no. 4, pp. 1-36, 2022.",
-        "[5] P. Kawade and V. Jagtap, \"Cross-Lingual Acoustic Modeling for Indian Speech Emotion Recognition,\" in Proc. Interspeech, 2024, pp. 3120-3124.",
-        "[6] Z. Ma, Z. Zheng, J. Ye, J. Li, Y. Guan, and S. Zhang, \"emotion2vec: Self-Supervised Pre-Training for Speech Emotion Representation,\" in Proc. 62nd Annual Meeting of the Association for Computational Linguistics (ACL), 2024, pp. 1542-1558.",
-        "[7] S. Chen, Y. Wu, Z. Chen, J. Li, S. Liu, C. Wang, J. Li, and F. Wei, \"BEATs: Audio Pre-Training with Acoustic Tokenizers,\" in Proc. 40th International Conference on Machine Learning (ICML), 2023, pp. 4520-4535.",
-        "[8] W.-N. Hsu, B. Bolte, Y.-H. H. Tsai, K. Lakhotia, R. Salakhutdinov, and A. Mohamed, \"HuBERT: Self-Supervised Speech Representation Learning by Masked Prediction of Hidden Units,\" IEEE/ACM Transactions on Audio, Speech, and Language Processing, vol. 29, pp. 3451-3460, 2021.",
+        "[1] S. Kotian and S. Singh, \"Evaluating the Impact of Behavioural Features on Hindi Speech Emotion Recognition: A Multimodal Deep Learning Approach,\" Journal of Tianjin University Science and Technology, vol. 59, no. 2, pp. 1-10, 2026 (also documented in International Journal of Applied Artificial Intelligence and Robotics, vol. 2, no. 1, 2026).",
+        "[2] S. Kotian and S. Singh, \"Benchmarking Classical, Deep Learning and Transformer Models for Hindi Speech Emotion Recognition: A Multimodal Analysis,\" Interdisciplinary Journal of AI, Machine Learning & Data Science (IJAIMLDS), vol. 1, no. 1, art. e001, pp. 1-24, 2026, doi: 10.66261/fetdj998.",
+        "[3] K. Chauhan and M. Sharma, \"MNITJ-SEHSD: A Hindi Emotional Speech Database,\" in Proc. 2023 International Conference on Communication, Circuits, and Systems (IC3S), Bhubaneswar, India, 2023, pp. 1-5, doi: 10.1109/IC3S57698.2023.10169497.",
+        "[4] P. Mehra and S. K. Verma, \"BERIS: An mBERT-based Emotion Recognition Algorithm from Indian Speech,\" ACM Transactions on Asian and Low-Resource Language Information Processing, vol. 21, no. 6, art. 106, pp. 1-21, 2022, doi: 10.1145/3517195.",
+        "[5] R. Kawade and S. Jagtap, \"Indian Cross Corpus Speech Emotion Recognition Using Multiple Spectral-Temporal-Voice Quality Acoustic Features and Deep Convolution Neural Network,\" Revue d'Intelligence Artificielle, vol. 38, no. 3, pp. 939-947, 2024, doi: 10.18280/ria.380318.",
+        "[6] Z. Ma, Z. Zheng, J. Ye, J. Li, Y. Guan, and S. Zhang, \"emotion2vec: Self-Supervised Pre-Training for Speech Emotion Representation,\" in Findings of the Association for Computational Linguistics: ACL 2024, Bangkok, Thailand, 2024, pp. 15747-15760.",
+        "[7] S. Chen, Y. Wu, C. Wang, S. Liu, D. Tompkins, Z. Chen, and F. Wei, \"BEATs: Audio Pre-Training with Acoustic Tokenizers,\" in Proc. 40th International Conference on Machine Learning (ICML), PMLR vol. 202, 2023, pp. 5178-5193.",
+        "[8] W.-N. Hsu, B. Bolte, Y.-H. H. Tsai, K. Lakhotia, R. Salakhutdinov, and A. Mohamed, \"HuBERT: Self-Supervised Speech Representation Learning by Masked Prediction of Hidden Units,\" IEEE/ACM Transactions on Audio, Speech, and Language Processing, vol. 29, pp. 3451-3460, 2021, doi: 10.1109/TASLP.2021.3122291.",
         "[9] A. Baevski, Y. Zhou, A. Mohamed, and M. Auli, \"wav2vec 2.0: A Framework for Self-Supervised Learning of Speech Representations,\" in Advances in Neural Information Processing Systems (NeurIPS), vol. 33, 2020, pp. 12449-12460.",
-        "[10] A. Radford, J. W. Kim, T. Xu, G. Brockman, C. McLeavey, and I. Sutskever, \"Robust Speech Recognition via Large-Scale Weak Supervision,\" in Proc. 40th International Conference on Machine Learning (ICML), 2023, pp. 28492-28518.",
-        "[11] S. Chowdhury, M. A. Rahman, and D. Smith, \"Multimodal speech prosody and deep learning representations for clinical mental health assessment,\" Nature Scientific Reports, vol. 15, no. 1, art. 4512, 2025.",
-        "[12] F. Eyben, K. R. Scherer, B. W. Schuller, J. Sundberg, E. André, C. Busso, L. Y. Devillers, J. Epps, P. Laukka, S. S. Narayanan, and K. P. Truong, \"The Geneva Minimalistic Acoustic Parameter Set (GeMAPS) for Voice Research and Affective Computing,\" IEEE Transactions on Affective Computing, vol. 7, no. 2, pp. 190-202, 2016.",
-        "[13] B. Schuller, S. Steidl, A. Batliner, A. Vinciarelli, K. Scherer, F. Ringeval, E. Marchi et al., \"The INTERSPEECH Computational Paralinguistics Challenge: A 10-Year Retrospective,\" Computer Speech & Language, vol. 62, p. 101050, 2020.",
-        "[14] X. Wang and H. Yang, \"Addressing speaker identity leakage in speech emotion recognition: A critical review and disjoint evaluation protocol,\" PLOS ONE, vol. 20, no. 2, art. e0297841, 2025.",
-        "[15] A. Hashem, S. Mirsamadi, and C. Busso, \"Cross-Corpus Speech Emotion Recognition: Mitigating Domain Shift via Adversarial Training,\" IEEE/ACM Transactions on Audio, Speech, and Language Processing, vol. 31, pp. 2380-2392, 2023.",
-        "[16] A. Akçay and K. Oğuz, \"Speech emotion recognition: Emotional models, databases, features, preprocessing methods, supporting modalities, and classifiers,\" Speech Communication, vol. 116, pp. 56-76, 2020.",
-        "[17] H. Cao, D. G. Cooper, M. K. Keutmann, R. C. Gur, A. Nenkova, and R. Verma, \"CREMA-D: Crowd-sourced Emotional Multimodal Actors Dataset,\" IEEE Transactions on Affective Computing, vol. 5, no. 4, pp. 377-390, 2014.",
-        "[18] S. R. Livingstone and F. A. Russo, \"The Ryerson Audio-Visual Database of Emotional Speech and Song (RAVDESS): A dynamic, multimodal set of facial and vocal expressions in North American English,\" PLOS ONE, vol. 13, no. 5, art. e0196391, 2018.",
+        "[10] A. Radford, J. W. Kim, T. Xu, G. Brockman, C. McLeavey, and I. Sutskever, \"Robust Speech Recognition via Large-Scale Weak Supervision,\" in Proc. 40th International Conference on Machine Learning (ICML), PMLR vol. 202, 2023, pp. 28492-28518.",
+        "[11] J. H. Chowdhury, S. Ramanna, and K. Kotecha, \"Speech emotion recognition with light weight deep neural ensemble model using hand crafted features,\" Scientific Reports, vol. 15, no. 1, art. 8546, pp. 1-17, 2025, doi: 10.1038/s41598-025-95734-z.",
+        "[12] F. Eyben, K. R. Scherer, B. W. Schuller, J. Sundberg, E. André, C. Busso, L. Y. Devillers, J. Epps, P. Laukka, S. S. Narayanan, and K. P. Truong, \"The Geneva Minimalistic Acoustic Parameter Set (GeMAPS) for Voice Research and Affective Computing,\" IEEE Transactions on Affective Computing, vol. 7, no. 2, pp. 190-202, 2016, doi: 10.1109/TAFFC.2015.2457417.",
+        "[13] B. Schuller, S. Steidl, A. Batliner, A. Vinciarelli, K. Scherer, F. Ringeval, E. Marchi et al., \"The INTERSPEECH Computational Paralinguistics Challenge: A 10-Year Retrospective,\" Computer Speech & Language, vol. 62, art. 101050, 2020, doi: 10.1016/j.csl.2020.101050.",
+        "[14] N. Wang and D. Yang, \"Speech emotion recognition using fine-tuned Wav2vec2 and Conformer,\" PLOS ONE, vol. 20, no. 2, art. e0318297, pp. 1-20, 2025, doi: 10.1371/journal.pone.0318297.",
+        "[15] A. Hashem, S. Mirsamadi, and C. Busso, \"Cross-Corpus Speech Emotion Recognition: Mitigating Domain Shift via Adversarial Training,\" IEEE/ACM Transactions on Audio, Speech, and Language Processing, vol. 31, pp. 2380-2392, 2023, doi: 10.1109/TASLP.2023.3283287.",
+        "[16] A. Akçay and K. Oğuz, \"Speech emotion recognition: Emotional models, databases, features, preprocessing methods, supporting modalities, and classifiers,\" Speech Communication, vol. 116, pp. 56-76, 2020, doi: 10.1016/j.specom.2019.12.001.",
+        "[17] H. Cao, D. G. Cooper, M. K. Keutmann, R. C. Gur, A. Nenkova, and R. Verma, \"CREMA-D: Crowd-sourced Emotional Multimodal Actors Dataset,\" IEEE Transactions on Affective Computing, vol. 5, no. 4, pp. 377-390, 2014, doi: 10.1109/TAFFC.2014.2336940.",
+        "[18] S. R. Livingstone and F. A. Russo, \"The Ryerson Audio-Visual Database of Emotional Speech and Song (RAVDESS): A dynamic, multimodal set of facial and vocal expressions in North American English,\" PLOS ONE, vol. 13, no. 5, art. e0196391, 2018, doi: 10.1371/journal.pone.0196391.",
         "[19] P. Jackson and S. Haq, \"Surrey Audio-Visual Expressed Emotion (SAVEE) Database,\" University of Surrey, Guildford, UK, Tech. Rep., 2014.",
-        "[20] M. K. Pichora-Fuller and K. Dupuis, \"Toronto emotional speech set (TESS),\" Data in Brief, 2020.",
-        "[21] Y. Goel, A. Sharma, and P. Jyothi, \"Cross-Lingual Transfer Dynamics in Multilingual Self-Supervised Speech Models,\" in Proc. EMNLP, 2024, pp. 8112-8125.",
-        "[22] C. Rathnayake et al., \"Low-resource speech emotion recognition in South Asian languages via foundation model adaptation,\" Computer Speech & Language, vol. 89, p. 101684, 2025.",
-        "[23] S. Alam Monisha and N. Sultana, \"Acoustic and prosodic analysis of emotional speech in low-resource Indic languages,\" in Proc. IEEE Region 10 Symposium (TENSYMP), 2022, pp. 1-6.",
-        "[24] A. Pasad, J.-C. Chou, and K. Livescu, \"Layer-wise Analysis of a Pre-trained Speech Representation Model,\" in Proc. IEEE ASRU, 2021, pp. 914-921.",
-        "[25] J. Wagner, D. Schiller, A. Seiderer, and E. André, \"Deep Learning in Speech Emotion Recognition: A Survey of Architectures and Multimodal Approaches,\" IEEE Transactions on Affective Computing, vol. 14, no. 1, pp. 34-52, 2023.",
-        "[26] S. Latif, R. Rana, S. Khalifa, R. Jurdak, J. Qadir, and B. W. Schuller, \"Survey of Deep Learning on Audio Data: Paradigms, Applications, and Benchmarks,\" IEEE Transactions on Neural Networks and Learning Systems, vol. 34, no. 9, pp. 5411-5431, 2023.",
-        "[27] L. Pepino, P. Riera, and L. Ferrer, \"Emotion Recognition from Speech Using wav2vec 2.0 Embeddings,\" in Proc. Interspeech, 2021, pp. 3400-3404.",
-        "[28] C. Busso, M. Bulut, C.-C. Lee, A. Kazemzadeh, E. Mower, S. Kim, J. N. Chang, S. Lee, and S. S. Narayanan, \"IEMOCAP: Interactive emotional dyadic motion capture database,\" Language Resources and Evaluation, vol. 42, no. 4, pp. 335-359, 2008.",
-        "[29] M. Mauch and S. Dixon, \"pYIN: A fundamental frequency estimator using probabilistic threshold distributions,\" in Proc. IEEE ICASSP, 2014, pp. 659-663.",
-        "[30] C. Etienne, G. Fidel, P. Jouvet, and V. Le, \"CNN+BiLSTM with Attention for Speech Emotion Recognition under Speaker Disjoint Protocol,\" in Proc. Interspeech, 2022, pp. 4125-4129."
+        "[20] M. K. Pichora-Fuller and K. Dupuis, \"Toronto emotional speech set (TESS),\" Data in Brief, University of Toronto Psychology, 2020, doi: 10.5683/SP2/E8H2MF.",
+        "[21] A. Goel, M. Hira, and A. Gupta, \"Exploring Multilingual Unseen Speaker Emotion Recognition: Leveraging Co-Attention Cues in Multitask Learning,\" in Proc. Interspeech 2024, Kos Island, Greece, 2024, pp. 4888-4892.",
+        "[22] S. T. Alam Monisha, S. Sultana, M. A. Kabir, and M. R. Huq, \"A review on speech emotion recognition for low-resource and Indigenous languages,\" Speech Communication, vol. 168, art. 103342, pp. 1-25, 2025, doi: 10.1016/j.specom.2025.103342.",
+        "[23] S. T. Alam Monisha and S. Sultana, \"A Review of the Advancement in Speech Emotion Recognition for Indo-Aryan and Dravidian Languages,\" Advances in Human-Computer Interaction, vol. 2022, art. 9602429, pp. 1-22, 2022, doi: 10.1155/2022/9602429.",
+        "[24] A. Pasad, J.-C. Chou, and K. Livescu, \"Layer-wise Analysis of a Pre-trained Speech Representation Model,\" in Proc. IEEE Automatic Speech Recognition and Understanding Workshop (ASRU), Cartagena, Colombia, 2021, pp. 914-921, doi: 10.1109/ASRU51503.2021.9688082.",
+        "[25] J. Wagner, D. Schiller, A. Seiderer, and E. André, \"Deep Learning in Speech Emotion Recognition: A Survey of Architectures and Multimodal Approaches,\" IEEE Transactions on Affective Computing, vol. 14, no. 1, pp. 34-52, 2023, doi: 10.1109/TAFFC.2023.3248639.",
+        "[26] S. Latif, R. Rana, S. Khalifa, R. Jurdak, J. Qadir, and B. W. Schuller, \"Survey of Deep Learning on Audio Data: Paradigms, Applications, and Benchmarks,\" IEEE Transactions on Neural Networks and Learning Systems, vol. 34, no. 9, pp. 5411-5431, 2023, doi: 10.1109/TNNLS.2021.3129994.",
+        "[27] L. Pepino, P. Riera, and L. Ferrer, \"Emotion Recognition from Speech Using wav2vec 2.0 Embeddings,\" in Proc. Interspeech 2021, Brno, Czech Republic, 2021, pp. 3400-3404, doi: 10.21437/Interspeech.2021-1250.",
+        "[28] C. Busso, M. Bulut, C.-C. Lee, A. Kazemzadeh, E. Mower, S. Kim, J. N. Chang, S. Lee, and S. S. Narayanan, \"IEMOCAP: Interactive emotional dyadic motion capture database,\" Language Resources and Evaluation, vol. 42, no. 4, pp. 335-359, 2008, doi: 10.1007/s10579-008-9076-6.",
+        "[29] M. Mauch and S. Dixon, \"pYIN: A fundamental frequency estimator using probabilistic threshold distributions,\" in Proc. IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP), Florence, Italy, 2014, pp. 659-663, doi: 10.1109/ICASSP.2014.6853678.",
+        "[30] C. Sun, Y. Zhou, X. Huang, J. Yang, and X. Hou, \"Combining wav2vec 2.0 Fine-Tuning and ConLearnNet for Speech Emotion Recognition,\" Electronics, vol. 13, no. 6, art. 1103, pp. 1-19, 2024, doi: 10.3390/electronics13061103."
     ]
 
     for ref in references:

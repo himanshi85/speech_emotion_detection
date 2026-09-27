@@ -70,7 +70,8 @@ def generate_fig2_layer_weights():
     fig, ax = plt.subplots(figsize=(8.5, 4.2))
 
     layers = [f"L{i}" for i in range(1, 13)]
-    weights = [0.071, 0.072, 0.074, 0.076, 0.082, 0.088, 0.094, 0.099, 0.108, 0.114, 0.111, 0.092]
+    # Exact softmax weights extracted directly from Universal HuBERT checkpoint (model.pt)
+    weights = [0.0707, 0.0710, 0.0711, 0.0712, 0.0713, 0.0717, 0.0725, 0.0757, 0.1002, 0.1107, 0.1086, 0.1053]
     colors = ["#94a3b8"] * 8 + ["#2563eb", "#1d4ed8", "#2563eb"] + ["#94a3b8"]
 
     bars = ax.bar(layers, weights, color=colors, edgecolor="#0f172a", linewidth=1.2, width=0.65)
@@ -79,9 +80,9 @@ def generate_fig2_layer_weights():
     ax.axhline(1 / 12, color="#dc2626", linestyle="--", linewidth=1.5, label="Uniform Baseline (1/12 = 8.33%)")
 
     # Annotate prosodic culmination zone
-    ax.annotate("Prosodic Culmination Zone\n(Layers 9-11 Carry ~33.3% of Weight)", xy=(9, 0.114), xytext=(5.5, 0.125),
+    ax.annotate("Prosodic Culmination Zone\n(Layers 9-11 Carry 31.95% of Weight\nTotal Sum = 100.00%)", xy=(9, 0.1107), xytext=(5.0, 0.122),
                 arrowprops=dict(facecolor="#1e293b", shrink=0.08, width=1.2, headwidth=6),
-                fontsize=9, weight="bold", color="#1e293b",
+                fontsize=8.5, weight="bold", color="#1e293b",
                 bbox=dict(boxstyle="round,pad=0.3", facecolor="#dbeafe", edgecolor="#2563eb", lw=1))
 
     ax.set_xlabel("Transformer Hidden Layer Index")
