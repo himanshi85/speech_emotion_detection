@@ -27,7 +27,7 @@ import soundfile as sf
 import torch
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 
 from ser.core.config import load_model_config
 from ser.core.registry import build_model
@@ -200,6 +200,7 @@ app.add_middleware(
 
 
 @app.get("/health")
+@app.get("/api/health")
 def health_check():
     """Health check endpoint for Next.js frontend."""
     return {"status": "ok", "device": str(DEVICE)}
@@ -292,6 +293,28 @@ async def predict_endpoint(
             "audio_duration_sec": round(metrics.audio_duration_seconds, 2),
             "sample_rate": 16000,
             "summary": summary_str,
+            "behavior": {
+                "speaking_speed": {
+                    "category": metrics.speaking_speed,
+                    "syllables_per_second": round(metrics.syllables_per_second, 1),
+                    "words_per_minute": int(round(metrics.words_per_minute)),
+                },
+                "pause_frequency": {
+                    "category": metrics.pause_frequency,
+                    "pauses_per_minute": round(metrics.pauses_per_minute, 1),
+                    "silence_ratio": round(metrics.pause_ratio * 100.0, 1),
+                },
+                "vocal_energy": {
+                    "category": metrics.energy,
+                    "rms_db": round(metrics.rms_db, 1),
+                },
+                "pitch_variation": {
+                    "category": metrics.pitch_variation,
+                    "mean_hz": round(metrics.pitch_mean_hz, 1),
+                    "std_hz": round(metrics.pitch_std_hz, 1),
+                },
+                "overall_behaviour": metrics.overall_behaviour,
+            },
         })
     except Exception as e:
         logger.exception("Error in /predict endpoint: %s", e)

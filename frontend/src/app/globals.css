@@ -1,14 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
-  --surface: #ffffff;
-  --surface-subtle: #f1f5f9;
-  --border: #e2e8f0;
-  --border-focus: #6366f1;
-  --primary: #4f46e5;
-  --primary-glow: rgba(79, 70, 229, 0.15);
+  --background: #06080d;
+  --foreground: #f8fafc;
+  --surface-glass: rgba(13, 17, 26, 0.72);
+  --surface-elevated: rgba(19, 25, 38, 0.85);
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --border-highlight: rgba(255, 255, 255, 0.18);
+  --accent-lime: #ccff00;
+  --accent-cyan: #00f0ff;
+  --accent-green: #00f59b;
 }
 
 @theme inline {
@@ -19,102 +20,144 @@
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background-color: #06080d;
+  color: #f8fafc;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 ::selection {
-  background: rgba(99, 102, 241, 0.2);
-  color: #1e1b4b;
+  background: rgba(204, 255, 0, 0.25);
+  color: #ccff00;
 }
 
-/* Futuristic SaaS Ambient Mesh */
-.saas-mesh-bg {
-  background-color: #f8fafc;
+/* Atmospheric Cyber-Glass Canvas */
+.cyber-canvas-bg {
+  background-color: #06080d;
   background-image: 
-    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(56, 189, 248, 0.08) 0px, transparent 50%),
-    radial-gradient(at 50% 100%, rgba(168, 85, 247, 0.06) 0px, transparent 50%),
-    linear-gradient(to right, rgba(226, 232, 240, 0.45) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(226, 232, 240, 0.45) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 100% 100%, 32px 32px, 32px 32px;
+    radial-gradient(circle at 15% 10%, rgba(0, 240, 255, 0.09) 0px, transparent 40%),
+    radial-gradient(circle at 85% 25%, rgba(204, 255, 0, 0.07) 0px, transparent 45%),
+    radial-gradient(circle at 50% 80%, rgba(167, 139, 250, 0.08) 0px, transparent 55%),
+    radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 28px 28px;
 }
 
-/* Glass card styling */
-.glass-panel {
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(226, 232, 240, 0.9);
-  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04), 0 2px 6px -1px rgba(15, 23, 42, 0.02);
+/* Multi-layered Glassmorphic Surfaces */
+.cyber-glass {
+  background: rgba(13, 17, 26, 0.65);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+    0 20px 40px -15px rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(0, 0, 0, 0.4);
 }
 
-.glass-panel-elevated {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(226, 232, 240, 0.95);
-  box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.07), 0 0 0 1px rgba(226, 232, 240, 0.6);
+.cyber-glass-elevated {
+  background: rgba(18, 24, 37, 0.8);
+  backdrop-filter: blur(32px) saturate(200%);
+  -webkit-backdrop-filter: blur(32px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.14),
+    0 24px 50px -10px rgba(0, 0, 0, 0.85),
+    0 0 30px -5px rgba(0, 240, 255, 0.05);
 }
 
-/* Shimmer animation */
-@keyframes shimmer {
+.cyber-pill {
+  background: rgba(14, 19, 30, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.12),
+    0 12px 30px -5px rgba(0, 0, 0, 0.65);
+}
+
+/* Neon Glow Accents */
+.glow-lime {
+  box-shadow: 0 0 25px rgba(204, 255, 0, 0.35), 0 0 50px rgba(204, 255, 0, 0.15);
+}
+
+.glow-cyan {
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.35), 0 0 50px rgba(0, 240, 255, 0.15);
+}
+
+.glow-bio {
+  box-shadow: 0 0 25px rgba(167, 139, 250, 0.35), 0 0 50px rgba(167, 139, 250, 0.15);
+}
+
+/* Shimmer & Scanning Wave Animation */
+@keyframes cyber-scan {
   0% {
-    transform: translateX(-100%);
+    transform: translateY(-100%);
   }
   100% {
-    transform: translateX(200%);
+    transform: translateY(1000%);
   }
 }
 
-.animate-shimmer {
-  animation: shimmer 2s infinite linear;
+.animate-scan {
+  animation: cyber-scan 3.5s infinite linear;
 }
 
-/* Pulse glow keyframe */
-@keyframes pulse-ring {
-  0% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.5);
+@keyframes neon-pulse {
+  0%, 100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 8px rgba(204, 255, 0, 0.8));
   }
-  70% {
-    transform: scale(1);
-    box-shadow: 0 0 0 12px rgba(99, 102, 241, 0);
-  }
-  100% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+  50% {
+    opacity: 0.6;
+    filter: drop-shadow(0 0 2px rgba(204, 255, 0, 0.3));
   }
 }
 
-.pulse-ring-active {
-  animation: pulse-ring 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+.pulse-neon-lime {
+  animation: neon-pulse 2s infinite ease-in-out;
 }
 
-/* Custom modern scrollbars */
+@keyframes float-gentle {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.animate-float {
+  animation: float-gentle 4s infinite ease-in-out;
+}
+
+/* Custom Cockpit Scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #06080d;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #1e293b;
   border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #334155;
 }
 
 audio {
-  color-scheme: light;
+  color-scheme: dark;
   width: 100%;
-  height: 38px;
+  height: 36px;
+  filter: invert(0.9) hue-rotate(180deg);
 }
