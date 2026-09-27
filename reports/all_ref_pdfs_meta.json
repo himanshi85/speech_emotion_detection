@@ -1,0 +1,275 @@
+[
+  {
+    "file": "1-s2.0-S0167639319302262-main.pdf",
+    "dir": "paper",
+    "pages": 21,
+    "doi": "10.1016/j.specom.2019.12.001",
+    "header_sample": "Speech Communication 116 (2020) 56\u201376  Contents lists available at ScienceDirect  Speech Communication  journal homepage: www.elsevier.com/locate/specom  Speech emotion recognition: Emotional models, databases, features,  preprocessing methods, supporting modalities, and classi\ufb01ers  Mehmet Berkehan Ak\u00e7ay a , \u2217 , Kaya O \u011fuz b  a Department of Software Engineering, Izmir University of Economics, Izmir, Turkey  b Department of Computer Engineering, Izmir University of Economics, Izmir, Turkey  a r "
+  },
+  {
+    "file": "1-s2.0-S0885230825000981-main.pdf",
+    "dir": "paper",
+    "pages": 32,
+    "doi": "10.1016/j.csl.2025.101873",
+    "header_sample": "  Contents lists available at ScienceDirect Computer Speech & Language journal homepage: www.elsevier.com/locate/csl   Deep feature representations and fusion strategies for speech  emotion recognition from acoustic and linguistic modalities: A  systematic review Andrea Chaves-Villota a  ,\u2217, Ana Jimenez-Mart\u00edn a  , Mario Jojoa-Acosta b  ,  Alfonso Bahillo b  , Juan Jes\u00fas Garc\u00eda-Dom\u00ednguez a a Department of Electronics, University of Alcal\u00e1, E.P.S. Campus universitario s/n, Alcal\u00e1 de Henares (Madr"
+  },
+  {
+    "file": "1-s2.0-S0925231222003964-main.pdf",
+    "dir": "paper",
+    "pages": 19,
+    "doi": "10.1016/j.neucom.2022.04.028",
+    "header_sample": "Survey paper A systematic literature review of speech emotion recognition approaches Youddha Beer Singh a,b,\u21d1, Shivani Goel a a Computer Science Engineering Department, School of Computer Science Engineering and Technology, Bennett University, Greater Noida, UP-201310, I ndia b Department of Computer Science and Information Technology, KIET Group of Institutions, Delhi-NCR, Ghaziabad, UP-201206, India article info Article history: Received 3 September 2021 Revised 16 March 2022 Accepted 3 April "
+  },
+  {
+    "file": "1-s2.0-S0925231223000103-main.pdf",
+    "dir": "paper",
+    "pages": 11,
+    "doi": "10.1016/j.neucom.2023.01.002",
+    "header_sample": "An ongoing review of speech emotion recognition Javier de Lope a,\u21d1, Manuel Gra\u00f1a b a Department of Arti\ufb01cial Intelligence, Universidad Polit\u00e9cnica de Madrid (UPM), Spain b Computational Intelligence Group, University of the Basque Country (UPV/EHU), Spain article info Article history: Received 7 August 2022 Revised 5 December 2022 Accepted 8 January 2023 Available online 18 January 2023 Keywords: Speech emotion recognition Deep learning Datasets Machine learning Speech feature extraction abstrac"
+  },
+  {
+    "file": "1-s2.0-S0925231223011384-main.pdf",
+    "dir": "paper",
+    "pages": 23,
+    "doi": "10.1016/j.neucom.2023.127015",
+    "header_sample": "Neurocomputing 568 (2024) 127015 Available online 17 November 2023 0925-2312/\u00a9 2023 Elsevier B.V. All rights reserved. Survey paper  A review on speech emotion recognition: A survey, recent advances,  challenges, and the influence of noise  Swapna Mol George *,1, P. Muhamed Ilyas  Sullamussalam Science College, Areekode, Affiliated to University of Calicut, Kerala, India    ARTICLE INFO   Keywords:  Affective computing  Speech emotion recognition  Noisy speech emotion recognition  Robust SER  AB"
+  },
+  {
+    "file": "1-s2.0-S1566253526000400-main.pdf",
+    "dir": "paper",
+    "pages": 32,
+    "doi": "10.1016/j.in",
+    "header_sample": "Contents lists available at ScienceDirect Information Fusion journal homepage: www.elsevier.com/locate/inffus Speech emotion recognition: A systematic mega-review of techniques and  pipelines Adil Chakhtouna  \u2217, Sara Sekkate  , Abdellah Adib University Hassan II Casablanca, Faculty of Sciences and Technologies Mohammedia, Morocco University Hassan II Casablanca, Higher National School of Arts and Crafts Casablanca, Morocco a r t i c l e  i n f o Keywords: Speech emotion recognition Emotional dat"
+  },
+  {
+    "file": "1-s2.0-S1877050924002515-main.pdf",
+    "dir": "paper",
+    "pages": 10,
+    "doi": "10.1016/j.procs.2024.02.074",
+    "header_sample": "ScienceDirect Available online at www.sciencedirect.com Procedia Computer Science 232 (2024) 2560\u20132569 1877-0509 \u00a9 2024 The Authors. Published by Elsevier B.V . This is an open access article under the CC BY-NC-ND license (https://creativecommons.org/licenses/by-nc-nd/4.0) Peer-review under responsibility of the scientific committee of the 5th International Conference on Industry 4.0 and  Smart Manufacturing 10.1016/j.procs.2024.02.074 10.1016/j.procs.2024.02.074 1877-0509 \u00a9 2024 The Authors. Pu"
+  },
+  {
+    "file": "1-s2.0-S2667305323000911-main.pdf",
+    "dir": "paper",
+    "pages": 25,
+    "doi": "10.1016/j.iswa.2023.200266",
+    "header_sample": "Intelligent Systems with Applications 20 (2023) 200266 Available online 14 August 2023 2667-3053/\u00a9 2023 The Author(s). Published by Elsevier Ltd. This is an open access article under the CC BY-NC-ND license ( http://creativecommons.org/licenses/by- nc-nd/4.0/). Contentslistsavailableat ScienceDirect Intelligent Systems with Applications journal homepage: www.journals.elsevier.com/intelligent-systems-with-applications Review Speech emotion recognition using machine learning \u2014 A systematic review "
+  },
+  {
+    "file": "2024.findings-acl.931.pdf",
+    "dir": "paper",
+    "pages": 14,
+    "doi": null,
+    "header_sample": "Findings of the Association for Computational Linguistics: ACL 2024 , pages 15747\u201315760 August 11-16, 2024 \u00a92024 Association for Computational Linguistics emotion2vec: Self-Supervised Pre-Training for Speech Emotion Representation Ziyang Ma1, Zhisheng Zheng1, Jiaxin Ye2, Jinchao Li3, Zhifu Gao4, Shiliang Zhang4, Xie Chen1\u2020 1 Shanghai Jiao Tong University,2 Fudan University, 3 The Chinese University of Hong Kong, 4 Alibaba Abstract We propose emotion2vec, a universal speech emotion representation"
+  },
+  {
+    "file": "2212.09058v1.pdf",
+    "dir": "paper",
+    "pages": 16,
+    "doi": null,
+    "header_sample": "BEAT S  : Audio Pre-Training with Acoustic Tokenizers Sanyuan Chen\u2217 Yu Wu\u2020 Chengyi Wang Shujie Liu Daniel Tompkins Zhuo Chen Furu Wei {t-schen, yuwu1, t-chewang, shujliu, datompki, zhuc, fuwei}@microsoft.com Microsoft Abstract The massive growth of self-supervised learning (SSL) has been witnessed in language, vision, speech, and audio domains over the past few years. While discrete label prediction is widely adopted for other modalities, the state-of-the-art audio SSL models still employ recons"
+  },
+  {
+    "file": "2304.11472v1.pdf",
+    "dir": "paper",
+    "pages": 8,
+    "doi": null,
+    "header_sample": "A Comparative Study of Pre-trained Speech and Audio Embeddings for Speech Emotion Recognition Orchid Chetia Phukan Dept. of CSE IIIT Delhi, India orchidp@iiitd.ac.in Arun Balaji Buduru Dept. of CSE IIIT Delhi, India arunb@iiitd.ac.in Rajesh Sharma Institute of Computer Science University of Tartu, Estonia rajesh.sharma@ut.ee Abstract\u2014Pre-trained models (PTMs) have shown great promise in the speech and audio domain. Embeddings leveraged from these models serve as inputs for learning algorithms wi"
+  },
+  {
+    "file": "A-review-on-speech-emotion-recognition--A-survey--recent-advan_2024_Neurocom.pdf",
+    "dir": "paper",
+    "pages": 23,
+    "doi": "10.1016/j.neucom.2023.127015",
+    "header_sample": "Neurocomputing 568 (2024) 127015 Available online 17 November 2023 0925-2312/\u00a9 2023 Elsevier B.V. All rights reserved. Survey paper  A review on speech emotion recognition: A survey, recent advances,  challenges, and the influence of noise  Swapna Mol George *,1, P. Muhamed Ilyas  Sullamussalam Science College, Areekode, Affiliated to University of Calicut, Kerala, India    ARTICLE INFO   Keywords:  Affective computing  Speech emotion recognition  Noisy speech emotion recognition  Robust SER  AB"
+  },
+  {
+    "file": "Fixed-frequency-range-empirical-wavelet-transform-based-acou_2025_Speech-Com.pdf",
+    "dir": "paper",
+    "pages": 17,
+    "doi": "10.1016/j.specom.2024.103148",
+    "header_sample": "Contents lists available at ScienceDirect Speech Communication journal homepage: www.elsevier.com/locate/specom Fixed frequency range empirical wavelet transform based acoustic and entropy features for speech emotion recognition Siba Prasad Mishra \u2217, Pankaj Warule, Suman Deb Sardar Vallabhbhai National Institute of Technology, Surat, Gujarat, India A R T I C L E I N F O Keywords: Deep neural network Speech emotion recognition MFCC Permutation entropy Approximate entropy Increment entropy A B S T"
+  },
+  {
+    "file": "In-depth-investigation-of-speech-emotion-recognition-stu_2024_Intelligent-Sy.pdf",
+    "dir": "paper",
+    "pages": 12,
+    "doi": "10.1016/j.iswa.2024.200351",
+    "header_sample": "Intelligent Systems with Applications 22 (2024) 200351 Available online 11 March 2024 2667-3053/\u00a9 2024 The Authors. Published by Elsevier Ltd. This is an open access article under the CC BY-NC-ND license ( http://creativecommons.org/licenses/by- nc-nd/4.0/). In-depth investigation of speech emotion recognition studies from past to  present \u2013The importance of emotion recognition from speech signal for AI\u2013  Yes\u00b8im \u00dcLGEN S\u00a8ONMEZ a,*, Asaf VAROL b,c  a F\u0131rat University, Faculty of Economics and Admi"
+  },
+  {
+    "file": "MSER--Multimodal-speech-emotion-recognition-using-c_2024_Expert-Systems-with.pdf",
+    "dir": "paper",
+    "pages": 11,
+    "doi": "10.1016/j.eswa.2023.122946",
+    "header_sample": "Expert Systems With Applications 245 (2024) 122946 Available online 15 December 2023 0957-4174/\u00a9 2023 Elsevier Ltd. All rights reserved. MSER: Multimodal speech emotion recognition using cross-attention with  deep fusion  Mustaqeem Khan a,b, Wail Gueaieb b,c, Abdulmotaleb El Saddik b,c, Soonil Kwon a,*  a Interaction Technology Laboratory, Department of Software, Sejong University Seoul, Korea  b Mohamed Bin Zayed University of Artificial Intelligence, Abu Dhabi, The United Arab Emirates  c Univ"
+  },
+  {
+    "file": "Multimodal-Emotion-Recognition-with-Deep-Learning--Advanceme_2024_Informatio.pdf",
+    "dir": "paper",
+    "pages": 38,
+    "doi": "10.1016/j.inffus.2023.102218",
+    "header_sample": "Information Fusion 105 (2024) 102218 Available online 29 December 2023 1566-2535/\u00a9 2023 Elsevier B.V. All rights reserved. Contents lists available at ScienceDirect Information Fusion journal homepage: www.elsevier.com/locate/inffus Multimodal Emotion Recognition with Deep Learning: Advancements, challenges, and future directions Geetha A.V. \u2217, Mala T., Priyanka D., Uma E. Department of Information Science and Technology, College of Engineering Guindy, Chennai, India A R T I C L E I N F O Keywor"
+  },
+  {
+    "file": "Speech-emotion-recognition-approaches--A-systematic-r_2023_Speech-Communicat.pdf",
+    "dir": "paper",
+    "pages": 29,
+    "doi": "10.1016/j.specom.2023.102974",
+    "header_sample": "Speech Communication 154 (2023) 102974 Available online 7 September 2023 0167-6393/\u00a9 2023 Elsevier B.V. All rights reserved. Contents lists available at ScienceDirect Speech Communication journal homepage: www.elsevier.com/locate/specom Speech emotion recognition approaches: A systematic review Ahlam Hashem, Muhammad Arif \u2217, Manal Alghamdi Department of Computer Science, Umm Al-Qura university, Makkah, Saudi Arabia A R T I C L E I N F O Keywords: Speech emotion recognition Emotional speech datab"
+  },
+  {
+    "file": "Speech_Emotion_Recognition_Using_Machine_Learning_.pdf",
+    "dir": "paper",
+    "pages": 8,
+    "doi": "10.2991/978-94-6463-136-4_50",
+    "header_sample": "Speech Emotion Recognition Using Machine Learning Approach S. G. Shaila(B), A. Sindhu, L. Monish, D. Shivamma, and B. V aishali Department of CSE (Data Science), Dayananda Sagar University, Bangalore, Karnataka, India {shaila-cse,sindhua-cse,monishl-cse,shivammad-cse, vaishalivb-cse}@dsu.edu.in Abstract. Nowadays, emotion recognition and classi\ufb01cation plays a vital role in the \ufb01eld of Human-Computer Interaction (HCI). Emotions are being recog- nized through behaviors of body such as facial expre"
+  },
+  {
+    "file": "TSP_CMC_41332.pdf",
+    "dir": "paper",
+    "pages": 22,
+    "doi": "10.32604/cmc.2023.041332",
+    "header_sample": "This work is licensed under a Creative Commons Attribution 4.0 International License, which permits unrestricted use, distribution, and reproduction in any medium, provided the original work is properly cited. echT PressScience DOI: 10.32604/cmc.2023.041332 ARTICLE Using Speaker-Specific Emotion Representations in W av2vec 2.0-Based Modules for Speech Emotion Recognition Somin Park1, Mpabulungi Mark1,B o g y u n gP a r k2 and Hyunki Hong1,* 1College of Software, Chung-Ang University, Seoul, 0697"
+  },
+  {
+    "file": "electronics-13-01103-v2.pdf",
+    "dir": "paper",
+    "pages": 19,
+    "doi": "10.3390/electronics13061103",
+    "header_sample": "Citation: Sun, C.; Zhou, Y.; Huang, X.; Yang, J.; Hou, X. Combining wav2vec 2.0 Fine-Tuning and ConLearnNet for Speech Emotion Recognition. Electronics 2024, 13, 1103. https:// doi.org/10.3390/electronics13061103 Academic Editor: Byung-Gyu Kim Received: 26 January 2024 Revised: 11 March 2024 Accepted: 15 March 2024 Published: 17 March 2024 Copyright: \u00a9 2024 by the authors. Licensee MDPI, Basel, Switzerland. This article is an open access article distributed under the terms and conditions of the "
+  },
+  {
+    "file": "journal.pone.0318297.pdf",
+    "dir": "paper",
+    "pages": 13,
+    "doi": "10.1371/journal.pone",
+    "header_sample": "ID: pone.0318297 \u2014 2025/2/18 \u2014 page 1 \u2014 #1 PLOS ONE OPEN ACCESS Citation: WangN,YangD(2025)Speech emotionrecognitionusingfine-tuned Wav2vec2.0andneuralcontrolleddifferential equationsclassifier.PLoSONE20(2): e0318297.https://doi.org/10.1371/journal.pone. 0318297 Editor:SeyedRezaShahamiri,Universityof Auckland,NEWZEALAND Received:October4,2024 Accepted:January13,2025 Published:February20,2025 Copyright: \u00a92025 Wang,Yang.Thisisanopen accessarticledistributedunderthetermsofthe CreativeCommonsAttribu"
+  },
+  {
+    "file": "s00521-026-12186-w.pdf",
+    "dir": "paper",
+    "pages": 45,
+    "doi": "10.1007/s00521-026-12186-w",
+    "header_sample": "REVIEW Neural Comput & Applic (2026) 38:485 Neural Comput & Applic (2026) 38:485 https://doi.org/10.1007/s00521-026-12186-w Speech emotion recognition using deep learning: from  basic to complex emotions in unimodal and multimodal  frameworks Rachel Si Ting\u00a0Lai\u00a0\u00b7 Lau Bee\u00a0Theng\u00a0\u00b7 Mark Kit Tsun\u00a0Tee\u00a0\u00b7 Colin Choon Lin\u00a0Tan\u00a0\u00b7 Caslon\u00a0Chua Received: 6 May 2025 / Accepted: 11 May 2026 / Published online: 13 June 2026 \u00a9 The Author(s) 2026 Abstract Speech Emotion Recognition (SER) is an advanced technology"
+  },
+  {
+    "file": "s10772-025-10229-6.pdf",
+    "dir": "paper",
+    "pages": 26,
+    "doi": "10.1007/s10772-025-10229-6",
+    "header_sample": "RESEARCH International Journal of Speech Technology (2026) 29:21 https://doi.org/10.1007/s10772-025-10229-6 body language, and vocal cues (Zhang et al., 2020). In con- temporary society, the significance of emotion recognition  extends across diverse domains, ranging from human-com- puter interaction and virtual reality to healthcare and mar - keting. The ability to accurately perceive emotions holds  immense societal importance as it facilitates the develop - ment of empathetic and responsive t"
+  },
+  {
+    "file": "08074220_ML.pdf",
+    "dir": "all_lan_paper",
+    "pages": 6,
+    "doi": null,
+    "header_sample": "2017 International Conference on circuits Power and Computing Technologies [ICCPCT]      Speech Based Emotion Recognition in Tamil and  Telugu using LPCC and Hurst Parameters  -A comparitive study using KNN and ANN classifiers  Renjith S*, Manju K G   Dept. of CSE  Rohini College of Engineering & Technology  Kanyakumari, India  *renjiths.cse@gmail.com    Abstract\u2014 Speech based emotion recognition finds numerous  applications in automated speech services such as interactive  voice recognition sys"
+  },
+  {
+    "file": "1-s2.0-S0167639323001085-main.pdf",
+    "dir": "all_lan_paper",
+    "pages": 29,
+    "doi": "10.1016/j.specom.2023.102974",
+    "header_sample": "Speech Communication 154 (2023) 102974 Available online 7 September 2023 0167-6393/\u00a9 2023 Elsevier B.V. All rights reserved. Contents lists available at ScienceDirect Speech Communication journal homepage: www.elsevier.com/locate/specom Speech emotion recognition approaches: A systematic review Ahlam Hashem, Muhammad Arif \u2217, Manal Alghamdi Department of Computer Science, Umm Al-Qura university, Makkah, Saudi Arabia A R T I C L E I N F O Keywords: Speech emotion recognition Emotional speech datab"
+  },
+  {
+    "file": "1-s2.0-S0167639325001578-main.pdf",
+    "dir": "all_lan_paper",
+    "pages": 14,
+    "doi": "10.1016/j.specom.2025.103342",
+    "header_sample": "  Contents lists available at ScienceDirect Speech Communication journal homepage: www.elsevier.com/locate/specom   A review on speech emotion recognition for low-resource and Indigenous  languages Himashi Rathnayake a  ,\u2217, Jesin James a  , Gianna Leoni b, Ake Nicholas c, Catherine Watson a,  Peter Keegan d a Department of Electrical, Computer, and Software Engineering, The University of Auckland, New Zealand b Te Hiku Media, New Zealand c M \u00afaori Studies, Faculty of Arts, The University of Auck"
+  },
+  {
+    "file": "1-s2.0-S1746809425001478-main.pdf",
+    "dir": "all_lan_paper",
+    "pages": 16,
+    "doi": "10.1016/j.bspc.2025.107636",
+    "header_sample": "Biomedical Signal Processing and Control 105 (2025) 107636 Available online 31 January 2025 1746-8094/\u00a9 2025 Elsevier Ltd. All rights are reserved, including those for text and data mining, AI training, and similar technologies. A Reliable speech emotion recognition framework for multi-regional languages using optimized light gradient boosting machine classifier Subramanian Radhika a,*, Aruchamy Prasanth b, K.K. Devi Sowndarya c a Assistant Professor, Department of Electronics and Communication "
+  },
+  {
+    "file": "1-s2.0-S2352340925003580-main.pdf",
+    "dir": "all_lan_paper",
+    "pages": 14,
+    "doi": "10.1016/j.dib.2025.111627",
+    "header_sample": "Data in Brief 60 (2025) 111627  Contents lists available at ScienceDirect  Data in Brief  journal homepage: www.elsevier.com/locate/dib  Data Article  UrduSER: A comprehensive dataset for speech  emotion recognition in Urdu language  Muhammad Zaheer Akhtar a , b , Rashid Jahangir b ,Q u r a t U l Ain a ,  Muhammad Asif Nauman c , Mueen Uddin d , \u2217,S y e d Sajid Ullah e  a Department of Information Technology, The Islamia University of Bahawalpur, Bahawalpur 63100, Pakistan  b Department of Compu"
+  },
+  {
+    "file": "3517195.pdf",
+    "dir": "all_lan_paper",
+    "pages": 19,
+    "doi": "10.1145/3517195",
+    "header_sample": "106 BERIS: An mBERT-based Emotion Recognition Algorithm from Indian Speech PRAMOD MEHRA,Uttarakhand Technical University, Dehradun, Uttarakhand, India DR SHASHI KANT VERMA,G. B. Pant Engineering College, Pauri Garhwal, Uttarakhand, India Emotions, the building blocks of the human intellect, play a vital role in Artificial Intelligence (AI). For a robust AI-based machine, it is important that the machine understands human emotions. COVID-19 has in- troduced the world to no-touch intelligent syste"
+  },
+  {
+    "file": "Advances in Human-Computer Interaction - 2022 - Alam Monisha - A Review of the Advancement in Speech Emotion Recognition.pdf",
+    "dir": "all_lan_paper",
+    "pages": 11,
+    "doi": "10.1155/2022/9602429",
+    "header_sample": "ReviewArticle A Review of the Advancement in Speech Emotion Recognition for Indo-Aryan and Dravidian Languages Syeda Tamanna Alam Monisha  and Sadia Sultana Department of Computer Science and Engineering, Shahjalal University of Science and Technology, Sylhet, Bangladesh CorrespondenceshouldbeaddressedtoSyedaTamannaAlamMonisha;alammonisha@gmail.comand Sadia Sultana; sadia-cse@sust.edu Received 3 October 2022; Revised 10 November 2022; Accepted 21 November 2022; Published 1 December 2022  Academi"
+  },
+  {
+    "file": "ERIL_An_Algorithm_for_Emotion_Recognition_From_Ind.pdf",
+    "dir": "all_lan_paper",
+    "pages": 6,
+    "doi": "10.21203/rs.3.rs-449758/v1",
+    "header_sample": "Page 1/6 ERIL: An Algorithm for Emotion Recognition From Indian Languages Using Machine Learning PRAMOD MEHRA\u00a0 ( \uf0e0 pramodmehra11@gmail.com ) CIPET - Lucknow: Central Institute of Petrochemicals Engineering &amp; Technology - Lucknow Parag Jain\u00a0 Roorkee Institute of Technology, Roorkee, Uttarakhand, India Research Article Keywords: MFCC, LPC, Pitch, Indian Speech, Emotion recognition, emotion classi\u0000cation, Catboost Posted Date: April 23rd, 2021 DOI: https://doi.org/10.21203/rs.3.rs-449758/v1 Lic"
+  },
+  {
+    "file": "Enhancing_Emotion_Recognition_in_Speech_Based_on_Self-Supervised_Learning_Cross-Attention_Fusion_of_Acoustic_and_Semantic_Features.pdf",
+    "dir": "all_lan_paper",
+    "pages": 13,
+    "doi": null,
+    "header_sample": "Received 14 February 2025, accepted 16 March 2025, date of publication 24 March 2025, date of current version 4 April 2025. Digital Object Identifier 10.1 109/ACCESS.2025.3554454 Enhancing Emotion Recognition in Speech Based on Self-Supervised Learning: Cross-Attention Fusion of Acoustic and Semantic Features BASHAR M. DEEB  1, ANDREY V. SAVCHENKO  2,3,4, AND IL YA MAKAROV  1,2,5 1Moscow Institute of Physics and Technology, 141700 Moscow, Russia 2Research Center for Trusted Artificial Intelligen"
+  },
+  {
+    "file": "Evaluating+the+Impact+of+Behavioural+Features+on+Hindi+Speech+Emotion+Recognition-A+Multimodal+Deep+Learning+Approach.pdf",
+    "dir": "all_lan_paper",
+    "pages": 13,
+    "doi": null,
+    "header_sample": "    INTERNATIONAL JOURNAL OF APPLIED ARTIFICIAL INTELLIGENCE AND ROBOTICS  E-ISSN: 3124-1212, DOI: 00.000/XXXX.YYYY.II.NNN  Vol. 2 No. 1 2026 pp. 01-10    1      Evaluating the Impact of Behavioural Features on  Hindi Speech Emotion Recognition: A Multimodal  Deep Learning Approach   Sujata Kotian1, Santosh Singh2*    1,2 Department of Information Technology, University of Mumbai     *Corresponding Author:  sksingh@tcsc.edu.in     Article info: Received 07-01-2026, Revised 30-01-2026, Accepted 1"
+  },
+  {
+    "file": "Exploring_Multilingual_Unseen_Speaker_Emotion_Reco.pdf",
+    "dir": "all_lan_paper",
+    "pages": 5,
+    "doi": null,
+    "header_sample": "Exploring Multilingual Unseen Speaker Emotion Recognition: Leveraging Co-Attention Cues in Multitask Learning Arnav Goel1\u2020# , Medha Hira1\u2020 , Anubha Gupta1,2 1SBILab, Indraprastha Institute of Information Technology Delhi (IIIT-D), India 2MIRAE AI Systems Pvt. Ltd. arnav21519,medha21265,anubha{@iiitd.ac.in} Abstract Advent of modern deep learning techniques has given rise to ad- vancements in the field of Speech Emotion Recognition (SER). However, most systems prevalent in the field fail to gener"
+  },
+  {
+    "file": "MNITJ-SEHS.pdf",
+    "dir": "all_lan_paper",
+    "pages": 6,
+    "doi": "10.1109/IC3S57698.2023.10169497",
+    "header_sample": "2023 International Conference on Communication, Circuits, and Systems (IC3S), May 26-28, 2023, Bhubaneswar, India MNITJ-SEHSD: A Hindi Emotional Speech Database Krishna Chauhan Department of Electronics and Communication Malaviya National Institute of Technology Jaipur, India 2018rec9121@mnit.ac.in Kamalesh Kumar Sharma Department of Electronics and Communication Malaviya National Institute of Technology Jaipur, India kksharma.ece@mnit.ac.in Tarun Varma Department of Electronics and Communicatio"
+  },
+  {
+    "file": "bBenchmarking_Classical_Deep_Learning_and_Transfor.pdf",
+    "dir": "all_lan_paper",
+    "pages": 24,
+    "doi": "10.66261/fetdj998",
+    "header_sample": "Interdisciplinary Journal of AI, Machine Learning & Data Science  (IJAIMLDS) -   ISSN: 3139-3527 | January-March-Issue, Vol. 1, No. 1 (2026) | DOI: 10.66261/fetdj998    \u00a9 2026 The Author(s) | Published by - Scholiora Research Publications      Creative Commons Attribution 4.0 International License (CC BY 4.0)                   Article - e001     BENCHMARKING CLASSICAL, DEEP LEARNING AND  TRANSFORMER MODELS FOR HINDI SPEECH EMOTION  RECOGNITION: A MULTIMODAL ANALYSIS    Ms. Sujata Kotian1, Dr. Sa"
+  },
+  {
+    "file": "ria_38.03_18.pdf",
+    "dir": "all_lan_paper",
+    "pages": 15,
+    "doi": "10.18280/ria.380318",
+    "header_sample": "Indian Cross Corpus Speech Emotion Recognition Using Multiple Spectral-Temporal-Voice  Quality Acoustic Features and Deep Convolution Neural Network  Rupali Kawade1,2* , Sonal Jagtap1,3 1 Department of E&TC Engineering, G H Raisoni College of Engineering and Management, Wagholi, Pune 412207, India  2 Department of E&TC Engineering, PCET's Pimpri Chinchwad College of Engineering & Research, Ravet, Pune 412101, India  3 Department of E&TC Engineering, Smt. Kashibai Navale College of Engineering, V"
+  },
+  {
+    "file": "s40031-026-01343-3.pdf",
+    "dir": "all_lan_paper",
+    "pages": 21,
+    "doi": "10.1007/s40031-026-01343-3",
+    "header_sample": "Vol.:(0123456789) J. Inst. Eng. India Ser. B (2026) 107:1745\u20131765  https://doi.org/10.1007/s40031-026-01343-3 ORIGINAL CONTRIBUTION Multilingual Speech Emotion Recognition using Hybrid  Convolution Neural Network with\u00a0Attention Mechanism A.\u00a0Geethashree1\u00a0\u00b7 B.\u00a0T.\u00a0Ramesh2 \u00a0\u00b7  Chandrashekar\u00a0M.\u00a0Patil1\u00a0\u00b7 Audre\u00a0Arlene\u00a0Anthony1\u00a0 Received: 31 July 2025 / Accepted: 23 May 2026 / Published online: 1 June 2026  \u00a9 The Author(s) 2026 RAVDESS, EMO-DB, and KES databases, respectively. The  results obtained from"
+  },
+  {
+    "file": "s41598-025-95734-z.pdf",
+    "dir": "all_lan_paper",
+    "pages": 14,
+    "doi": "10.1038/s41598-025-95734-z",
+    "header_sample": "Speech emotion recognition with  light weight deep neural ensemble  model using hand crafted features Jaher Hassan Chowdhury1, Sheela Ramanna1\uf02a & Ketan Kotecha2 Automatic emotion detection has become crucial in various domains, such as healthcare, neuroscience,  smart home technologies, and human-computer interaction (HCI). Speech Emotion Recognition  (SER) has attracted considerable attention because of its potential to improve conversational robotics  and human-computer interaction (HCI) syste"
+  }
+]
