@@ -13,9 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AURA CYBER-GLASS | Speech Emotion & Behavioral Intelligence Studio",
-  description:
-    "Spatial neural speech emotion recognition & clinical prosody telemetry platform built with futuristic cyber-glass aesthetics and multi-layer foundation models.",
+  title: "Speech Emotion Recognition Studio",
+  description: "Minimal and modern speech emotion and voice behavior detection studio.",
 };
 
 export default function RootLayout({
@@ -26,9 +25,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans bg-[#06080d] text-slate-100 selection:bg-[#ccff00] selection:text-black">
+      <body className="min-h-full flex flex-col font-sans bg-[#f8fafc] text-slate-900 selection:bg-slate-900 selection:text-white">
         {children}
       </body>
     </html>

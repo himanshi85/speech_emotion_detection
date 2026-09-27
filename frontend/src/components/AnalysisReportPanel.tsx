@@ -1,23 +1,8 @@
 "use client";
 
-import {
-  Activity,
-  ArrowUpRight,
-  Check,
-  Compass,
-  Copy,
-  Info,
-  Radio,
-  Sliders,
-  Sparkles,
-  Volume2,
-  Waves,
-  Zap,
-} from "lucide-react";
+import { Activity, Check, Copy, Loader2, Volume2 } from "lucide-react";
 import { useState } from "react";
 
-import { ArcTrajectoryGraph } from "@/components/ArcTrajectoryGraph";
-import { DotMatrixNumber } from "@/components/DotMatrixNumber";
 import { cn } from "@/lib/cn";
 import { emotionMeta } from "@/lib/emotion-theme";
 import { ui } from "@/lib/ui";
@@ -30,7 +15,6 @@ type Props = {
 
 export function AnalysisReportPanel({ report, loading }: Props) {
   const [copied, setCopied] = useState(false);
-  const [visualMode, setVisualMode] = useState<"arcs" | "dot-grid">("arcs");
 
   const handleCopyJson = () => {
     if (!report) return;
@@ -41,68 +25,35 @@ export function AnalysisReportPanel({ report, loading }: Props) {
 
   if (loading) {
     return (
-      <div className="rounded-[36px] squircle-obsidian p-8 sm:p-10 flex min-h-[460px] flex-col items-center justify-center text-center relative overflow-hidden border border-white/10">
-        {/* Ambient subtle violet glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-violet-600/10 blur-3xl pointer-events-none" />
-
-        <div className="relative mb-6">
-          <div className="h-16 w-16 rounded-full bg-white/5 border border-white/15 flex items-center justify-center shadow-lg">
-            <Radio className="h-7 w-7 animate-pulse text-white" />
-          </div>
-        </div>
-
-        <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400">
-          Inference Telemetry
-        </span>
-        <h3 className="mt-1 text-base font-semibold text-white tracking-tight">
-          Decoding Acoustic Tensors
+      <div className="rounded-2xl border border-slate-200/80 bg-white p-8 flex min-h-[380px] flex-col items-center justify-center text-center shadow-xs">
+        <Loader2 className="h-8 w-8 animate-spin text-slate-800 mb-4" />
+        <h3 className="text-sm font-semibold text-slate-900">
+          Analyzing Speech Emotion
         </h3>
-        <p className="mt-1.5 max-w-xs text-xs text-slate-400 leading-relaxed">
-          Extracting log-mel spectrogram features and evaluating prosody matrices.
+        <p className="mt-1 text-xs text-slate-500 max-w-xs leading-relaxed">
+          Evaluating vocal pitch, rhythm, energy, and emotional probabilities...
         </p>
-
-        {/* Minimal dot-matrix loader indicator */}
-        <div className="mt-8 flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-white animate-ping" />
-          <span className="h-2 w-2 rounded-full bg-white/60 animate-pulse" />
-          <span className="h-2 w-2 rounded-full bg-white/30" />
-        </div>
       </div>
     );
   }
 
   if (!report) {
     return (
-      <div className="rounded-[36px] squircle-obsidian p-8 sm:p-10 flex min-h-[460px] flex-col items-center justify-center text-center relative overflow-hidden border border-white/10">
-        <div className="h-16 w-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-5 text-slate-400">
-          <Activity className="h-7 w-7 stroke-[1.5]" />
+      <div className="rounded-2xl border border-slate-200/80 bg-white p-8 flex min-h-[380px] flex-col items-center justify-center text-center shadow-xs">
+        <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 mb-3">
+          <Activity className="h-6 w-6 stroke-[1.8]" />
         </div>
-
-        <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400">
-          Standby Engine
-        </span>
-        <h3 className="mt-1 text-base font-semibold text-white tracking-tight">
-          Awaiting Audio Signal
+        <h3 className="text-sm font-semibold text-slate-900">
+          No Speech Analyzed Yet
         </h3>
-        <p className="mt-1.5 max-w-xs text-xs text-slate-400 leading-relaxed">
-          Ingest a speech recording or select a benchmark sample to activate neural decoding.
+        <p className="mt-1 text-xs text-slate-500 max-w-xs leading-relaxed">
+          Select a sample audio clip, upload a file, or record from your microphone to view emotion insights.
         </p>
-
-        <div className="mt-7 flex flex-wrap items-center justify-center gap-2">
-          {["16 kHz Mono", "8-Class Circumplex", "F0 Prosody", "Speech Rate"].map((tag) => (
-            <span
-              key={tag}
-              className="rounded-full border border-white/8 bg-white/3 px-3 py-1 font-mono text-[9px] uppercase tracking-wider text-slate-400"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
       </div>
     );
   }
 
-  const topMeta = emotionMeta(report.predicted_emotion);
+  const meta = emotionMeta(report.predicted_emotion);
   const confidencePct = (report.confidence * 100).toFixed(1);
 
   const behavior = report.behavior ?? {
@@ -125,300 +76,144 @@ export function AnalysisReportPanel({ report, loading }: Props) {
       mean_hz: 110.0,
       std_hz: 19.5,
     },
-    overall_behaviour: "Engaged Communicator",
+    overall_behaviour: "Conversational Speaker",
   };
 
   return (
-    <div className="space-y-5 animate-in fade-in zoom-in-95 duration-300">
-      {/* 1. HERO SQUIRCLE CARD: Radiant Plum/Magenta Minimal Hero (like Total Balance & Lung Capacity) */}
-      <div className="squircle-magenta p-6 sm:p-7 relative overflow-hidden transition-all duration-300">
-        {/* Top Header Row */}
-        <div className="flex items-center justify-between">
+    <div className="space-y-4">
+      {/* Primary Result Box */}
+      <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xs">
+        <div className="flex items-start justify-between">
           <div>
-            <span className="text-xs font-semibold text-white/80 tracking-wide">
-              Dominant Resonance
+            <span className="text-xs font-medium text-slate-500 uppercase tracking-wider">
+              Detected Emotion
             </span>
-            <div className="flex items-center gap-2 mt-1">
-              <span className="font-mono text-xs font-bold text-white tracking-wider">
-                {topMeta.label.toUpperCase()}
+            <div className="flex items-center gap-3 mt-1.5">
+              <h2 className="text-2xl font-bold tracking-tight text-slate-900">
+                {meta.label}
+              </h2>
+              <span className={cn("px-2.5 py-0.5 rounded-full text-xs font-semibold border", meta.badge)}>
+                {confidencePct}% Confidence
               </span>
-              <span className="rounded-full bg-black/30 border border-white/15 px-2 py-0.5 text-[9px] font-mono text-white/90">
-                {topMeta.code}
-              </span>
             </div>
+            <p className="mt-2 text-xs text-slate-600 leading-relaxed max-w-md">
+              {meta.description}
+            </p>
           </div>
 
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setVisualMode((m) => (m === "arcs" ? "dot-grid" : "arcs"))}
-              title="Toggle graph visualizer mode"
-              className="h-8 w-8 rounded-full bg-black/30 border border-white/20 text-white/80 hover:text-white flex items-center justify-center transition-all"
-            >
-              <Sliders className="h-3.5 w-3.5" />
-            </button>
-            <div className="btn-circle-white">
-              <ArrowUpRight className="h-4 w-4 stroke-[2.2]" />
-            </div>
-          </div>
-        </div>
-
-        {/* Sub-row: Sample stats & coordinates */}
-        <div className="mt-4 flex items-center justify-between text-[11px] text-white/70 font-mono">
-          <div className="flex items-center gap-1.5">
-            <DotMatrixNumber value="15" size="xs" dotColor="#ffffff" />
-            <span>tensor frames</span>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1">
-              <span className="h-1.5 w-1.5 rounded-full bg-white" />
-              <span>Valence {topMeta.valence}</span>
-            </span>
-            <span className="flex items-center gap-1">
-              <span className="h-1.5 w-1.5 rounded-full border border-white/70" />
-              <span>Arousal {topMeta.arousal}</span>
-            </span>
-          </div>
-        </div>
-
-        {/* Center Spatial Visualizer: Tactile Dot Matrix or Trajectory Arcs */}
-        <div className="my-5 py-2 flex items-center justify-center">
-          <ArcTrajectoryGraph
-            mode={visualMode}
-            accentColor="#ffffff"
-            className="w-full h-24 max-w-xs"
-          />
-        </div>
-
-        {/* Bottom Big Dot-Matrix Number Display */}
-        <div className="mt-2 border-t border-white/10 pt-4 flex items-end justify-between">
-          <div>
-            <span className="block font-mono text-[9px] uppercase tracking-wider text-white/60 mb-1">
-              Calibrated Confidence Score
-            </span>
-            <div className="flex items-baseline gap-2">
-              <DotMatrixNumber
-                value={confidencePct}
-                size="lg"
-                dotColor="#ffffff"
-                glowColor="rgba(255,255,255,0.4)"
-              />
-              <span className="font-mono text-sm font-bold text-white/90">%</span>
-            </div>
-          </div>
-
-          <div className="text-right">
-            <span className="font-mono text-[9px] text-white/50 block">Latency</span>
-            <span className="font-mono text-xs font-semibold text-white/90">
-              {(report.inference_time_sec * 1000).toFixed(0)} ms
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* 2. BEHAVIORAL TELEMETRY BENTO ROW (Minimal, subtle, tactile) */}
-      <div className="grid grid-cols-2 gap-3.5">
-        {/* Card A: Speaking Velocity */}
-        <div className="rounded-[28px] squircle-obsidian p-5 border border-white/8">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-medium text-slate-400">Speaking Velocity</span>
-            <Waves className="h-3.5 w-3.5 text-slate-400" />
-          </div>
-
-          <div className="mt-2.5 flex items-baseline gap-1.5">
-            <DotMatrixNumber
-              value={behavior.speaking_speed.words_per_minute}
-              size="sm"
-              dotColor="#ffffff"
-            />
-            <span className="font-mono text-[10px] text-slate-400 uppercase">WPM</span>
-          </div>
-
-          <div className="mt-2 text-[10px] text-slate-400 font-mono flex items-center justify-between">
-            <span>{behavior.speaking_speed.syllables_per_second} syl/sec</span>
-            <span className="text-white font-medium">{behavior.speaking_speed.category}</span>
-          </div>
-
-          {/* Minimal timeline indicator dots */}
-          <div className="mt-3 flex items-center gap-1.5 pt-2 border-t border-white/6">
-            {Array.from({ length: 9 }).map((_, i) => (
-              <span
-                key={i}
-                className={cn(
-                  "h-1 rounded-full flex-1",
-                  i < 6 ? "bg-white/70" : "bg-white/15",
-                )}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Card B: Vocal Intensity (Radiant Ember Squircle) */}
-        <div className="squircle-ember p-5 rounded-[28px] relative overflow-hidden">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-medium text-white/80">Vocal Energy</span>
-            <Volume2 className="h-3.5 w-3.5 text-white/80" />
-          </div>
-
-          <div className="mt-2.5 flex items-baseline gap-1.5">
-            <DotMatrixNumber
-              value={Math.abs(behavior.vocal_energy.rms_db).toFixed(1)}
-              size="sm"
-              dotColor="#ffffff"
-            />
-            <span className="font-mono text-[10px] text-white/80 uppercase">dB RMS</span>
-          </div>
-
-          <div className="mt-2 text-[10px] text-white/70 font-mono flex items-center justify-between">
-            <span>Dynamic Volume</span>
-            <span className="text-white font-semibold">{behavior.vocal_energy.category}</span>
-          </div>
-
-          {/* Subtle arc trajectory graph */}
-          <div className="mt-2 pt-1 border-t border-white/10 flex justify-center">
-            <ArcTrajectoryGraph
-              mode="arcs"
-              accentColor="#ffffff"
-              className="w-full h-8"
-            />
-          </div>
-        </div>
-
-        {/* Card C: Pause Ratio */}
-        <div className="rounded-[28px] squircle-obsidian p-5 border border-white/8">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-medium text-slate-400">Pause Cadence</span>
-            <Zap className="h-3.5 w-3.5 text-slate-400" />
-          </div>
-
-          <div className="mt-2.5 flex items-baseline gap-1.5">
-            <DotMatrixNumber
-              value={behavior.pause_frequency.pauses_per_minute.toFixed(0)}
-              size="sm"
-              dotColor="#ffffff"
-            />
-            <span className="font-mono text-[10px] text-slate-400 uppercase">per min</span>
-          </div>
-
-          <div className="mt-2 text-[10px] text-slate-400 font-mono flex items-center justify-between">
-            <span>{behavior.pause_frequency.silence_ratio.toFixed(1)}% silence</span>
-            <span className="text-white font-medium">{behavior.pause_frequency.category}</span>
-          </div>
-
-          {/* Minimal dot row */}
-          <div className="mt-3 flex items-center gap-1 pt-2 border-t border-white/6">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <span
-                key={i}
-                className={cn(
-                  "h-1.5 w-1.5 rounded-full",
-                  i % 2 === 0 ? "bg-white" : "border border-white/30 bg-transparent",
-                )}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Card D: Pitch F0 Contour */}
-        <div className="rounded-[28px] squircle-obsidian p-5 border border-white/8">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-medium text-slate-400">Pitch Contour</span>
-            <Compass className="h-3.5 w-3.5 text-slate-400" />
-          </div>
-
-          <div className="mt-2.5 flex items-baseline gap-1.5">
-            <DotMatrixNumber
-              value={Math.round(behavior.pitch_variation.mean_hz)}
-              size="sm"
-              dotColor="#ffffff"
-            />
-            <span className="font-mono text-[10px] text-slate-400 uppercase">Hz F0</span>
-          </div>
-
-          <div className="mt-2 text-[10px] text-slate-400 font-mono flex items-center justify-between">
-            <span>±{Math.round(behavior.pitch_variation.std_hz)} Hz dev</span>
-            <span className="text-white font-medium">{behavior.pitch_variation.category}</span>
-          </div>
-
-          <div className="mt-3 flex items-center justify-between pt-2 border-t border-white/6 text-[9px] font-mono text-slate-400">
-            <span>Vocal Pitch</span>
-            <span className="text-slate-300">pYIN Engine</span>
-          </div>
-        </div>
-      </div>
-
-      {/* 3. CALIBRATED PROBABILITY DISTRIBUTION (Minimal & Subtle) */}
-      <div className="rounded-[28px] squircle-obsidian p-5 border border-white/8">
-        <div className="flex items-center justify-between mb-3.5">
-          <span className="text-xs font-semibold text-slate-300">
-            Neural Probability Distribution
-          </span>
           <button
             type="button"
             onClick={handleCopyJson}
-            className="flex items-center gap-1 text-[10px] font-mono text-slate-400 hover:text-white transition-all"
+            className="text-slate-400 hover:text-slate-700 text-xs font-medium flex items-center gap-1 transition-all"
+            title="Copy JSON result"
           >
             {copied ? (
               <>
-                <Check className="h-3 w-3 text-emerald-400" />
-                <span>Copied</span>
+                <Check className="h-3.5 w-3.5 text-emerald-600" />
+                <span className="text-emerald-700">Copied</span>
               </>
             ) : (
               <>
-                <Copy className="h-3 w-3" />
-                <span>Export JSON</span>
+                <Copy className="h-3.5 w-3.5" />
+                <span>JSON</span>
               </>
             )}
           </button>
         </div>
 
+        {/* Behavior Summary */}
+        {report.summary && (
+          <div className="mt-4 pt-4 border-t border-slate-100">
+            <p className="text-xs text-slate-700 leading-relaxed bg-slate-50 rounded-xl p-3 border border-slate-100">
+              {report.summary}
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Emotion Probabilities Breakdown */}
+      <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs">
+        <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">
+          Emotion Probabilities
+        </h4>
+
         <div className="space-y-2.5">
-          {report.probabilities.map((item, idx) => {
-            const meta = emotionMeta(item.emotion);
+          {report.probabilities.map((item) => {
+            const itemMeta = emotionMeta(item.emotion);
             const pct = (item.probability * 100).toFixed(1);
             const isWinner = item.emotion === report.predicted_emotion;
 
             return (
-              <div
-                key={item.emotion}
-                className={cn(
-                  "flex items-center justify-between rounded-xl px-3 py-2 transition-all",
-                  isWinner ? "bg-white/6 border border-white/15" : "hover:bg-white/2",
-                )}
-              >
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <span
-                    className={cn(
-                      "h-2 w-2 rounded-full",
-                      isWinner ? "bg-white shadow-[0_0_8px_#ffffff]" : "bg-white/25",
-                    )}
-                  />
-                  <span className="truncate text-xs font-medium text-slate-200">
-                    {meta.label}
+              <div key={item.emotion} className="space-y-1">
+                <div className="flex items-center justify-between text-xs">
+                  <span className={cn("font-medium", isWinner ? "text-slate-900 font-semibold" : "text-slate-600")}>
+                    {itemMeta.label}
                   </span>
-                  <span className="font-mono text-[9px] text-slate-400">
-                    {meta.tag}
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <div className="hidden sm:block w-20 h-1 rounded-full bg-white/8 overflow-hidden">
-                    <div
-                      className={cn(
-                        "h-full rounded-full transition-all duration-300",
-                        isWinner ? "bg-white" : "bg-white/40",
-                      )}
-                      style={{ width: `${Math.max(item.probability * 100, 3)}%` }}
-                    />
-                  </div>
-                  <span className="font-mono text-xs font-semibold text-white min-w-[42px] text-right">
+                  <span className={cn("font-medium", isWinner ? "text-slate-900 font-bold" : "text-slate-500")}>
                     {pct}%
                   </span>
+                </div>
+                <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                  <div
+                    className={cn(
+                      "h-full rounded-full transition-all duration-300",
+                      isWinner ? "bg-slate-900" : "bg-slate-300",
+                    )}
+                    style={{ width: `${Math.max(item.probability * 100, 1.5)}%` }}
+                  />
                 </div>
               </div>
             );
           })}
+        </div>
+      </div>
+
+      {/* Acoustic & Speech Characteristics */}
+      <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs">
+        <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">
+          Speech Characteristics
+        </h4>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div className="rounded-xl bg-slate-50 p-3 border border-slate-100">
+            <span className="text-[11px] text-slate-500 block">Speaking Speed</span>
+            <span className="text-sm font-bold text-slate-900">
+              {behavior.speaking_speed.words_per_minute} WPM
+            </span>
+            <span className="text-[10px] text-slate-500 block mt-0.5">
+              {behavior.speaking_speed.syllables_per_second} syl/sec ({behavior.speaking_speed.category})
+            </span>
+          </div>
+
+          <div className="rounded-xl bg-slate-50 p-3 border border-slate-100">
+            <span className="text-[11px] text-slate-500 block">Pause Cadence</span>
+            <span className="text-sm font-bold text-slate-900">
+              {behavior.pause_frequency.pauses_per_minute.toFixed(0)} / min
+            </span>
+            <span className="text-[10px] text-slate-500 block mt-0.5">
+              {behavior.pause_frequency.silence_ratio.toFixed(0)}% silence ({behavior.pause_frequency.category})
+            </span>
+          </div>
+
+          <div className="rounded-xl bg-slate-50 p-3 border border-slate-100">
+            <span className="text-[11px] text-slate-500 block">Vocal Energy</span>
+            <span className="text-sm font-bold text-slate-900">
+              {behavior.vocal_energy.rms_db.toFixed(1)} dB
+            </span>
+            <span className="text-[10px] text-slate-500 block mt-0.5">
+              Volume: {behavior.vocal_energy.category}
+            </span>
+          </div>
+
+          <div className="rounded-xl bg-slate-50 p-3 border border-slate-100">
+            <span className="text-[11px] text-slate-500 block">Pitch (F0)</span>
+            <span className="text-sm font-bold text-slate-900">
+              {Math.round(behavior.pitch_variation.mean_hz)} Hz
+            </span>
+            <span className="text-[10px] text-slate-500 block mt-0.5">
+              Variation: {behavior.pitch_variation.category}
+            </span>
+          </div>
         </div>
       </div>
     </div>
