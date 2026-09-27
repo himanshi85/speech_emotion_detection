@@ -1,15 +1,12 @@
 """
-Script to generate a clean, publication-grade Microsoft Word (.docx) research report.
-- Strictly pure black text (RGB: 0, 0, 0) throughout.
-- Clean and minimal headers/footers:
-  * Header: Completely empty (NO lines, NO IEEE banners, NO text).
-  * Footer: Simple centered page number (NO lines, NO IEEE text).
-- Professional academic title and author block (Himanshi Patel).
-- Indented abstract and keywords block.
-- Native Office Math Markup Language (OMML) display equations with right-aligned numbering.
-- LaTeX Booktabs tables in clean black & white with zero vertical lines.
-- Centered high-resolution figures with clear academic captions.
-- 30 verified authentic peer-reviewed citations with hanging indents.
+Script to generate an impeccably aligned, publication-grade Microsoft Word (.docx) research report.
+Applies intelligent content-aware alignment:
+- Full narrative body paragraphs and multi-line descriptive points: JUSTIFIED for clean academic margins.
+- Short list items, concise points, section headings, and references: LEFT-ALIGNED to eliminate awkward word-stretching.
+- Numerical metric columns and table titles: CENTER-ALIGNED for crisp tabular clarity.
+- Figure captions and display equations: CENTER-ALIGNED with right-aligned equation numbers.
+- Clean and minimal headers/footers: Empty header, simple centered page number in footer (zero lines, zero IEEE clutter).
+- 100% Pure Black text (RGB: 0, 0, 0) throughout.
 
 Author: Himanshi Patel
 Department of Computer Science and Engineering
@@ -139,12 +136,12 @@ def build_clean_word_report():
     normal_style.font.size = Pt(10)
     normal_style.font.color.rgb = BLACK
 
-    # --- Document Title ---
+    # --- Document Title (Centered) ---
     p_title = doc.add_paragraph()
     p_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_title.paragraph_format.space_before = Pt(10)
-    p_title.paragraph_format.space_after = Pt(10)
-    p_title.paragraph_format.line_spacing = 1.25
+    p_title.paragraph_format.space_after = Pt(8)
+    p_title.paragraph_format.line_spacing = 1.22
     run_title = p_title.add_run(
         "Multi-Corpus and Multilingual Speech Emotion Recognition with Audio Behavioural Intelligence: "
         "A Cross-Lingual Evaluation and Learnable Weighted Layer Pooling Study"
@@ -154,7 +151,7 @@ def build_clean_word_report():
     run_title.font.bold = True
     run_title.font.color.rgb = BLACK
 
-    # --- Author Block ---
+    # --- Author Block (Centered) ---
     p_author = doc.add_paragraph()
     p_author.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_author.paragraph_format.space_before = Pt(0)
@@ -178,7 +175,7 @@ def build_clean_word_report():
     run_affil.font.italic = True
     run_affil.font.color.rgb = BLACK
 
-    # --- Abstract & Keywords Block ---
+    # --- Abstract & Keywords Block (Justified narrative, Left-aligned tag) ---
     p_abs = doc.add_paragraph()
     p_abs.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
     p_abs.paragraph_format.left_indent = Inches(0.35)
@@ -221,7 +218,7 @@ def build_clean_word_report():
     run_abs_body.font.color.rgb = BLACK
 
     p_kw = doc.add_paragraph()
-    p_kw.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+    p_kw.alignment = WD_ALIGN_PARAGRAPH.LEFT
     p_kw.paragraph_format.left_indent = Inches(0.35)
     p_kw.paragraph_format.right_indent = Inches(0.35)
     p_kw.paragraph_format.line_spacing = 1.15
@@ -242,12 +239,13 @@ def build_clean_word_report():
     run_kw_body.font.size = Pt(9.5)
     run_kw_body.font.color.rgb = BLACK
 
-    # --- Section Generator Helpers ---
+    # --- Typography Helpers with Intelligent Alignment ---
     def add_sec_heading(title):
+        """Major section heading: LEFT-ALIGNED, bold, clean spacing."""
         p = doc.add_paragraph()
         p.alignment = WD_ALIGN_PARAGRAPH.LEFT
         p.paragraph_format.space_before = Pt(14)
-        p.paragraph_format.space_after = Pt(5)
+        p.paragraph_format.space_after = Pt(4)
         p.paragraph_format.keep_with_next = True
         run = p.add_run(title)
         run.font.name = "Times New Roman"
@@ -256,6 +254,7 @@ def build_clean_word_report():
         run.font.color.rgb = BLACK
 
     def add_subsec_heading(title):
+        """Subsection heading: LEFT-ALIGNED, bold, clean spacing."""
         p = doc.add_paragraph()
         p.alignment = WD_ALIGN_PARAGRAPH.LEFT
         p.paragraph_format.space_before = Pt(9)
@@ -268,11 +267,12 @@ def build_clean_word_report():
         run.font.color.rgb = BLACK
 
     def add_body_p(text, indent=True):
+        """Standard narrative paragraph: JUSTIFIED with 0.2 inch first-line indent."""
         p = doc.add_paragraph()
         p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
         p.paragraph_format.line_spacing = 1.15
         p.paragraph_format.space_before = Pt(0)
-        p.paragraph_format.space_after = Pt(3)
+        p.paragraph_format.space_after = Pt(3.5)
         if indent:
             p.paragraph_format.first_line_indent = Inches(0.2)
         run = p.add_run(text)
@@ -281,7 +281,63 @@ def build_clean_word_report():
         run.font.color.rgb = BLACK
         return p
 
+    def add_bullet_point(tag_bold, text_body, justify=True):
+        """
+        List/bullet item with hanging indent.
+        - Multi-line descriptive points: JUSTIFIED.
+        - Short points: LEFT-ALIGNED.
+        """
+        p = doc.add_paragraph()
+        p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY if justify else WD_ALIGN_PARAGRAPH.LEFT
+        p.paragraph_format.line_spacing = 1.15
+        p.paragraph_format.left_indent = Inches(0.3)
+        p.paragraph_format.first_line_indent = Inches(-0.2)
+        p.paragraph_format.space_before = Pt(0)
+        p.paragraph_format.space_after = Pt(3)
+
+        run_tag = p.add_run(tag_bold)
+        run_tag.font.name = "Times New Roman"
+        run_tag.font.size = Pt(9.5)
+        run_tag.font.bold = True
+        run_tag.font.color.rgb = BLACK
+
+        run_body = p.add_run(text_body)
+        run_body.font.name = "Times New Roman"
+        run_body.font.size = Pt(9.5)
+        run_body.font.color.rgb = BLACK
+        return p
+
+    def add_short_list_item(num_str, tag_bold, text_body):
+        """Concise list item: LEFT-ALIGNED (no justified stretching)."""
+        p = doc.add_paragraph()
+        p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+        p.paragraph_format.line_spacing = 1.15
+        p.paragraph_format.left_indent = Inches(0.3)
+        p.paragraph_format.first_line_indent = Inches(-0.2)
+        p.paragraph_format.space_before = Pt(0)
+        p.paragraph_format.space_after = Pt(2.5)
+
+        run_num = p.add_run(f"{num_str}. ")
+        run_num.font.name = "Times New Roman"
+        run_num.font.size = Pt(9.5)
+        run_num.font.bold = True
+        run_num.font.color.rgb = BLACK
+
+        if tag_bold:
+            run_tag = p.add_run(f"{tag_bold}: ")
+            run_tag.font.name = "Times New Roman"
+            run_tag.font.size = Pt(9.5)
+            run_tag.font.bold = True
+            run_tag.font.color.rgb = BLACK
+
+        run_body = p.add_run(text_body)
+        run_body.font.name = "Times New Roman"
+        run_body.font.size = Pt(9.5)
+        run_body.font.color.rgb = BLACK
+        return p
+
     def add_figure(img_name, caption_text, width_in=5.8):
+        """Centered image with centered caption."""
         img_path = FIG_DIR / img_name
         if img_path.exists():
             fig_p = doc.add_paragraph()
@@ -336,19 +392,12 @@ def build_clean_word_report():
         "Standard SER architectures typically output discrete emotion class probabilities, such as P(Happy) = 0.85. However, clinical diagnostic "
         "applications, tele-counseling, and automated conversational systems benefit from continuous, interpretable acoustic measurements [5], [11]:"
     )
-    p_num_list = doc.add_paragraph()
-    p_num_list.paragraph_format.left_indent = Inches(0.25)
-    p_num_list.paragraph_format.space_before = Pt(2)
-    p_num_list.paragraph_format.space_after = Pt(4)
-    run_nl = p_num_list.add_run(
-        "1. Speech Velocity (syllables per second) indicates psychomotor state.\n"
-        "2. Pause Frequency and duration reflect hesitation or cognitive processing load.\n"
-        "3. Vocal Energy Variation indicates engagement level.\n"
-        "4. Fundamental Pitch (F0) variation differentiates dynamic intonation from flattened vocal affect."
-    )
-    run_nl.font.name = "Times New Roman"
-    run_nl.font.size = Pt(9.5)
-    run_nl.font.color.rgb = BLACK
+
+    # 4 Vocal Metrics: Short concise points -> LEFT-ALIGNED
+    add_short_list_item("1", "Speech Velocity (syllables/s)", "Indicates psychomotor tempo and affective activation state.")
+    add_short_list_item("2", "Pause Frequency and Duration", "Reflects cognitive hesitation, processing load, and structural fluency.")
+    add_short_list_item("3", "Vocal Energy Variation", "Measures behavioral engagement and acoustic intensity dynamics.")
+    add_short_list_item("4", "Fundamental Pitch (F0) Variation", "Quantifies dynamic pitch inflection versus flattened vocal affect.")
 
     add_body_p(
         "Coupling categorical emotion classification with systematic behavioral feature extraction provides a more informative assessment of speech recordings [1], [11]."
@@ -356,19 +405,12 @@ def build_clean_word_report():
 
     add_subsec_heading("1.4 Research Questions (RQ)")
     add_body_p("This study addresses four primary research questions:")
-    p_rq = doc.add_paragraph()
-    p_rq.paragraph_format.left_indent = Inches(0.25)
-    p_rq.paragraph_format.space_before = Pt(2)
-    p_rq.paragraph_format.space_after = Pt(4)
-    run_rq = p_rq.add_run(
-        "• RQ1 (Layer Pooling Dynamics): Does learnable weighted pooling across all transformer hidden layers outperform standard mean pooling or top-layer classification, and which layers encode the most discriminative emotional information?\n"
-        "• RQ2 (Speaker Diversity Law): What is the relationship between the number of training speakers and out-of-domain generalization performance on strictly unseen actors?\n"
-        "• RQ3 (Cross-Lingual Transfer to Indic Speech): To what degree do English multi-corpus representations transfer zero-shot to native Hindi speech, and what performance gain is achieved via supervised adaptation?\n"
-        "• RQ4 (Behavioral Telemetry Integration): How effectively do continuous acoustic features (speech tempo, pause ratio, energy, and pitch intonation) correlate with categorical emotion classifications?"
-    )
-    run_rq.font.name = "Times New Roman"
-    run_rq.font.size = Pt(9.5)
-    run_rq.font.color.rgb = BLACK
+
+    # 4 RQs: Multi-line descriptive questions -> JUSTIFIED with bold tag
+    add_bullet_point("• RQ1 (Layer Pooling Dynamics): ", "Does learnable weighted pooling across all transformer hidden layers outperform standard mean pooling or top-layer classification, and which layers encode the most discriminative emotional information?", justify=True)
+    add_bullet_point("• RQ2 (Speaker Diversity Law): ", "What is the relationship between the number of training speakers and out-of-domain generalization performance on strictly unseen actors?", justify=True)
+    add_bullet_point("• RQ3 (Cross-Lingual Transfer to Indic Speech): ", "To what degree do English multi-corpus representations transfer zero-shot to native Hindi speech, and what performance gain is achieved via supervised adaptation?", justify=True)
+    add_bullet_point("• RQ4 (Behavioral Telemetry Integration): ", "How effectively do continuous acoustic features (speech tempo, pause ratio, energy, and pitch intonation) correlate with categorical emotion classifications?", justify=True)
 
     # --- Section 2: Literature Survey ---
     add_sec_heading("2. Related Work & Literature Survey")
@@ -424,7 +466,7 @@ def build_clean_word_report():
         "Detection (VAD) silence trimming and amplitude normalization. Table 1 summarizes the dataset ecosystem."
     )
 
-    # Table 1: Dataset Ecosystem
+    # Table 1: Dataset Ecosystem (Centered Caption, Left Text, Center Numbers)
     p_cap1 = doc.add_paragraph()
     p_cap1.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_cap1.paragraph_format.space_before = Pt(8)
@@ -454,6 +496,12 @@ def build_clean_word_report():
             p = cell.paragraphs[0]
             p.paragraph_format.space_before = Pt(2)
             p.paragraph_format.space_after = Pt(2)
+            # Alignment: column 1 (numbers) centered, all other columns left-aligned
+            if c_idx == 1:
+                p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            else:
+                p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+
             p_run = p.runs[0]
             p_run.font.name = "Times New Roman"
             p_run.font.size = Pt(8.5)
@@ -845,7 +893,7 @@ def build_clean_word_report():
         "features across diverse corpora. Table 2 reports the benchmark leaderboard."
     )
 
-    # Table 2: Multi-Corpus Leaderboard
+    # Table 2: Multi-Corpus Leaderboard (Centered Caption, Left Text, Center Numbers)
     p_cap2 = doc.add_paragraph()
     p_cap2.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_cap2.paragraph_format.space_before = Pt(8)
@@ -874,6 +922,12 @@ def build_clean_word_report():
             p = cell.paragraphs[0]
             p.paragraph_format.space_before = Pt(2)
             p.paragraph_format.space_after = Pt(2)
+            # Alignment: column 0 left-aligned, columns 1-4 centered
+            if c_idx == 0:
+                p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+            else:
+                p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+
             p_run = p.runs[0]
             p_run.font.name = "Times New Roman"
             p_run.font.size = Pt(8.5)
@@ -890,21 +944,16 @@ def build_clean_word_report():
 
     add_subsec_heading("6.2 In-Domain Multi-Corpus Benchmark Summary")
     add_body_p(
-        "Individual in-domain evaluations across all five corpora reveal consistent patterns:\n\n"
-        "1. CREMA-D (91 Actors, 13 Unseen Test Actors): Soft-Voting Top-5 Ensemble achieved 75.57% Accuracy, 0.7594 Macro-F1, and 75.40% UAR. "
-        "HuBERT with Learnable Layer Pooling reached 71.98% Accuracy, outperforming Wav2Vec2 Base (69.25%) and MFCC+CNN-BiLSTM (62.80%). "
-        "Wav2Vec2-XLS-R-300M (Frozen Baseline) reached only 24.43% Accuracy (near chance level of 16.67%).\n\n"
-        "2. RAVDESS (24 Actors, Actors 21 to 24 Unseen): Transfer Ensemble achieved 73.75% Accuracy and 0.7207 Macro-F1. Transfer from CREMA-D "
-        "pre-training to RAVDESS produced 72.92% Accuracy, compared to 32.50% when trained from scratch on RAVDESS alone. Wav2Vec2-XLS-R-300M "
-        "collapsed to 13.33% Accuracy (barely above chance level of 12.50%).\n\n"
-        "3. SAVEE (4 Actors, Actor KL Unseen): Transfer ensemble reached 51.67% Accuracy and 0.3860 Macro-F1, doubling the scratch baseline of "
-        "25.0% which suffered from vocal tract overfitting. Wav2Vec2-XLS-R-300M achieved 12.50% Accuracy (chance level is 14.29%).\n\n"
-        "4. TESS (2 Actresses, 200 Words, 30 Unseen Target Words): All SSL foundation models achieved 100.00% Accuracy and 1.0000 Macro-F1. "
-        "However, this result reflects the inherent ceiling effect and low acoustic complexity of the TESS dataset (only 2 speakers, carrier phrases, "
-        "pristine studio acoustics) rather than architectural invincibility. Table 3 reports the comprehensive multi-corpus benchmark."
+        "Individual in-domain evaluations across all five corpora reveal consistent patterns under strict speaker-disjoint splits:"
     )
 
-    # Table 3: In-Domain Benchmark Leaderboard
+    # 4 In-Domain Evaluations: Multi-line detailed points -> JUSTIFIED
+    add_bullet_point("• CREMA-D (91 Actors, 13 Unseen Test Actors): ", "Soft-Voting Top-5 Ensemble achieved 75.57% Accuracy, 0.7594 Macro-F1, and 75.40% UAR. HuBERT with Learnable Layer Pooling reached 71.98% Accuracy, outperforming Wav2Vec2 Base (69.25%) and MFCC+CNN-BiLSTM (62.80%). Wav2Vec2-XLS-R-300M (Frozen Baseline) reached only 24.43% Accuracy (near chance level of 16.67%).", justify=True)
+    add_bullet_point("• RAVDESS (24 Actors, Actors 21 to 24 Unseen): ", "Transfer Ensemble achieved 73.75% Accuracy and 0.7207 Macro-F1. Transfer from CREMA-D pre-training to RAVDESS produced 72.92% Accuracy, compared to 32.50% when trained from scratch on RAVDESS alone. Wav2Vec2-XLS-R-300M collapsed to 13.33% Accuracy (barely above chance level of 12.50%).", justify=True)
+    add_bullet_point("• SAVEE (4 Actors, Actor KL Unseen): ", "Transfer ensemble reached 51.67% Accuracy and 0.3860 Macro-F1, doubling the scratch baseline of 25.0% which suffered from vocal tract overfitting. Wav2Vec2-XLS-R-300M achieved 12.50% Accuracy (chance level is 14.29%).", justify=True)
+    add_bullet_point("• TESS (2 Actresses, 200 Words, 30 Unseen Target Words): ", "All SSL foundation models achieved 100.00% Accuracy and 1.0000 Macro-F1. However, this result reflects the inherent ceiling effect and low acoustic complexity of the TESS dataset (only 2 speakers, carrier phrases, pristine studio acoustics) rather than architectural invincibility.", justify=True)
+
+    # Table 3: In-Domain Benchmark Leaderboard (Centered Caption, Left Text, Center Numbers)
     p_cap3 = doc.add_paragraph()
     p_cap3.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_cap3.paragraph_format.space_before = Pt(8)
@@ -934,6 +983,12 @@ def build_clean_word_report():
             p = cell.paragraphs[0]
             p.paragraph_format.space_before = Pt(2)
             p.paragraph_format.space_after = Pt(2)
+            # Alignment: columns 0 and 1 left-aligned, columns 2-5 centered
+            if c_idx in [0, 1]:
+                p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+            else:
+                p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+
             p_run = p.runs[0]
             p_run.font.name = "Times New Roman"
             p_run.font.size = Pt(8.5)
@@ -947,16 +1002,13 @@ def build_clean_word_report():
     add_subsec_heading("6.3 Technical Analysis of Wav2Vec2-XLS-R-300M Failure")
     add_body_p(
         "Across all evaluated corpora, Wav2Vec2-XLS-R-300M performed near random chance (13.33% on RAVDESS, 24.43% on CREMA-D, 12.50% on SAVEE, "
-        "and 19.76% on TESS), underperforming even shallow MFCC baselines. Three primary technical factors explain this behavior:\n\n"
-        "1. ASR Invariant Pre-training Objective: XLS-R-300M was pre-trained across 128 languages using contrastive masked prediction to extract phonetic content. "
-        "In cross-lingual speech recognition, speaker-specific pitch variations and emotional intonations are treated as nuisance parameters and filtered out "
-        "to achieve cross-lingual phonetic invariance. Consequently, the frozen representations suppress paralinguistic and affective cues.\n\n"
-        "2. Top-Layer Emotional Depletion: Unlike our HuBERT framework which incorporates learnable layer pooling across intermediate depths, the frozen XLS-R "
-        "baseline extracted features exclusively from its 24th (final) layer. As demonstrated in Section 7.2, top transformer layers specialize in discrete "
-        "phonetic tokens and exhibit lower emotional sensitivity than intermediate layers.\n\n"
-        "3. Capacity-to-Sample Mismatch: Projecting a frozen 1024-dimensional representation from a 317M-parameter model onto tiny target datasets "
-        "(e.g., 384 SAVEE clips or 960 RAVDESS clips) without layer-wise adaptation or fine-tuning creates an acute representation mismatch that prevents effective linear separation."
+        "and 19.76% on TESS), underperforming even shallow MFCC baselines. Three primary technical factors explain this behavior:"
     )
+
+    # 3 Technical Factors: Multi-line detailed explanations -> JUSTIFIED
+    add_bullet_point("1. ASR Invariant Pre-training Objective: ", "XLS-R-300M was pre-trained across 128 languages using contrastive masked prediction to extract phonetic content. In cross-lingual speech recognition, speaker-specific pitch variations and emotional intonations are treated as nuisance parameters and filtered out to achieve cross-lingual phonetic invariance. Consequently, the frozen representations suppress paralinguistic and affective cues.", justify=True)
+    add_bullet_point("2. Top-Layer Emotional Depletion: ", "Unlike our HuBERT framework which incorporates learnable layer pooling across intermediate depths, the frozen XLS-R baseline extracted features exclusively from its 24th (final) layer. As demonstrated in Section 7.2, top transformer layers specialize in discrete phonetic tokens and exhibit lower emotional sensitivity than intermediate layers.", justify=True)
+    add_bullet_point("3. Capacity-to-Sample Mismatch: ", "Projecting a frozen 1024-dimensional representation from a 317M-parameter model onto tiny target datasets (e.g., 384 SAVEE clips or 960 RAVDESS clips) without layer-wise adaptation or fine-tuning creates an acute representation mismatch that prevents effective linear separation.", justify=True)
 
     # --- Section 7: Ablation Studies ---
     add_sec_heading("7. Empirical Findings & Ablation Studies")
@@ -974,20 +1026,17 @@ def build_clean_word_report():
 
     add_subsec_heading("7.2 Layer Weight Distribution Across Transformer Depth")
     add_body_p(
-        "Figure 3 illustrates the learned softmax weights alpha across the 12 transformer encoder blocks of the Universal HuBERT model:\n\n"
-        "• Early Layers (Layers 1 to 4): Weights remain basal (alpha_1 = 0.0707, alpha_2 = 0.0710, alpha_3 = 0.0711, alpha_4 = 0.0712, "
-        "representing 7.07% to 7.12%), capturing low-level spectro-temporal acoustics.\n"
-        "• Intermediate Transition (Layers 5 to 8): Weights steadily increase (alpha_5 = 0.0713, alpha_6 = 0.0717, alpha_7 = 0.0725, alpha_8 = 0.0757, "
-        "representing 7.13% to 7.57%), reflecting progressive harmonic abstraction.\n"
-        "• Prosodic Culmination Zone (Layers 9 to 11): Weights reach their empirical maximum (alpha_9 = 0.1002, alpha_10 = 0.1107, alpha_11 = 0.1086), "
-        "accounting for exactly 31.95% of the total network weight. Layer 10 serves as the primary focal point (alpha_10 = 11.07%), capturing pitch inflection "
-        "contours and macro-energy modulations.\n"
-        "• Final Layer (Layer 12): Weight decreases to alpha_12 = 0.1053 (10.53%) relative to Layer 10 as representation space shifts toward discrete phonetic classification.\n"
-        "• Normalization Verification: The complete 12-layer softmax distribution (7.07% + 7.10% + 7.11% + 7.12% + 7.13% + 7.17% + 7.25% + 7.57% + 10.02% + 11.07% + 10.86% + 10.53%) "
-        "sums strictly to 100.00% (sum_{i=1}^{12} alpha_i = 1.0000). Table 4 details the layer weights."
+        "Figure 3 illustrates the learned softmax weights alpha across the 12 transformer encoder blocks of the Universal HuBERT model:"
     )
 
-    # Table 4: Layer Weights
+    # 5 Layer Depth Zones: Multi-line detailed explanations -> JUSTIFIED
+    add_bullet_point("• Early Layers (Layers 1 to 4): ", "Weights remain basal (alpha_1 = 0.0707, alpha_2 = 0.0710, alpha_3 = 0.0711, alpha_4 = 0.0712, representing 7.07% to 7.12%), capturing low-level spectro-temporal acoustics.", justify=True)
+    add_bullet_point("• Intermediate Transition (Layers 5 to 8): ", "Weights steadily increase (alpha_5 = 0.0713, alpha_6 = 0.0717, alpha_7 = 0.0725, alpha_8 = 0.0757, representing 7.13% to 7.57%), reflecting progressive harmonic abstraction.", justify=True)
+    add_bullet_point("• Prosodic Culmination Zone (Layers 9 to 11): ", "Weights reach their empirical maximum (alpha_9 = 0.1002, alpha_10 = 0.1107, alpha_11 = 0.1086), accounting for exactly 31.95% of the total network weight. Layer 10 serves as the primary focal point (alpha_10 = 11.07%), capturing pitch inflection contours and macro-energy modulations.", justify=True)
+    add_bullet_point("• Final Layer (Layer 12): ", "Weight decreases to alpha_12 = 0.1053 (10.53%) relative to Layer 10 as representation space shifts toward discrete phonetic classification.", justify=True)
+    add_bullet_point("• Normalization Verification: ", "The complete 12-layer softmax distribution (7.07% + 7.10% + 7.11% + 7.12% + 7.13% + 7.17% + 7.25% + 7.57% + 10.02% + 11.07% + 10.86% + 10.53%) sums strictly to 100.00% (sum_{i=1}^{12} alpha_i = 1.0000). Table 4 details the layer weights.", justify=True)
+
+    # Table 4: Layer Weights (Centered Caption, Left Text, Center Numbers)
     p_cap4 = doc.add_paragraph()
     p_cap4.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_cap4.paragraph_format.space_before = Pt(8)
@@ -1024,6 +1073,12 @@ def build_clean_word_report():
             p = cell.paragraphs[0]
             p.paragraph_format.space_before = Pt(2)
             p.paragraph_format.space_after = Pt(2)
+            # Alignment: columns 0 and 3 left-aligned, columns 1 and 2 centered
+            if c_idx in [0, 3]:
+                p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+            else:
+                p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+
             p_run = p.runs[0]
             p_run.font.name = "Times New Roman"
             p_run.font.size = Pt(8.5)
@@ -1052,52 +1107,51 @@ def build_clean_word_report():
     # --- Section 8: Behavioural Telemetry ---
     add_sec_heading("8. Speech Behavioural Intelligence Profiling")
     add_body_p(
-        "Figure 6 summarizes the objective acoustic patterns extracted across emotion categories by the Behaviour Engine:\n\n"
-        "• Anger: Characterized by an accelerated speaking tempo (mean 4.2 syl/s), minimal hesitation (pause ratio 12.4%), high vocal intensity "
-        "(mean loudness -16.2 dB), and sharp pitch variance (sigma_F0 = 54.3 Hz).\n"
-        "• Sadness: Exhibits psychomotor deceleration with a slow speaking tempo (mean 2.2 syl/s), extensive silence intervals (pause ratio 31.8%), "
-        "attenuated energy (mean loudness -29.4 dB), and flat fundamental frequency intonation (mean pitch 108.4 Hz, sigma_F0 = 18.2 Hz).\n"
-        "• Joy: Features elevated pitch dynamics (mean pitch 232.1 Hz, sigma_F0 = 62.1 Hz) and moderate tempo (3.6 syl/s).\n"
-        "• Neutral / Calm: Displays balanced cadence (2.8 to 3.4 syl/s), standard pause ratio (18% to 22%), and stable loudness (-22 to -26 dB)."
+        "Figure 6 summarizes the objective acoustic patterns extracted across emotion categories by the Behaviour Engine:"
     )
+
+    # 4 Emotion Behaviour Profiles: Multi-line detailed profiles -> JUSTIFIED
+    add_bullet_point("• Anger: ", "Characterized by an accelerated speaking tempo (mean 4.2 syl/s), minimal hesitation (pause ratio 12.4%), high vocal intensity (mean loudness -16.2 dB), and sharp pitch variance (sigma_F0 = 54.3 Hz).", justify=True)
+    add_bullet_point("• Sadness: ", "Exhibits psychomotor deceleration with a slow speaking tempo (mean 2.2 syl/s), extensive silence intervals (pause ratio 31.8%), attenuated energy (mean loudness -29.4 dB), and flat fundamental frequency intonation (mean pitch 108.4 Hz, sigma_F0 = 18.2 Hz).", justify=True)
+    add_bullet_point("• Joy: ", "Features elevated pitch dynamics (mean pitch 232.1 Hz, sigma_F0 = 62.1 Hz) and moderate tempo (3.6 syl/s).", justify=True)
+    add_bullet_point("• Neutral / Calm: ", "Displays balanced cadence (2.8 to 3.4 syl/s), standard pause ratio (18% to 22%), and stable loudness (-22 to -26 dB).", justify=True)
 
     add_figure("fig6_behavioral_prosody_profile.png", "Figure 6: Multimodal Speech Behaviour Telemetry across Discrete Emotion Categories.", width_in=6.0)
 
     # --- Section 9: Deployment Architecture ---
     add_sec_heading("9. System Deployment Architecture")
     add_body_p(
-        "The end-to-end framework is implemented as an Apple Silicon accelerated microservice paired with a minimal web application:\n\n"
-        "• Frontend UI (Next.js / TypeScript): Minimal white-mode interface featuring a real-time Web Audio API frequency visualizer (AudioWaveformVisualizer) "
-        "connected to live microphone input and audio playback.\n"
-        "• Backend Microservice (FastAPI): Model registry serving the Hindi Specialist (CNN-BiLSTM) and Universal SER models with Metal Performance Shaders (mps) "
-        "hardware acceleration (38.4 ms average inference latency)."
+        "The end-to-end framework is implemented as an Apple Silicon accelerated microservice paired with a minimal web application:"
     )
+
+    # 2 Deployment Components: Multi-line detailed descriptions -> JUSTIFIED
+    add_bullet_point("• Frontend UI (Next.js / TypeScript): ", "Minimal white-mode interface featuring a real-time Web Audio API frequency visualizer (AudioWaveformVisualizer) connected to live microphone input and audio playback.", justify=True)
+    add_bullet_point("• Backend Microservice (FastAPI): ", "Model registry serving the Hindi Specialist (CNN-BiLSTM) and Universal SER models with Metal Performance Shaders (mps) hardware acceleration (38.4 ms average inference latency).", justify=True)
 
     # --- Section 10: Discussion ---
     add_sec_heading("10. Discussion & Limitations")
     add_body_p(
-        "While the experimental results validate the efficacy of learnable layer pooling and disjoint evaluation protocols, several limitations should be noted:\n\n"
-        "1. Acoustic Cleanliness: Corpora such as TESS feature near-zero ambient noise, which does not reflect conversational real-world audio.\n"
-        "2. Dialectal Diversity in Indic Speech: The Hindi evaluation was conducted across 25 speakers; regional dialectal variations across northern and central India "
-        "require broader multi-dialect data collection.\n"
-        "3. Pre-trained Audio Sampling: Standard foundation models operate at 16 kHz, which truncates ultra-high frequency acoustic cues (> 8 kHz)."
+        "While the experimental results validate the efficacy of learnable layer pooling and disjoint evaluation protocols, several limitations should be noted:"
     )
+
+    # 3 Limitations: Multi-line detailed points -> JUSTIFIED
+    add_bullet_point("1. Acoustic Cleanliness: ", "Corpora such as TESS feature near-zero ambient noise, which does not reflect conversational real-world audio.", justify=True)
+    add_bullet_point("2. Dialectal Diversity in Indic Speech: ", "The Hindi evaluation was conducted across 25 speakers; regional dialectal variations across northern and central India require broader multi-dialect data collection.", justify=True)
+    add_bullet_point("3. Pre-trained Audio Sampling: ", "Standard foundation models operate at 16 kHz, which truncates ultra-high frequency acoustic cues (> 8 kHz).", justify=True)
 
     # --- Section 11: Conclusion ---
     add_sec_heading("11. Conclusion")
     add_body_p(
-        "This research evaluated speech emotion recognition across multi-corpus and cross-lingual settings. The primary conclusions are:\n\n"
-        "1. Learnable Weighted Layer Pooling demonstrates that intermediate transformer layers (Layers 9 to 11) capture the highest concentration "
-        "of emotional prosody (31.95%), outperforming top-layer pooling.\n"
-        "2. Speaker Diversity is essential for generalization: models trained on minimal speaker cohorts overfit speaker identity, whereas pre-training "
-        "across larger cohorts supports speaker-independent evaluation.\n"
-        "3. Cross-Lingual Transfer: English pre-trained models transfer moderately above chance to native Hindi speech, but supervised adaptation using "
-        "specialized CNN-BiLSTM networks achieves 75.19% accuracy.\n"
-        "4. Behavioural Metrics: Combining discrete emotion classification with continuous acoustic measurements (speech rate, pause metrics, energy, and pitch) "
-        "provides a more comprehensive vocal assessment."
+        "This research evaluated speech emotion recognition across multi-corpus and cross-lingual settings. The primary conclusions are:"
     )
 
-    # --- Section: References ---
+    # 4 Conclusions: Multi-line detailed conclusions -> JUSTIFIED
+    add_bullet_point("1. Learnable Weighted Layer Pooling: ", "Demonstrates that intermediate transformer layers (Layers 9 to 11) capture the highest concentration of emotional prosody (31.95%), outperforming top-layer pooling.", justify=True)
+    add_bullet_point("2. Speaker Diversity: ", "Essential for generalization: models trained on minimal speaker cohorts overfit speaker identity, whereas pre-training across larger cohorts supports speaker-independent evaluation.", justify=True)
+    add_bullet_point("3. Cross-Lingual Transfer: ", "English pre-trained models transfer moderately above chance to native Hindi speech, but supervised adaptation using specialized CNN-BiLSTM networks achieves 75.19% accuracy.", justify=True)
+    add_bullet_point("4. Behavioural Metrics: ", "Combining discrete emotion classification with continuous acoustic measurements (speech rate, pause metrics, energy, and pitch) provides a more comprehensive vocal assessment.", justify=True)
+
+    # --- Section: References (LEFT-ALIGNED to avoid ugly justified gaps in citations) ---
     add_sec_heading("References")
 
     references = [
@@ -1135,7 +1189,7 @@ def build_clean_word_report():
 
     for ref in references:
         rp = doc.add_paragraph()
-        rp.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+        rp.alignment = WD_ALIGN_PARAGRAPH.LEFT  # Strict left alignment prevents awkward spacing gaps in citations
         rp.paragraph_format.left_indent = Inches(0.25)
         rp.paragraph_format.first_line_indent = Inches(-0.25)  # Hanging indent
         rp.paragraph_format.line_spacing = 1.1
@@ -1148,7 +1202,7 @@ def build_clean_word_report():
 
     doc.save(str(DOCX_OUT))
     doc.save(str(DESKTOP_DOCX))
-    print(f"Successfully generated clean Word report: {DOCX_OUT} and {DESKTOP_DOCX}")
+    print(f"Successfully generated clean Word report with optimized alignment: {DOCX_OUT} and {DESKTOP_DOCX}")
 
 
 if __name__ == "__main__":
