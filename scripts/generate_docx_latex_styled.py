@@ -186,7 +186,7 @@ def build_clean_word_report():
     p_sub.paragraph_format.space_before = Pt(0)
     p_sub.paragraph_format.space_after = Pt(8)
     run_sub = p_sub.add_run(
-        "A Controlled Empirical Evaluation Across CREMA-D, RAVDESS, SAVEE, TESS, and Native Hindi Speech"
+        "A Controlled Empirical Evaluation Across CREMA-D, RAVDESS, SAVEE, TESS, and Indic Hindi Speech"
     )
     run_sub.font.name = 'Times New Roman'
     run_sub.font.size = Pt(11)
@@ -242,7 +242,7 @@ def build_clean_word_report():
         "To address these challenges, this study presents a standardized empirical evaluation comprising two decoupled experimental protocols across five "
         "speech corpora totaling 12,180 standardized audio recordings: (1) a multi-corpus English benchmark combining four established corpora (CREMA-D, "
         "RAVDESS, SAVEE, and TESS, totaling 11,318 canonical clips across 121 speakers) to evaluate cross-corpus generalization and layer-pooling dynamics, "
-        "and (2) a cross-lingual transfer and native adaptation study on an Indic speech corpus (862 standardized Hindi utterances across 14 unique speaker IDs "
+        "and (2) a cross-lingual transfer and in-domain adaptation study on an Indic speech corpus (862 standardized Hindi speech utterances across 14 unique speaker IDs "
         "curated from three open-access collections [31]–[33]). Speaker-disjoint evaluation is enforced for CREMA-D, RAVDESS, and SAVEE; TESS is evaluated under "
         "prompt-disjoint conditions on unseen vocabulary; and the Hindi specialist is evaluated on a stratified utterance-level split. Inspired by the lightweight probing "
         "methodology used in the SUPERB benchmark [2], we implement a Learnable Weighted Layer Pooling mechanism coupled with a linear classification probe "
@@ -253,7 +253,7 @@ def build_clean_word_report():
         "Across the 1,701 pooled multi-corpus test clips, a Universal HuBERT probe (initialized from the best CREMA-D HuBERT checkpoint and adapted on the combined "
         "4-corpus dataset) achieves 68.31% aggregate accuracy (0.6779 Macro-F1, 68.61% UAR), outperforming the zero-shot CREMA-D baseline (60.61%) by +7.70 percentage "
         "points, alongside an unweighted corpus-level macro-average of 61.26% Accuracy and 57.54% UAR across the four diverse corpora. Furthermore, zero-shot cross-lingual "
-        "evaluation of the English foundation model on the shared canonical subset of native Hindi speech yields 27.62% accuracy and 31.76% Unweighted Average Recall "
+        "evaluation of the English foundation model on the shared canonical subset of Hindi speech yields 27.62% accuracy and 31.76% Unweighted Average Recall "
         "(UAR) against a 25.00% 4-class chance floor. Supervised in-domain adaptation on the full 5-class Hindi space using a specialized CNN-BiLSTM architecture "
         "substantially increases test accuracy to 74.42% (75.19% via ensemble fusion) and UAR to 70.85% (70.56% ensemble) against a 20.00% 5-class chance floor "
         "(+46.80% single-model gain over zero-shot transfer). Finally, an auxiliary Audio Behaviour Analysis Engine extracts "
@@ -444,7 +444,7 @@ def build_clean_word_report():
 
     add_bullet_point("• RQ1 (Layer-Wise Representation Dynamics): ", "How are affective vocal representations distributed across the depths of a frozen self-supervised speech transformer, and what relative weighting does learnable layer pooling converge upon when trained on multi-corpus speech?", justify=True)
     add_bullet_point("• RQ2 (Effect of Training Speaker Diversity): ", "What is the empirical association between training cohort speaker diversity and out-of-domain generalization performance on strictly unseen actors, when accounting for simultaneous variations in corpus conditions?", justify=True)
-    add_bullet_point("• RQ3 (Cross-Lingual Transfer to Indic Speech): ", "To what degree do English multi-corpus representations transfer zero-shot to native Hindi speech, and what quantitative performance gain is achieved via native supervised adaptation?", justify=True)
+    add_bullet_point("• RQ3 (Cross-Lingual Transfer to Indic Speech): ", "To what degree do English multi-corpus representations transfer zero-shot to Hindi speech, and what quantitative performance gain is achieved via supervised in-domain adaptation?", justify=True)
     add_bullet_point("• RQ4 (Acoustic Behavioural Profiling): ", "What distinctive continuous acoustic profiles (syllabic speed, pause ratio, vocal energy, and fundamental pitch F0) characterize categorical emotion predictions, and how can auxiliary telemetry complement discrete classification without claiming clinical diagnostic validity?", justify=True)
 
     # --- Section 2: Literature Survey ---
@@ -494,7 +494,7 @@ def build_clean_word_report():
         "(HuBERT, Wav2Vec 2.0, WavLM) under leave-speaker-out multilingual conditions and demonstrating that standard random train/test splits "
         "cause neural models to overfit speaker identity rather than true affective cues. Whereas Goel et al. focused on multi-task co-attention, "
         "the present investigation evaluates a unified multi-corpus English benchmark under canonicalized emotion mappings, analyzes layer-wise pooling "
-        "weights, and quantifies both zero-shot cross-lingual transfer and native adaptation on Hindi speech. Hashem, Arif, and Alghamdi (2023) [15] "
+        "weights, and quantifies both zero-shot cross-lingual transfer and supervised in-domain adaptation on Hindi speech. Hashem, Arif, and Alghamdi (2023) [15] "
         "and Akçay and Oğuz (2020) [16] conducted systematic reviews detailing how cross-corpus evaluation protocols reveal severe performance degradation "
         "when models encounter novel recording environments. Wagner et al. (2018) [25] empirically evaluated hand-crafted features versus learned representations "
         "across paralinguistic tasks, finding that acoustic descriptors provide vital complementarity to deep representations, while Latif et al. (2023) [26] "
@@ -582,7 +582,7 @@ def build_clean_word_report():
     run_t1_note = p_t1_note.add_run(
         "*Note: Across the four English source corpora, raw clips total 12,162 (CREMA-D: 7,442; RAVDESS: 1,440; SAVEE: 480; TESS: 2,800). "
         "Standardizing onto the 6 shared canonical classes (neutral, happy, sad, angry, fear, disgust) excludes 844 non-shared clips (calm and surprise), "
-        "yielding 11,318 English clips. Combined with the 862 native Hindi clips (5 classes), the complete evaluation encompasses 12,180 audio clips."
+        "yielding 11,318 English clips. Combined with the 862 standardized Hindi clips (5 classes), the complete evaluation encompasses 12,180 audio clips."
     )
     run_t1_note.font.name = "Times New Roman"
     run_t1_note.font.size = Pt(8.0)
@@ -1226,7 +1226,7 @@ def build_clean_word_report():
         "and training-set size vary simultaneously with speaker count, the comparison should not be interpreted as a causal estimate of speaker diversity."
     )
 
-    add_figure("fig2_layer_weights.png", "Figure 3: Empirical Layer Weight Distribution in Learnable Weighted Layer Pooling (Layers 9 to 11 receive 31.95%, total sum = 100.00%).", width_in=5.8)
+    add_figure("fig2_layer_weights.png", "Figure 3: Empirical Layer Weight Distribution in Learnable Weighted Layer Pooling. Layers 9–11 receive approximately 31.95% of the unrounded normalized weight; exported four-decimal values sum to 99.99% due to rounding.", width_in=5.8)
 
     add_subsec_heading("7.2 Layer Weight Distribution Across Transformer Depth")
     add_body_p(
@@ -1408,7 +1408,7 @@ def build_clean_word_report():
 
     add_bullet_point("1. Learnable Weighted Layer Pooling: ", "The learned pooling mechanism assigned its highest aggregate weight to Layers 9–11, which together received 31.95% of the normalized layer weight, demonstrating that intermediate transformer representations provide superior affective utility compared to early acoustic layers.", justify=True)
     add_bullet_point("2. Effect of Training Speaker Diversity: ", "Broad multi-speaker training cohorts are associated with improved generalization: models trained on minimal speaker cohorts overfit individual speaker vocal tract geometry, whereas diverse cohorts support robust speaker-independent evaluation.", justify=True)
-    add_bullet_point("3. Cross-Lingual Transfer & Supervised Adaptation: ", "English pre-trained models transfer moderately above chance (27.62% vs. 25.00% floor) to native Hindi speech, but supervised adaptation using specialized CNN-BiLSTM networks achieves 74.42% accuracy (75.19% via ensemble fusion), representing a +46.80% single-model performance gain.", justify=True)
+    add_bullet_point("3. Cross-Lingual Transfer & Supervised Adaptation: ", "English pre-trained models transfer moderately above chance (27.62% vs. 25.00% floor) to Hindi speech, but supervised adaptation using specialized CNN-BiLSTM networks achieves 74.42% accuracy (75.19% via ensemble fusion), representing a +46.80% single-model performance gain.", justify=True)
     add_bullet_point("4. Continuous Behavioural Telemetry: ", "Combining discrete emotion classification with continuous acoustic measurements (speaking rate, pause ratio, RMS energy, and pitch variability) provides interpretable vocal characterization to complement categorical predictions.", justify=True)
 
     # --- Section: References ---

@@ -69,7 +69,7 @@ def generate_fig1_architecture():
     hindi_box = FancyBboxPatch((0.33, 0.48), 0.25, 0.27, boxstyle="round,pad=0.015,rounding_size=0.02",
                                facecolor="#fef3c7", edgecolor="#d97706", linewidth=1.4)
     ax.add_patch(hindi_box)
-    ax.text(0.455, 0.71, "Hindi Specialist\n(Native Supervised)", ha="center", va="center", weight="bold", color="#78350f", fontsize=9.5)
+    ax.text(0.455, 0.71, "Hindi Specialist\n(In-Domain Supervised)", ha="center", va="center", weight="bold", color="#78350f", fontsize=9.5)
     ax.text(0.455, 0.57, "• 40 MFCC Acoustic Features\n  (32-ms FFT, 10-ms Hop)\n• 3-Layer 1D CNN (64-128-256)\n• 2-Layer BiLSTM (128 h/dir)\n• 923,717 Parameters (100% Train)",
             ha="center", va="center", color="#0f172a", fontsize=8.0)
 
@@ -171,7 +171,7 @@ def generate_fig3_benchmark_performance():
     """Figure 3: Multi-Corpus Benchmark Leaderboard."""
     fig, ax = plt.subplots(figsize=(9, 4.5))
 
-    corpora = ["CREMA-D\n(91 Actors)", "RAVDESS\n(24 Actors)", "SAVEE\n(4 Actors)", "TESS\n(200 Words)", "Hindi SER\n(Native Ind.)", "Multi-Corpus\n(1,701 Unseen)"]
+    corpora = ["CREMA-D\n(91 Actors)", "RAVDESS\n(24 Actors)", "SAVEE\n(4 Actors)", "TESS\n(200 Words)", "Hindi SER\n(Indic 14 Spk)", "Multi-Corpus\n(1,701 Unseen)"]
     accuracy = [75.57, 73.75, 51.67, 100.0, 75.19, 68.31]
     macro_f1 = [75.94, 72.07, 38.60, 100.0, 71.36, 67.79]
 
@@ -205,7 +205,7 @@ def generate_fig4_cross_lingual_transfer():
     """Figure 4: Cross-Lingual Transfer Comparison (Zero-Shot vs Supervised)."""
     fig, ax = plt.subplots(figsize=(7.5, 4.2))
 
-    categories = ["Zero-Shot Transfer\n(English HuBERT -> Hindi)", "Native Supervised\n(Hindi Ensemble)"]
+    categories = ["Zero-Shot Transfer\n(English HuBERT -> Hindi)", "In-Domain Supervised\n(Hindi Ensemble)"]
     accuracy = [27.62, 75.19]
     uar = [31.76, 70.56]
     macro_f1 = [24.43, 71.36]
@@ -221,7 +221,7 @@ def generate_fig4_cross_lingual_transfer():
     ax.axhline(25.0, color="#dc2626", linestyle="--", linewidth=1.2, label="4-Class Chance Baseline (25.0%)")
 
     # Gain annotation
-    ax.annotate("+47.57% Accuracy Gain\nVia Native In-Domain Supervision",
+    ax.annotate("+47.57% Accuracy Gain\nVia In-Domain Supervision",
                 xy=(1, 75.19), xytext=(0.3, 85),
                 arrowprops=dict(facecolor="#0f172a", shrink=0.08, width=1.2, headwidth=6),
                 fontsize=9.5, weight="bold", color="#0f172a",
