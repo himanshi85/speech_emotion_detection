@@ -1070,8 +1070,9 @@ def build_clean_word_report():
     add_body_p(
         "To evaluate whether a unified representation can generalize across diverse acoustic environments, accents, and recording conditions, a Universal "
         "HuBERT probe was initialized from the best CREMA-D HuBERT checkpoint (outputs/cremad/hubert/checkpoints/best_model/model.pt, logged as HuBERT "
-        "(Transfer from CREMAD)) and subsequently adapted on the combined 4-corpus training set (121 speakers across CREMA-D, RAVDESS, SAVEE, and TESS) "
-        "and evaluated against 1,701 unseen multi-corpus test utterances (1,060 CREMA-D + 360 TESS + 176 RAVDESS + 105 SAVEE).\n\n"
+        "(Transfer from CREMAD)) and subsequently adapted on the combined four-corpus training set, comprising 103 unique training speaker IDs across "
+        "CREMA-D, RAVDESS, SAVEE, and TESS (TESS uses prompt-disjoint rather than speaker-disjoint evaluation), and evaluated against 1,701 unseen "
+        "multi-corpus test utterances (1,060 CREMA-D + 360 TESS + 176 RAVDESS + 105 SAVEE).\n\n"
         "Across the 1,701 pooled test clips, the Universal HuBERT probe achieves 68.31% aggregate accuracy (0.6779 Macro-F1, 68.61% UAR), outperforming the "
         "zero-shot CREMA-D HuBERT baseline (which achieves 60.61% accuracy, 0.6031 Macro-F1, and 60.54% UAR when transferred directly to the multi-corpus test set) "
         "by an absolute margin of +7.70 percentage points. This gain reflects the combined effect of multi-corpus supervised adaptation and learnable layer pooling "
@@ -1406,7 +1407,7 @@ def build_clean_word_report():
         "This research evaluated speech emotion recognition across multi-corpus and cross-lingual settings. The primary conclusions are:"
     )
 
-    add_bullet_point("1. Learnable Weighted Layer Pooling: ", "The learned pooling mechanism assigned its highest aggregate weight to Layers 9–11, which together received 31.95% of the normalized layer weight, demonstrating that intermediate transformer representations provide superior affective utility compared to early acoustic layers.", justify=True)
+    add_bullet_point("1. Learnable Weighted Layer Pooling: ", "The learned pooling mechanism assigned its highest aggregate weight to Layers 9–11, which together received approximately 31.95% of the normalized layer weight. This indicates that the downstream probe preferentially weighted these intermediate representations under the evaluated multi-corpus protocol.", justify=True)
     add_bullet_point("2. Effect of Training Speaker Diversity: ", "Broad multi-speaker training cohorts are associated with improved generalization: models trained on minimal speaker cohorts overfit individual speaker vocal tract geometry, whereas diverse cohorts support robust speaker-independent evaluation.", justify=True)
     add_bullet_point("3. Cross-Lingual Transfer & Supervised Adaptation: ", "English pre-trained models transfer moderately above chance (27.62% vs. 25.00% floor) to Hindi speech, but supervised adaptation using specialized CNN-BiLSTM networks achieves 74.42% accuracy (75.19% via ensemble fusion), representing a +46.80% single-model performance gain.", justify=True)
     add_bullet_point("4. Continuous Behavioural Telemetry: ", "Combining discrete emotion classification with continuous acoustic measurements (speaking rate, pause ratio, RMS energy, and pitch variability) provides interpretable vocal characterization to complement categorical predictions.", justify=True)

@@ -12,10 +12,10 @@
   <img src="https://img.shields.io/badge/Maintainer-Jash%20Lathiya-lightgrey?style=for-the-badge" alt="Maintainer" />
 </p>
 
-A modular, production-grade PyTorch benchmarking framework for **Speech Emotion Recognition (SER)** and **Audio Behaviour Intelligence** across diverse speech corpora. This repository evaluates classical acoustic baselines against state-of-the-art self-supervised foundation models across **5 speech datasets** (CREMA-D, RAVDESS, SAVEE, TESS, and authentic Hindi speech) totaling **12,180 audio clips** under strict speaker-independent and prompt-independent evaluation protocols.
+A modular, production-grade PyTorch benchmarking framework for **Speech Emotion Recognition (SER)** and **Audio Behaviour Intelligence** across diverse speech corpora. This repository evaluates classical acoustic baselines against state-of-the-art self-supervised foundation models across **5 speech datasets** (CREMA-D, RAVDESS, SAVEE, TESS, and authentic Hindi speech) totaling **12,180 audio clips** under disciplined evaluation protocols: CREMA-D, RAVDESS, and SAVEE enforce speaker-disjoint test partitions; TESS enforces prompt-disjoint evaluation on unseen vocabulary; and the Hindi specialist uses a stratified utterance-level split in which speaker IDs may occur across partitions.
 
 > [!IMPORTANT]
-> **Strict Zero-Leakage Benchmark Guarantee**: All evaluation metrics reported herein are generated exclusively on completely unseen human actors (CREMA-D: 13 unseen actors; RAVDESS: Actors 21-24; SAVEE: Actor `KL`) or unseen vocabulary prompts (TESS: 30 unseen words). There is zero data or identity overlap between train, validation, and test partitions.
+> **Evaluation & Partitioning Protocols**: Evaluation metrics reported herein are generated under disciplined, clearly documented protocols: CREMA-D, RAVDESS, and SAVEE enforce strictly speaker-disjoint test partitions on unseen actors (CREMA-D: 13 unseen actors; RAVDESS: Actors 21-24; SAVEE: Actor `KL`); TESS enforces prompt-disjoint evaluation across 30 unseen vocabulary words; and the Hindi specialist is evaluated on an utterance-level stratified split (604 train / 129 val / 129 test across 14 unique speaker IDs).
 
 ---
 
@@ -142,11 +142,11 @@ flowchart TD
 
 ## Benchmark Leaderboard
 
-All evaluations are conducted strictly on **unseen actors or unseen prompts** (disjoint test partitions with zero leakage).
+All multi-corpus evaluations are conducted strictly on **unseen actors or unseen prompts** (speaker-disjoint for CREMA-D/RAVDESS/SAVEE; prompt-disjoint for TESS).
 
 ### 1. Universal Multi-Corpus Foundation Model
 
-*Unified corpus of **11,318 audio clips** across 121 speakers mapped to 6 canonical emotions (`neutral`, `happy`, `sad`, `angry`, `fear`, `disgust`). Evaluated on **1,701 strictly unseen clips** across all 4 datasets simultaneously. Random chance baseline: **16.67%**.*
+*Unified English corpus of **11,318 audio clips** (121 total speakers across all splits; 103 unique training speaker IDs) mapped to 6 canonical emotions (`neutral`, `happy`, `sad`, `angry`, `fear`, `disgust`). Evaluated on **1,701 pooled test clips** across all 4 datasets simultaneously. Random chance baseline: **16.67%**.*
 
 | Architecture / Model | Training Strategy | Trainable Params | Test Accuracy | Macro-F1 | Test UAR | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: | :--- |
@@ -634,9 +634,10 @@ python scripts/verify_metrics.py --dataset tess
 
 ## Methodological Guarantees
 
-1. **Strict Zero-Leakage Partitions**:
-   - **Speaker-Independent**: Test partitions for CREMA-D, RAVDESS, and SAVEE feature actors who never appear in training or validation splits.
-   - **Prompt-Independent**: Test partitions for TESS feature 30 vocabulary words never spoken in the training split.
+1. **Rigorous Partition Protocols**:
+   - **Speaker-Disjoint**: Test partitions for CREMA-D, RAVDESS, and SAVEE feature actors who never appear in training or validation splits.
+   - **Prompt-Disjoint**: Test partitions for TESS feature 30 vocabulary words never spoken in the training split.
+   - **Stratified Utterance-Level**: The Hindi specialist partition stratifies clips by emotion class (604 train / 129 val / 129 test), with the 14 speaker IDs distributed across partitions.
 2. **Dynamic Label Discovery**:
    - Class indices, labels, and class counts are discovered dynamically at runtime via `metadata/labels.json` and canonical mappers.
 3. **Reproducibility**:
