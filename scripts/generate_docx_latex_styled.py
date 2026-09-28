@@ -193,25 +193,28 @@ def build_clean_word_report():
     run_abs_body = p_abs.add_run(
         "Speech Emotion Recognition (SER) is an active area of investigation within human-computer interaction, "
         "psychiatric diagnostics, and automated voice analysis. However, contemporary SER research faces several methodological "
-        "constraints. First, randomized dataset partitioning causes speaker identity leakage, which inflates experimental accuracy "
-        "by 15% to 35% compared to real-world performance on novel speakers. Second, deep architectures remain susceptible to acoustic "
-        "overfitting when trained on constrained speech cohorts. Third, the literature exhibits a pronounced focus on Germanic and "
-        "Romance languages, offering limited empirical evidence on cross-lingual transferability to morphologically rich Indic languages "
-        "such as Hindi. Finally, categorical classification schemes fail to provide actionable acoustic metrics concerning speaker vocal dynamics.\n\n"
+        "constraints. First, randomized dataset partitioning causes speaker identity leakage, which has been shown in recent "
+        "paralinguistic literature [21] to artificially inflate experimental accuracy by overestimating generalization to novel speakers. "
+        "Second, deep architectures remain susceptible to acoustic overfitting when trained on constrained speech cohorts. Third, the "
+        "literature exhibits a pronounced focus on Germanic and Romance languages, offering limited empirical evidence on cross-lingual "
+        "transferability to morphologically rich Indic languages such as Hindi. Finally, categorical classification schemes fail to "
+        "provide actionable acoustic metrics concerning speaker vocal dynamics.\n\n"
         "To address these limitations, this study presents a standardized empirical evaluation comprising two decoupled experimental protocols "
         "across five speech corpora totaling 12,180 standardized audio recordings: (1) a multi-corpus English benchmark combining four established "
         "corpora (CREMA-D, RAVDESS, SAVEE, and TESS, totaling 11,318 clips across 121 speakers) to evaluate cross-corpus generalization and layer-pooling "
         "dynamics under strict speaker-disjoint splits, and (2) a standalone cross-lingual transfer and native adaptation study on an Indic speech corpus "
         "(862 native Hindi utterances across 25 speakers). We enforce speaker-independent partitions (with unseen test actors) and prompt-independent "
-        "splits (with unseen vocabulary) to prevent data leakage. We implement a Learnable Weighted Layer Pooling mechanism coupled with a linear classification probe "
-        "across the 12 transformer hidden layers of a frozen self-supervised foundation backbone (HuBERT-Base, training only 4,626 parameters). Empirical probing "
-        "reveals that intermediate layers (Layers 9 to 11) capture 31.95% of the total emotional discrimination weight (with all 12 layer weights summing strictly "
-        "to 100.00%), outperforming the final classification layer.\n\n"
+        "splits (with unseen vocabulary) to prevent data leakage. Following the SUPERB benchmark methodology [2], we implement a Learnable "
+        "Weighted Layer Pooling mechanism coupled with a linear classification probe across the 12 transformer hidden layers of a frozen "
+        "self-supervised foundation backbone (HuBERT-Base, training only 4,626 parameters). Empirical probing reveals that intermediate layers "
+        "(Layers 9 to 11) capture 31.95% of the total emotional discrimination weight (with all 12 layer weights summing strictly to 100.00%), "
+        "demonstrating that intermediate representations retain strong emotional salience compared to early acoustic representations.\n\n"
         "Additionally, cross-lingual transfer from the English multi-corpus foundation model yields 27.62% accuracy and 31.76% Unweighted Average Recall (UAR) "
         "on native Hindi speech under a zero-shot regime. Supervised adaptation using a specialized CNN-BiLSTM architecture increases test accuracy "
-        "to 75.19% and UAR to 70.56%. Furthermore, we introduce an Audio Behaviour Analysis Engine that extracts syllabic speaking rate, pause frequency, "
-        "root-mean-square (RMS) energy, and fundamental frequency (F0) intonation to generate structured behavioral profiles. The full system is deployed "
-        "as an Apple Silicon accelerated microservice paired with a minimal web application featuring real-time audio waveform visualization."
+        "to 74.42% (75.19% via ensemble fusion) and UAR to 70.85% (70.56% ensemble). Furthermore, we introduce an Audio Behaviour Analysis Engine "
+        "that extracts syllabic speaking rate, pause frequency, root-mean-square (RMS) energy, and fundamental frequency (F0) intonation to generate "
+        "structured behavioral profiles. The full system is deployed as an Apple Silicon accelerated microservice paired with a minimal web application "
+        "featuring real-time audio waveform visualization."
     )
     run_abs_body.font.name = "Times New Roman"
     run_abs_body.font.size = Pt(9.5)
@@ -375,7 +378,7 @@ def build_clean_word_report():
         "from the same speaker appear in both the training and testing partitions, neural models tend to memorize speaker-specific vocal tract "
         "characteristics rather than generalizable emotional features. Consequently, models that report over 90% accuracy in random split "
         "evaluations frequently suffer substantial performance drops when tested on novel speakers. Valid evaluation necessitates strict "
-        "speaker-independent partitions in which test speakers are entirely withheld during training [15], [21], [30]."
+        "speaker-independent partitions in which test speakers are entirely withheld during training [15], [21]."
     )
 
     add_subsec_heading("1.2 Indic and Low-Resource Language Representation")
@@ -383,7 +386,7 @@ def build_clean_word_report():
         "Most accessible SER benchmarks rely on English (e.g., IEMOCAP [28], RAVDESS [18], CREMA-D [17], SAVEE [19], TESS [20]) or German (e.g., EMO-DB) [16]. "
         "Indic languages, spoken by over 1.4 billion individuals, remain underrepresented in speech research [1], [3], [22], [23]. Hindi exhibits "
         "distinctive phonological properties, including phonemic vowel length contrasts, retroflex consonants, and syllable-timed stress patterns, "
-        "which diverge from English speech dynamics [2], [4], [5]. Establishing whether pre-trained English acoustic models transfer to Hindi speech, "
+        "which diverge from English speech dynamics [3], [4], [5]. Establishing whether pre-trained English acoustic models transfer to Hindi speech, "
         "and measuring the quantitative improvement achievable through supervised adaptation, is essential for multilingual affective computing [1], [18], [22]."
     )
 
@@ -415,7 +418,7 @@ def build_clean_word_report():
     # --- Section 2: Literature Survey ---
     add_sec_heading("2. Related Work & Literature Survey")
     add_body_p(
-        "This investigation synthesizes 39 peer-reviewed publications across four core theoretical domains:"
+        "This investigation synthesizes 30 peer-reviewed publications across four core theoretical domains:"
     )
 
     add_subsec_heading("2.1 Indic and Hindi Speech Emotion Recognition")
@@ -423,12 +426,8 @@ def build_clean_word_report():
         "Early speech emotion recognition research in India relied predominantly on small private datasets evaluated with conventional "
         "classifiers such as Support Vector Machines (SVM) and Multi-Layer Perceptrons [4], [16]. Kotian and Singh (2026) [1] demonstrated "
         "that concatenating prosodic-behavioral descriptors (speaking rate, pitch perturbation, pause ratio, and energy dynamics) with spectral "
-        "features increased classification accuracy to 83.9% and Macro-F1 to 0.81 on Hindi speech. In a subsequent benchmarking study, "
-        "Kotian and Singh (2026) [2] compared classical, deep learning, and transformer architectures, finding that CNN-BiLSTM networks "
-        "provided an optimal balance of accuracy and computational efficiency for Hindi speech under constrained sample sizes."
-    )
-    add_body_p(
-        "Chauhan, Sharma, and Varma (2023) [3] introduced the MNITJ-SEHSD database, standardizing an Indic emotion corpus and highlighting acoustic overlap "
+        "features enhanced classification accuracy and macro-F1 on Hindi speech under challenging acoustic conditions. Chauhan, Sharma, and "
+        "Varma (2023) [3] introduced the MNITJ-SEHSD database, standardizing an Indic emotion corpus and highlighting acoustic overlap "
         "between anger and disgust resulting from shared high vocal intensity. Kawade and Jagtap (2024) [5] evaluated cross-lingual acoustic modeling "
         "across Indian speech corpora, demonstrating the effectiveness of combining multiple spectral, temporal, and voice quality descriptors with deep "
         "convolutional neural networks. Rathnayake et al. (2026) [22] and Alam Monisha and Sultana (2022) [23] provided comprehensive surveys on the unique "
@@ -439,6 +438,8 @@ def build_clean_word_report():
     add_body_p(
         "Self-supervised learning has established powerful baseline representations for speech tasks. Models such as Wav2Vec 2.0 (Baevski et al., 2020) [9] "
         "and HuBERT (Hsu et al., 2021) [8] learn representations from thousands of hours of unlabeled audio through contrastive loss or masked cluster prediction. "
+        "Yang et al. (2021) [2] introduced the SUPERB benchmark, establishing standard evaluation methodologies for speech representation learning and demonstrating "
+        "that learnable layer-weighted combinations of intermediate representations consistently outperform fixed top-layer embeddings across diverse speech classification tasks. "
         "Pepino, Riera, and Ferrer (2021) [27] and Sun et al. (2024) [30] demonstrated the efficacy of fine-tuning pre-trained representations for downstream "
         "emotion recognition, while Wang and Yang (2025) [14] integrated fine-tuned Wav2vec 2.0 with neural controlled differential equation classifiers. "
         "However, recent studies by Ma et al. on emotion2vec [6] and Chen et al. on BEATs [7] demonstrate that standard speech models optimize for phonetic "
@@ -460,16 +461,17 @@ def build_clean_word_report():
         "Goel, Hira, and Gupta (2024) [21] examined the challenge of unseen speaker generalization in SER, demonstrating that standard random train/test splits "
         "cause neural models to overfit speaker identity rather than true affective cues. Hashem, Arif, and Alghamdi (2023) [15] and Akçay and Oğuz (2020) [16] "
         "conducted systematic reviews detailing how cross-corpus evaluation protocols reveal severe performance degradation when models encounter novel recording environments. "
-        "Wagner et al. (2018) [25] and Latif et al. (2023) [26] surveyed deep representation learning paradigms, showing that disentangling speaker identity "
-        "from affective prosody remains essential for robust real-world deployment."
+        "Wagner et al. (2018) [25] empirically evaluated hand-crafted features versus learned representations across paralinguistic tasks, finding that acoustic descriptors "
+        "provide vital complementarity to deep representations, while Latif et al. (2023) [26] surveyed deep representation learning paradigms for disentangling speaker "
+        "identity from affective prosody."
     )
 
     # --- Section 3: Dataset Ecosystem ---
     add_sec_heading("3. Dataset Ecosystem & Partitioning Protocols")
     add_body_p(
-        "To ensure rigorous evaluation, five distinct corpora comprising 12,180 audio files were curated, preprocessed, and partitioned: "
+        "To ensure rigorous evaluation, five distinct corpora comprising 12,180 standardized audio files were curated, preprocessed, and partitioned: "
         "CREMA-D [17] (7,442 utterances, 91 actors), RAVDESS [18] (1,440 utterances, 24 actors), SAVEE [19] (480 utterances, 4 actors), "
-        "TESS [20] (2,800 utterances, 2 actresses), and Hindi SER [1], [2], [3] (862 utterances, 25 native speakers). "
+        "TESS [20] (2,800 utterances, 2 actresses), and Hindi SER [1], [3] (862 utterances, 25 native speakers curated from Project Vaani, Indian TTS Emotion, and RapidOrc). "
         "Audio files were resampled to a standardized format: 16,000 Hz sampling rate, single-channel (mono), 16-bit PCM WAV, with Voice Activity "
         "Detection (VAD) silence trimming and amplitude normalization. Table 1 summarizes the dataset ecosystem."
     )
@@ -520,7 +522,20 @@ def build_clean_word_report():
                 p_run.font.bold = True
             set_cell_margins(cell, top=60, bottom=60, left=80, right=80)
 
-    doc.add_paragraph().paragraph_format.space_after = Pt(4)
+    p_t1_note = doc.add_paragraph()
+    p_t1_note.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p_t1_note.paragraph_format.space_before = Pt(2)
+    p_t1_note.paragraph_format.space_after = Pt(6)
+    run_t1_note = p_t1_note.add_run(
+        "*Note: Across the four English source corpora, raw clips total 12,162 (CREMA-D: 7,442; RAVDESS: 1,440; SAVEE: 480; TESS: 2,800). "
+        "After standardizing onto the 6 shared canonical classes (neutral, happy, sad, angry, fear, disgust) and excluding non-shared classes "
+        "(such as calm and surprise, totaling 844 clips), the English multi-corpus pool contains 11,318 audio clips. Combined with the 862 native "
+        "Hindi clips (5 classes), the entire evaluation framework encompasses 12,180 standardized audio clips."
+    )
+    run_t1_note.font.name = "Times New Roman"
+    run_t1_note.font.size = Pt(8.0)
+    run_t1_note.font.italic = True
+    run_t1_note.font.color.rgb = BLACK
 
     # --- Section 4: Methodology ---
     add_sec_heading("4. Methodology & Model Architecture")
@@ -534,8 +549,8 @@ def build_clean_word_report():
 
     add_subsec_heading("4.1 Learnable Weighted Layer Pooling")
     add_body_p(
-        "Rather than using mean pooling over time and layers or relying exclusively on the final transformer output, we implement Learnable "
-        "Weighted Layer Pooling across all L = 12 transformer hidden representations h_t^(l) in R^D (l in {1, ..., L}):"
+        "Following the weighted layer pooling formulation established by the SUPERB benchmark (Yang et al., 2021) [2] and Pepino et al. (2021) [27], "
+        "we adopt a learnable layer-wise weighted sum across all L = 12 transformer encoder representations h_t^(l) in R^D (l in {1, ..., L}):"
     )
 
     # Equation 1: Learnable Weighted Layer Pooling
@@ -595,83 +610,60 @@ def build_clean_word_report():
 
     add_body_p(
         "Here, w in R^L is a learnable parameter vector initialized uniformly (w_l = 0), and alpha in R^L represents the normalized layer weighting. "
-        "After computing the layer-weighted sequence e_t, temporal statistics (mean and standard deviation) are concatenated:"
+        "After computing the layer-weighted sequence e_t, masked temporal mean pooling is applied over valid audio frames:"
     )
 
-    # Equation 2: Temporal Statistical Pooling
+    # Equation 2: Masked Temporal Mean Pooling
     omml_eq2 = '''
     <m:oMathPara xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math">
       <m:oMath>
-        <m:r><m:rPr><m:sty m:val="b"/></m:rPr><m:t>r</m:t></m:r>
+        <m:r><m:rPr><m:sty m:val="b"/></m:rPr><m:t>z</m:t></m:r>
         <m:r><m:t> = </m:t></m:r>
-        <m:d>
-          <m:dPr><m:begChr m:val="["/><m:endChr m:val="]"/></m:dPr>
-          <m:e>
-            <m:f>
-              <m:num><m:r><m:t>1</m:t></m:r></m:num>
-              <m:den><m:r><m:t>T</m:t></m:r></m:den>
-            </m:f>
+        <m:f>
+          <m:num><m:r><m:t>1</m:t></m:r></m:num>
+          <m:den>
             <m:nary>
               <m:naryPr><m:chr m:val="∑"/><m:limLoc m:val="undOvr"/></m:naryPr>
               <m:sub><m:r><m:t>t=1</m:t></m:r></m:sub>
               <m:sup><m:r><m:t>T</m:t></m:r></m:sup>
               <m:e>
                 <m:sSub>
-                  <m:e><m:r><m:rPr><m:sty m:val="b"/></m:rPr><m:t>e</m:t></m:r></m:e>
+                  <m:e><m:r><m:t>m</m:t></m:r></m:e>
                   <m:sub><m:r><m:t>t</m:t></m:r></m:sub>
                 </m:sSub>
               </m:e>
             </m:nary>
-            <m:r><m:t>   ‖   </m:t></m:r>
-            <m:rad>
-              <m:radPr><m:degHide m:val="1"/></m:radPr>
-              <m:deg/>
-              <m:e>
-                <m:f>
-                  <m:num><m:r><m:t>1</m:t></m:r></m:num>
-                  <m:den><m:r><m:t>T</m:t></m:r></m:den>
-                </m:f>
-                <m:nary>
-                  <m:naryPr><m:chr m:val="∑"/><m:limLoc m:val="undOvr"/></m:naryPr>
-                  <m:sub><m:r><m:t>t=1</m:t></m:r></m:sub>
-                  <m:sup><m:r><m:t>T</m:t></m:r></m:sup>
-                  <m:e>
-                    <m:sSup>
-                      <m:e>
-                        <m:d>
-                          <m:dPr><m:begChr m:val="("/><m:endChr m:val=")"/></m:dPr>
-                          <m:e>
-                            <m:sSub>
-                              <m:e><m:r><m:rPr><m:sty m:val="b"/></m:rPr><m:t>e</m:t></m:r></m:e>
-                              <m:sub><m:r><m:t>t</m:t></m:r></m:sub>
-                            </m:sSub>
-                            <m:r><m:t> - </m:t></m:r>
-                            <m:bar>
-                              <m:barPr><m:pos m:val="top"/></m:barPr>
-                              <m:e><m:r><m:rPr><m:sty m:val="b"/></m:rPr><m:t>e</m:t></m:r></m:e>
-                            </m:bar>
-                          </m:e>
-                        </m:d>
-                      </m:e>
-                      <m:sup><m:r><m:t>2</m:t></m:r></m:sup>
-                    </m:sSup>
-                  </m:e>
-                </m:nary>
-              </m:e>
-            </m:rad>
+          </m:den>
+        </m:f>
+        <m:nary>
+          <m:naryPr><m:chr m:val="∑"/><m:limLoc m:val="undOvr"/></m:naryPr>
+          <m:sub><m:r><m:t>t=1</m:t></m:r></m:sub>
+          <m:sup><m:r><m:t>T</m:t></m:r></m:sup>
+          <m:e>
+            <m:sSub>
+              <m:e><m:r><m:t>m</m:t></m:r></m:e>
+              <m:sub><m:r><m:t>t</m:t></m:r></m:sub>
+            </m:sSub>
+            <m:sSub>
+              <m:e><m:r><m:rPr><m:sty m:val="b"/></m:rPr><m:t>e</m:t></m:r></m:e>
+              <m:sub><m:r><m:t>t</m:t></m:r></m:sub>
+            </m:sSub>
           </m:e>
-        </m:d>
+        </m:nary>
         <m:r><m:t> ∈ </m:t></m:r>
         <m:sSup>
           <m:e><m:r><m:t>ℝ</m:t></m:r></m:e>
-          <m:sup><m:r><m:t>2D</m:t></m:r></m:sup>
+          <m:sup><m:r><m:t>D</m:t></m:r></m:sup>
         </m:sSup>
       </m:oMath>
     </m:oMathPara>
     '''
     add_omml_equation_block(doc, omml_eq2, "2")
 
-    add_body_p("This representation is projected through a linear classification probe:")
+    add_body_p(
+        "where m_t in {0, 1} denotes the attention mask indicating valid audio frames. "
+        "The resulting pooled representation z in R^D (D = 768) is projected through a linear classification probe:"
+    )
 
     # Equation 3: Linear Classification Probe
     omml_eq3 = '''
@@ -689,7 +681,7 @@ def build_clean_word_report():
               <m:e><m:r><m:rPr><m:sty m:val="b"/></m:rPr><m:t>W</m:t></m:r></m:e>
               <m:sub><m:r><m:t>c</m:t></m:r></m:sub>
             </m:sSub>
-            <m:r><m:rPr><m:sty m:val="b"/></m:rPr><m:t>r</m:t></m:r>
+            <m:r><m:rPr><m:sty m:val="b"/></m:rPr><m:t>z</m:t></m:r>
             <m:r><m:t> + </m:t></m:r>
             <m:sSub>
               <m:e><m:r><m:rPr><m:sty m:val="b"/></m:rPr><m:t>b</m:t></m:r></m:e>
@@ -701,6 +693,12 @@ def build_clean_word_report():
     </m:oMathPara>
     '''
     add_omml_equation_block(doc, omml_eq3, "3")
+
+    add_body_p(
+        "where W_c in R^(C x D) and b_c in R^C (with C = 6 emotion classes). "
+        "With the backbone frozen, the total trainable parameters comprise only the 12 layer scalar weights and the linear probe: "
+        "12 + 768 x 6 + 6 = 4,626 parameters (representing ~0.005% of the total network capacity)."
+    )
 
     add_subsec_heading("4.2 Audio Behaviour Engine Telemetry")
     add_body_p(
@@ -898,7 +896,7 @@ def build_clean_word_report():
         "Architecturally, this model employs a frozen self-supervised HuBERT-Base backbone (94.7M parameters) coupled with our Learnable Weighted "
         "Layer Pooling module and a linear classification head. Only 4,626 parameters were trained, representing approximately 0.005% of the total network parameters. "
         "Freezing the backbone avoids catastrophic forgetting of generic acoustic representations while providing an efficient linear probe evaluation of the pre-trained "
-        "features across diverse corpora. Table 2 reports the benchmark leaderboard."
+        "features across diverse corpora. Table 2 reports the benchmark leaderboard alongside sub-cohort breakdowns on unseen test partitions."
     )
 
     # Table 2: Multi-Corpus Leaderboard (Centered Caption, Left Text, Center Numbers)
@@ -913,12 +911,14 @@ def build_clean_word_report():
     p_cap2_run.font.color.rgb = BLACK
 
     tbl2_data = [
-        ["Model Architecture", "Test Accuracy", "Macro-F1", "Test UAR", "Chance Level"],
-        ["Universal HuBERT (Frozen Transfer + Head)", "68.31%", "0.6779", "68.61%", "16.67%"],
-        ["Soft-Voting Multi-Corpus Ensemble", "67.43%", "0.6692", "67.80%", "16.67%"],
-        ["Wav2Vec2 Base (Direct Combined)", "63.26%", "0.6215", "63.50%", "16.67%"],
-        ["MFCC + LSTM Multi-Corpus Baseline", "44.15%", "0.4120", "43.82%", "16.67%"],
-        ["Random Chance Baseline", "16.67%", "0.1667", "16.67%", "16.67%"],
+        ["Model / Evaluation Strategy", "Test Accuracy", "Macro-F1", "Test UAR", "Status / Scope"],
+        ["Universal HuBERT (Frozen Transfer + Head)", "68.31%", "0.6779", "68.61%", "Unified Champion (4.1x chance)"],
+        ["Zero-Shot CREMA-D HuBERT Baseline", "60.61%", "0.6031", "60.54%", "Baseline Multi-Corpus Benchmark"],
+        ["Sub-Cohort: CREMA-D (1,060 clips, 13 actors)", "72.45%", "0.7232", "72.03%", "Unseen Diverse Actors (IDs 1079-1091)"],
+        ["Sub-Cohort: TESS (360 clips, 30 words)", "68.89%", "0.6771", "68.89%", "Unseen Vocabulary Words"],
+        ["Sub-Cohort: RAVDESS (176 clips, 4 actors)", "52.27%", "0.5018", "51.14%", "Unseen Professional Actors (21-24)"],
+        ["Sub-Cohort: SAVEE (105 clips, 1 actor)", "51.43%", "0.3999", "38.10%", "Unseen British Actor (KL)"],
+        ["Random Chance Baseline", "16.67%", "0.1667", "16.67%", "Theoretical 6-Class Floor"],
     ]
     t2 = doc.add_table(rows=len(tbl2_data), cols=len(tbl2_data[0]))
     t2.alignment = WD_TABLE_ALIGNMENT.CENTER
@@ -930,8 +930,8 @@ def build_clean_word_report():
             p = cell.paragraphs[0]
             p.paragraph_format.space_before = Pt(2)
             p.paragraph_format.space_after = Pt(2)
-            # Alignment: column 0 left-aligned, columns 1-4 centered
-            if c_idx == 0:
+            # Alignment: column 0 left-aligned, columns 1-3 centered, column 4 left-aligned
+            if c_idx in [0, 4]:
                 p.alignment = WD_ALIGN_PARAGRAPH.LEFT
             else:
                 p.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -956,10 +956,10 @@ def build_clean_word_report():
     )
 
     # 4 In-Domain Evaluations: Multi-line detailed points -> JUSTIFIED
-    add_bullet_point("• CREMA-D (91 Actors, 13 Unseen Test Actors): ", "Soft-Voting Top-5 Ensemble achieved 75.57% Accuracy, 0.7594 Macro-F1, and 75.40% UAR. HuBERT with Learnable Layer Pooling reached 71.98% Accuracy, outperforming Wav2Vec2 Base (69.25%) and MFCC+CNN-BiLSTM (62.80%). Wav2Vec2-XLS-R-300M (Frozen Baseline) reached only 24.43% Accuracy (near chance level of 16.67%).", justify=True)
-    add_bullet_point("• RAVDESS (24 Actors, Actors 21 to 24 Unseen): ", "Transfer Ensemble achieved 73.75% Accuracy and 0.7207 Macro-F1. Transfer from CREMA-D pre-training to RAVDESS produced 72.92% Accuracy, compared to 32.50% when trained from scratch on RAVDESS alone. Wav2Vec2-XLS-R-300M collapsed to 13.33% Accuracy (barely above chance level of 12.50%).", justify=True)
-    add_bullet_point("• SAVEE (4 Actors, Actor KL Unseen): ", "Transfer ensemble reached 51.67% Accuracy and 0.3860 Macro-F1, doubling the scratch baseline of 25.0% which suffered from vocal tract overfitting. Wav2Vec2-XLS-R-300M achieved 12.50% Accuracy (chance level is 14.29%).", justify=True)
-    add_bullet_point("• TESS (2 Actresses, 200 Words, 30 Unseen Target Words): ", "All SSL foundation models achieved 100.00% Accuracy and 1.0000 Macro-F1. However, this result reflects the inherent ceiling effect and low acoustic complexity of the TESS dataset (only 2 speakers, carrier phrases, pristine studio acoustics) rather than architectural invincibility.", justify=True)
+    add_bullet_point("• CREMA-D (91 Actors, 13 Unseen Test Actors): ", "Soft-Voting Top-5 Ensemble achieved 75.57% Accuracy, 0.7594 Macro-F1, and 75.61% UAR. HuBERT with Learnable Layer Pooling reached 71.98% Accuracy (0.7209 F1), outperforming Wav2Vec2 Base (69.25%) and MFCC+CNN-BiLSTM (63.30%). Wav2Vec2-XLS-R-300M (Frozen Baseline) reached only 24.43% Accuracy (near chance level of 16.67%).", justify=True)
+    add_bullet_point("• RAVDESS (24 Actors, Actors 21 to 24 Unseen): ", "Transfer Ensemble achieved 73.75% Accuracy, 0.7207 Macro-F1, and 72.27% UAR. Transfer from CREMA-D pre-training to RAVDESS produced 72.92% Accuracy, compared to 32.50% when trained from scratch using HuBERT alone. Wav2Vec2-XLS-R-300M collapsed to 13.33% Accuracy (barely above chance level of 12.50%).", justify=True)
+    add_bullet_point("• SAVEE (4 Actors, Actor KL Unseen): ", "Transfer ensemble reached 51.67% Accuracy, 0.3860 Macro-F1, and 40.48% UAR, substantially surpassing the HuBERT scratch baseline of 25.83% (0.0795 F1) which suffered from vocal tract overfitting. Note: In-domain SAVEE evaluation is conducted on a single unseen British actor (Actor KL, 120 clips), introducing higher empirical variance.", justify=True)
+    add_bullet_point("• TESS (2 Actresses, 200 Words, 30 Unseen Target Words): ", "All in-domain SSL foundation models achieved 100.00% Accuracy and 1.0000 Macro-F1 on prompt-independent splits. When evaluated zero-shot with the multi-corpus Universal HuBERT model, TESS performance settles at 68.89%, illustrating that the 100% in-domain score reflects the constrained acoustic complexity of the two-speaker studio recording rather than infinite generalization.", justify=True)
 
     # Table 3: In-Domain Benchmark Leaderboard (Centered Caption, Left Text, Center Numbers)
     p_cap3 = doc.add_paragraph()
@@ -974,11 +974,12 @@ def build_clean_word_report():
 
     tbl3_data = [
         ["Dataset", "Best Model", "Accuracy", "Macro-F1", "UAR", "Chance"],
-        ["CREMA-D", "Top-5 Soft-Voting Ensemble", "75.57%", "0.7594", "75.40%", "16.67%"],
-        ["RAVDESS", "Transfer Ensemble (CREMA-D)", "73.75%", "0.7207", "73.12%", "12.50%"],
-        ["SAVEE", "Transfer Ensemble (CREMA-D)", "51.67%", "0.3860", "50.45%", "14.29%"],
-        ["TESS", "Universal HuBERT / W2V2", "100.00%", "1.0000", "100.00%", "14.29%"],
-        ["Hindi SER", "CNN-BiLSTM Specialist", "75.19%", "0.7018", "70.56%", "20.00%"],
+        ["CREMA-D", "Top-5 Soft-Voting Ensemble", "75.57%", "0.7594", "75.61%", "16.67%"],
+        ["RAVDESS", "Transfer Ensemble (CREMA-D)", "73.75%", "0.7207", "72.27%", "12.50%"],
+        ["SAVEE", "Transfer Ensemble (CREMA-D)", "51.67%", "0.3860", "40.48%", "14.29%"],
+        ["TESS", "TESS-only HuBERT / W2V2", "100.00%", "1.0000", "100.00%", "14.29%"],
+        ["Hindi SER", "CNN-BiLSTM Specialist", "74.42%", "0.7201", "70.85%", "20.00%"],
+        ["Hindi SER", "Top-2 Ensemble (CNN-BiLSTM + LSTM)", "75.19%", "0.7136", "70.56%", "20.00%"],
         ["Combined", "Universal HuBERT (Frozen)", "68.31%", "0.6779", "68.61%", "16.67%"],
     ]
     t3 = doc.add_table(rows=len(tbl3_data), cols=len(tbl3_data[0]))
@@ -1005,7 +1006,20 @@ def build_clean_word_report():
                 p_run.font.bold = True
             set_cell_margins(cell, top=60, bottom=60, left=80, right=80)
 
-    doc.add_paragraph().paragraph_format.space_after = Pt(4)
+    p_t3_note = doc.add_paragraph()
+    p_t3_note.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p_t3_note.paragraph_format.space_before = Pt(2)
+    p_t3_note.paragraph_format.space_after = Pt(6)
+    run_t3_note = p_t3_note.add_run(
+        "*Note: In the experimental benchmarking configs, emotion2vec+ was evaluated using the facebook/wav2vec2-base proxy architecture "
+        "and BEATs using microsoft/wavlm-base-plus under the unified 768-dimensional transformer feature extraction interface. "
+        "All transformer backbones are Base variants (768 hidden dimensions). On SAVEE, the single-speaker test set (Actor KL) exhibits "
+        "higher variance than multi-speaker test cohorts."
+    )
+    run_t3_note.font.name = "Times New Roman"
+    run_t3_note.font.size = Pt(8.0)
+    run_t3_note.font.italic = True
+    run_t3_note.font.color.rgb = BLACK
 
     add_subsec_heading("6.3 Technical Analysis of Wav2Vec2-XLS-R-300M Failure")
     add_body_p(
@@ -1015,7 +1029,7 @@ def build_clean_word_report():
 
     # 3 Technical Factors: Multi-line detailed explanations -> JUSTIFIED
     add_bullet_point("1. ASR Invariant Pre-training Objective: ", "XLS-R-300M was pre-trained across 128 languages using contrastive masked prediction to extract phonetic content. In cross-lingual speech recognition, speaker-specific pitch variations and emotional intonations are treated as nuisance parameters and filtered out to achieve cross-lingual phonetic invariance. Consequently, the frozen representations suppress paralinguistic and affective cues.", justify=True)
-    add_bullet_point("2. Top-Layer Emotional Depletion: ", "Unlike our HuBERT framework which incorporates learnable layer pooling across intermediate depths, the frozen XLS-R baseline extracted features exclusively from its 24th (final) layer. As demonstrated in Section 7.2, top transformer layers specialize in discrete phonetic tokens and exhibit lower emotional sensitivity than intermediate layers.", justify=True)
+    add_bullet_point("2. Top-Layer Emotional Depletion: ", "Unlike our HuBERT framework which incorporates learnable layer pooling across intermediate depths, the frozen XLS-R baseline extracted features exclusively from its 24th (final) layer. This outcome is consistent with layer-probing findings by Pasad, Chou, and Livescu (2021) [24], which demonstrated that paralinguistic and emotional information concentrates within intermediate transformer representations before upper layers specialize toward phonetic invariance.", justify=True)
     add_bullet_point("3. Capacity-to-Sample Mismatch: ", "Projecting a frozen 1024-dimensional representation from a 317M-parameter model onto tiny target datasets (e.g., 384 SAVEE clips or 960 RAVDESS clips) without layer-wise adaptation or fine-tuning creates an acute representation mismatch that prevents effective linear separation.", justify=True)
 
     # --- Section 7: Ablation Studies ---
@@ -1023,11 +1037,13 @@ def build_clean_word_report():
 
     add_subsec_heading("7.1 The Speaker Diversity Effect")
     add_body_p(
-        "Comparing performance across SAVEE (2 training actors), RAVDESS (16 training actors), and CREMA-D (64 training actors) indicates a consistent "
-        "relationship between speaker cohort size and generalization capability. Models trained from scratch on SAVEE collapsed to 25.83% test accuracy "
-        "because attention mechanisms memorized the idiosyncratic formants of the two training speakers. Expanding the cohort to 16 actors on RAVDESS "
-        "elevated scratch accuracy to 68.75%, while CREMA-D with 64 training actors reached 75.57% accuracy. Pre-training on broader multi-actor cohorts "
-        "enables the network to separate speaker identity from emotional prosody."
+        "Comparing performance across SAVEE (3 training actors), RAVDESS (20 training actors), and CREMA-D (78 training actors) demonstrates a consistent "
+        "relationship between speaker cohort size and generalization capability on strictly unseen test speakers. Evaluating HuBERT models trained from "
+        "scratch across these datasets reveals that on SAVEE (3 training speakers), HuBERT achieved only 25.83% test accuracy (Macro-F1 0.0795) due to vocal tract "
+        "overfitting on the limited speaker cohort. Expanding the training cohort to 20 actors in RAVDESS elevated scratch HuBERT accuracy to 32.50% (and 68.75% for the "
+        "scratch ensemble). In CREMA-D, with 78 training actors, HuBERT from scratch reached 71.98% accuracy (and 75.57% for the ensemble). This empirical gradient "
+        "confirms the Speaker Diversity Law: pre-training across broad multi-speaker cohorts is critical for neural models to disentangle emotional prosody "
+        "from individual speaker vocal tract geometry."
     )
 
     add_figure("fig2_layer_weights.png", "Figure 3: Empirical Layer Weight Distribution in Learnable Weighted Layer Pooling (Layers 9 to 11 account for 31.95%, total sum = 100.00%).", width_in=5.8)
@@ -1104,8 +1120,10 @@ def build_clean_word_report():
     add_subsec_heading("7.3 Cross-Lingual Adaptation to Indic Hindi Speech")
     add_body_p(
         "Evaluating the English-trained Universal HuBERT model zero-shot on the native Hindi test split yielded 27.62% accuracy and 31.76% UAR "
-        "(above the 25.0% chance level). While cross-lingual transfer occurred, linguistic differences limited precision. Training the specialized "
-        "CNN-BiLSTM directly on the Hindi training split increased accuracy to 75.19% and UAR to 70.56%, an absolute improvement of 47.57 percentage points. "
+        "(exceeding the 20.00% 5-class random chance baseline). While cross-lingual transfer occurred, linguistic differences limited precision. "
+        "Supervised training of the specialized CNN-BiLSTM architecture directly on the Hindi training split achieved 74.42% test accuracy, "
+        "0.7201 Macro-F1, and 70.85% UAR (with the Top-2 ensemble of CNN-BiLSTM + LSTM reaching 75.19% accuracy and 70.56% UAR). This represents "
+        "an absolute improvement of 46.80 percentage points (47.57 points for the ensemble) over zero-shot transfer. "
         "Figure 4 illustrates this comparison, and Figure 5 displays the corresponding normalized confusion matrix."
     )
 
@@ -1134,7 +1152,7 @@ def build_clean_word_report():
 
     # 2 Deployment Components: Multi-line detailed descriptions -> JUSTIFIED
     add_bullet_point("• Frontend UI (Next.js / TypeScript): ", "Minimal white-mode interface featuring a real-time Web Audio API frequency visualizer (AudioWaveformVisualizer) connected to live microphone input and audio playback.", justify=True)
-    add_bullet_point("• Backend Microservice (FastAPI): ", "Model registry serving the Hindi Specialist (CNN-BiLSTM) and Universal SER models with Metal Performance Shaders (mps) hardware acceleration (38.4 ms average inference latency).", justify=True)
+    add_bullet_point("• Backend Microservice (FastAPI): ", "Model registry serving the Hindi Specialist (CNN-BiLSTM) and Universal SER models with hardware acceleration, achieving 19.9 ms inference latency per clip for the lightweight CNN-BiLSTM specialist and 191.4 ms for the 12-layer Universal HuBERT model.", justify=True)
 
     # --- Section 10: Discussion ---
     add_sec_heading("10. Discussion & Limitations")
@@ -1154,17 +1172,17 @@ def build_clean_word_report():
     )
 
     # 4 Conclusions: Multi-line detailed conclusions -> JUSTIFIED
-    add_bullet_point("1. Learnable Weighted Layer Pooling: ", "Demonstrates that intermediate transformer layers (Layers 9 to 11) capture the highest concentration of emotional prosody (31.95%), outperforming top-layer pooling.", justify=True)
+    add_bullet_point("1. Learnable Weighted Layer Pooling: ", "Demonstrates that intermediate transformer layers (Layers 9 to 11) capture the highest concentration of emotional prosody (31.95%), retaining stronger affective salience than early acoustic representations.", justify=True)
     add_bullet_point("2. Speaker Diversity: ", "Essential for generalization: models trained on minimal speaker cohorts overfit speaker identity, whereas pre-training across larger cohorts supports speaker-independent evaluation.", justify=True)
-    add_bullet_point("3. Cross-Lingual Transfer: ", "English pre-trained models transfer moderately above chance to native Hindi speech, but supervised adaptation using specialized CNN-BiLSTM networks achieves 75.19% accuracy.", justify=True)
+    add_bullet_point("3. Cross-Lingual Transfer: ", "English pre-trained models transfer moderately above chance (27.62% vs. 20.00% floor) to native Hindi speech, but supervised adaptation using specialized CNN-BiLSTM networks achieves 74.42% accuracy (75.19% via ensemble fusion).", justify=True)
     add_bullet_point("4. Behavioural Metrics: ", "Combining discrete emotion classification with continuous acoustic measurements (speech rate, pause metrics, energy, and pitch) provides a more comprehensive vocal assessment.", justify=True)
 
     # --- Section: References (LEFT-ALIGNED to avoid ugly justified gaps in citations) ---
     add_sec_heading("References")
 
     references = [
-        '[1] S. Kotian and S. Singh, "Evaluating the Impact of Behavioural Features on Hindi Speech Emotion Recognition: A Multimodal Deep Learning Approach," Journal of Tianjin University Science and Technology, vol. 59, no. 2, pp. 1–10, Feb. 2026, doi: 10.5281/zenodo.18797014.',
-        '[2] S. Kotian and S. Singh, "Benchmarking Classical, Deep Learning, and Transformer Models for Hindi Speech Emotion Recognition: A Multimodal Analysis," Interdisciplinary Journal of AI, Machine Learning & Data Science, vol. 1, no. 1, art. e001, pp. 1–24, Feb. 2026, doi: 10.66261/fetdj998. [Online]. Available: https://ijaimlds.com/ijaimlds/article/view/9.',
+        '[1] S. Kotian and S. Singh, "Evaluating the Impact of Behavioural Features on Hindi Speech Emotion Recognition: A Multimodal Deep Learning Approach," Journal of Tianjin University Science and Technology, vol. 59, no. 2, pp. 147–165, Feb. 2026, doi: 10.5281/zenodo.18797014.',
+        '[2] S.-w. Yang, P.-H. Chi, Y.-S. Chuang, C.-I. J. Lai, K. Lakhotia, Y. Y. Lin, A. T. Liu, J. Shi, X. Chang, G.-T. Lin et al., "SUPERB: Speech Processing Universal PERformance Benchmark," in Proc. Interspeech 2021, Brno, Czech Republic, 2021, pp. 1194–1198, doi: 10.21437/Interspeech.2021-1775.',
         '[3] K. Chauhan, K. K. Sharma, and T. Varma, "MNITJ-SEHSD: A Hindi Emotional Speech Database," in Proc. 2023 International Conference on Communication, Circuits, and Systems (IC3S), Bhubaneswar, India, 2023, pp. 1–6, doi: 10.1109/IC3S57698.2023.10169497.',
         '[4] P. Mehra and S. K. Verma, "BERIS: An mBERT-based Emotion Recognition Algorithm from Indian Speech," ACM Transactions on Asian and Low-Resource Language Information Processing, vol. 21, no. 5, art. 106, pp. 1–19, Apr. 2022, doi: 10.1145/3517195.',
         '[5] R. Kawade and S. Jagtap, "Indian Cross Corpus Speech Emotion Recognition Using Multiple Spectral-Temporal-Voice Quality Acoustic Features and Deep Convolution Neural Network," Revue d\'Intelligence Artificielle, vol. 38, no. 3, pp. 913–927, Jun. 2024, doi: 10.18280/ria.380318.',
@@ -1173,9 +1191,9 @@ def build_clean_word_report():
         '[8] W.-N. Hsu, B. Bolte, Y.-H. H. Tsai, K. Lakhotia, R. Salakhutdinov, and A. Mohamed, "HuBERT: Self-Supervised Speech Representation Learning by Masked Prediction of Hidden Units," IEEE/ACM Transactions on Audio, Speech, and Language Processing, vol. 29, pp. 3451–3460, 2021, doi: 10.1109/TASLP.2021.3122291.',
         '[9] A. Baevski, Y. Zhou, A. Mohamed, and M. Auli, "wav2vec 2.0: A Framework for Self-Supervised Learning of Speech Representations," in Advances in Neural Information Processing Systems (NeurIPS), vol. 33, 2020, pp. 12449–12460.',
         '[10] A. Babu, C. Wang, A. Tjandra, K. Lakhotia, Q. Xu, N. Goyal, K. Singh, P. von Platen, Y. Saraf, J. Pino, A. Baevski, A. Conneau, and M. Auli, "XLS-R: Self-supervised Cross-lingual Speech Representation Learning at Scale," in Proc. Interspeech 2022, Incheon, Korea, 2022, pp. 2278–2282, doi: 10.21437/Interspeech.2022-143.',
-        '[11] J. H. Chowdhury, S. Ramanna, and K. Kotecha, "Speech emotion recognition with light weight deep neural ensemble model using hand crafted features," Scientific Reports, vol. 15, no. 1, art. 11824, pp. 1–14, 2025, doi: 10.1038/s41598-025-95734-z.',
+        '[11] J. H. Chowdhury, S. Ramanna, and K. Kotecha, "Speech emotion recognition with light weight deep neural ensemble model using hand crafted features," Scientific Reports, vol. 15, no. 1, art. 11824, pp. 1–14, 2025, doi: 10.1038/s41598-025-95734-z. [Online]. Available: https://www.nature.com/articles/s41598-025-95734-z.',
         '[12] F. Eyben, K. R. Scherer, B. W. Schuller, J. Sundberg, E. André, C. Busso, L. Y. Devillers, J. Epps, P. Laukka, S. S. Narayanan, and K. P. Truong, "The Geneva Minimalistic Acoustic Parameter Set (GeMAPS) for Voice Research and Affective Computing," IEEE Transactions on Affective Computing, vol. 7, no. 2, pp. 190–202, Apr.–Jun. 2016, doi: 10.1109/TAFFC.2015.2457417.',
-        '[13] B. W. Schuller, A. Batliner, C. Bergler, C. Mascolo, J. Han, I. Lefter, H. Kaya, S. Amiriparian et al., "The INTERSPEECH 2020 Computational Paralinguistics Challenge: Elderly Emotion, Breathing & Masks," in Proc. Interspeech 2020, Shanghai, China, 2020, pp. 2017–2021, doi: 10.21437/Interspeech.2020-32.',
+        '[13] B. W. Schuller, A. Batliner, C. Bergler, E.-M. Messner, A. Hamilton, S. Amiriparian, A. Baird, G. Rizos, M. Schmitt, L. Stappen, H. Baumeister, A. D. MacIntyre, and S. Hantke, "The INTERSPEECH 2020 Computational Paralinguistics Challenge: Elderly Emotion, Breathing & Masks," in Proc. Interspeech 2020, Shanghai, China, 2020, pp. 2042–2046, doi: 10.21437/Interspeech.2020-32.',
         '[14] N. Wang and D. Yang, "Speech emotion recognition using fine-tuned Wav2vec2.0 and neural controlled differential equations classifier," PLoS ONE, vol. 20, no. 2, art. e0318297, pp. 1–13, Feb. 2025, doi: 10.1371/journal.pone.0318297.',
         '[15] A. Hashem, M. Arif, and M. Alghamdi, "Speech emotion recognition approaches: A systematic review," Speech Communication, vol. 154, art. 102974, pp. 1–29, Oct. 2023, doi: 10.1016/j.specom.2023.102974.',
         '[16] M. B. Akçay and K. Oğuz, "Speech emotion recognition: Emotional models, databases, features, preprocessing methods, supporting modalities, and classifiers," Speech Communication, vol. 116, pp. 56–76, Jan. 2020, doi: 10.1016/j.specom.2019.12.001.',
