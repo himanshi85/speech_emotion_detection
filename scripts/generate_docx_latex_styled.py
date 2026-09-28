@@ -371,26 +371,26 @@ def build_clean_word_report():
 
     add_subsec_heading("1.1 The Problem of Speaker Identity Leakage")
     add_body_p(
-        "A critical limitation in existing SER benchmarks is the use of randomized cross-validation [14], [16]. When speech segments "
+        "A critical limitation in existing SER benchmarks is the use of randomized cross-validation [16], [21]. When speech segments "
         "from the same speaker appear in both the training and testing partitions, neural models tend to memorize speaker-specific vocal tract "
         "characteristics rather than generalizable emotional features. Consequently, models that report over 90% accuracy in random split "
         "evaluations frequently suffer substantial performance drops when tested on novel speakers. Valid evaluation necessitates strict "
-        "speaker-independent partitions in which test speakers are entirely withheld during training [15], [30]."
+        "speaker-independent partitions in which test speakers are entirely withheld during training [15], [21], [30]."
     )
 
     add_subsec_heading("1.2 Indic and Low-Resource Language Representation")
     add_body_p(
-        "Most accessible SER benchmarks rely on English (e.g., IEMOCAP, RAVDESS, CREMA-D) or German (e.g., EMO-DB) [16], [28]. "
-        "Indic languages, spoken by over 1.4 billion individuals, remain underrepresented in speech research [1], [3]. Hindi exhibits "
+        "Most accessible SER benchmarks rely on English (e.g., IEMOCAP [28], RAVDESS [18], CREMA-D [17], SAVEE [19], TESS [20]) or German (e.g., EMO-DB) [16]. "
+        "Indic languages, spoken by over 1.4 billion individuals, remain underrepresented in speech research [1], [3], [22], [23]. Hindi exhibits "
         "distinctive phonological properties, including phonemic vowel length contrasts, retroflex consonants, and syllable-timed stress patterns, "
-        "which diverge from English speech dynamics [2], [4]. Establishing whether pre-trained English acoustic models transfer to Hindi speech, "
-        "and measuring the quantitative improvement achievable through supervised adaptation, is essential for multilingual affective computing [1], [18]."
+        "which diverge from English speech dynamics [2], [4], [5]. Establishing whether pre-trained English acoustic models transfer to Hindi speech, "
+        "and measuring the quantitative improvement achievable through supervised adaptation, is essential for multilingual affective computing [1], [18], [22]."
     )
 
     add_subsec_heading("1.3 Integrating Objective Vocal Metrics")
     add_body_p(
         "Standard SER architectures typically output discrete emotion class probabilities, such as P(Happy) = 0.85. However, clinical diagnostic "
-        "applications, tele-counseling, and automated conversational systems benefit from continuous, interpretable acoustic measurements [5], [11]:"
+        "applications, tele-counseling, and automated conversational systems benefit from continuous, interpretable acoustic measurements [5], [11], [12]:"
     )
 
     # 4 Vocal Metrics: Short concise points -> LEFT-ALIGNED
@@ -400,7 +400,7 @@ def build_clean_word_report():
     add_short_list_item("4", "Fundamental Pitch (F0) Variation", "Quantifies dynamic pitch inflection versus flattened vocal affect.")
 
     add_body_p(
-        "Coupling categorical emotion classification with systematic behavioral feature extraction provides a more informative assessment of speech recordings [1], [11]."
+        "Coupling categorical emotion classification with systematic behavioral feature extraction provides a more informative assessment of speech recordings [1], [11], [25]."
     )
 
     add_subsec_heading("1.4 Research Questions (RQ)")
@@ -421,47 +421,55 @@ def build_clean_word_report():
     add_subsec_heading("2.1 Indic and Hindi Speech Emotion Recognition")
     add_body_p(
         "Early speech emotion recognition research in India relied predominantly on small private datasets evaluated with conventional "
-        "classifiers such as Support Vector Machines (SVM) and Multi-Layer Perceptrons [4], [18]. Kotian and Singh (2026) [1] demonstrated "
+        "classifiers such as Support Vector Machines (SVM) and Multi-Layer Perceptrons [4], [16]. Kotian and Singh (2026) [1] demonstrated "
         "that concatenating prosodic-behavioral descriptors (speaking rate, pitch perturbation, pause ratio, and energy dynamics) with spectral "
         "features increased classification accuracy to 83.9% and Macro-F1 to 0.81 on Hindi speech. In a subsequent benchmarking study, "
         "Kotian and Singh (2026) [2] compared classical, deep learning, and transformer architectures, finding that CNN-BiLSTM networks "
         "provided an optimal balance of accuracy and computational efficiency for Hindi speech under constrained sample sizes."
     )
     add_body_p(
-        "Chauhan and Sharma (2023) [3] introduced the MNITJ-SEHSD database, standardizing an Indic emotion corpus and highlighting acoustic overlap "
+        "Chauhan, Sharma, and Varma (2023) [3] introduced the MNITJ-SEHSD database, standardizing an Indic emotion corpus and highlighting acoustic overlap "
         "between anger and disgust resulting from shared high vocal intensity. Kawade and Jagtap (2024) [5] evaluated cross-lingual acoustic modeling "
-        "across Hindi, Marathi, and Tamil, observing that while global pitch trends transfer across languages, syllable timing and vowel nasalization "
-        "require local supervised fine-tuning."
+        "across Indian speech corpora, demonstrating the effectiveness of combining multiple spectral, temporal, and voice quality descriptors with deep "
+        "convolutional neural networks. Rathnayake et al. (2026) [22] and Alam Monisha and Sultana (2022) [23] provided comprehensive surveys on the unique "
+        "acoustic-phonetic challenges and database resources in low-resource Indo-Aryan and Dravidian speech emotion recognition."
     )
 
     add_subsec_heading("2.2 Self-Supervised Speech Representation Models")
     add_body_p(
         "Self-supervised learning has established powerful baseline representations for speech tasks. Models such as Wav2Vec 2.0 (Baevski et al., 2020) [9] "
         "and HuBERT (Hsu et al., 2021) [8] learn representations from thousands of hours of unlabeled audio through contrastive loss or masked cluster prediction. "
+        "Pepino, Riera, and Ferrer (2021) [27] and Sun et al. (2024) [30] demonstrated the efficacy of fine-tuning pre-trained representations for downstream "
+        "emotion recognition, while Wang and Yang (2025) [14] integrated fine-tuned Wav2vec 2.0 with neural controlled differential equation classifiers. "
         "However, recent studies by Ma et al. on emotion2vec [6] and Chen et al. on BEATs [7] demonstrate that standard speech models optimize for phonetic "
-        "invariance, which can suppress emotional cues in upper transformer layers. Probing studies by Pasad et al. (2021) [24] confirmed that acoustic and "
-        "prosodic properties are concentrated within intermediate transformer layers, whereas the final layers focus on lexical identity. These findings motivate "
+        "invariance, which can suppress emotional cues in upper transformer layers. Probing studies by Pasad, Chou, and Livescu (2021) [24] confirmed that acoustic and "
+        "prosodic properties are concentrated within intermediate transformer layers, whereas final layers prioritize lexical alignment. These findings motivate "
         "the Learnable Weighted Layer Pooling approach used in this work."
     )
 
     add_subsec_heading("2.3 Vocal Behavioural Feature Integration")
     add_body_p(
         "Standardized acoustic parameter sets have long provided interpretable metrics for speech analysis. Eyben et al. (2016) defined the Geneva "
-        "Minimalistic Acoustic Parameter Set (eGeMAPS) [12], standardizing 88 acoustic descriptors across frequency, energy, and temporal domains. "
-        "Chowdhury et al. (2025) [11] showed that integrating acoustic prosody with deep learning architectures improved diagnostic reliability in clinical speech evaluations."
+        "Minimalistic Acoustic Parameter Set (GeMAPS) and extended GeMAPS (eGeMAPS) [12], standardizing 88 acoustic descriptors across frequency, energy, and temporal domains. "
+        "Chowdhury, Ramanna, and Kotecha (2025) [11] showed that integrating hand-crafted acoustic prosody with lightweight deep neural ensemble architectures "
+        "improved diagnostic reliability and interpretability across multiple SER benchmarks."
     )
 
     add_subsec_heading("2.4 Speaker Disjoint Protocols and Generalization")
     add_body_p(
-        "Wang and Yang (2025) [14] examined the effect of speaker identity leakage in SER, showing that random train/test splits can inflate accuracy scores "
-        "by up to 34.2 percentage points because classifiers exploit speaker-specific spectral patterns. Hashem et al. (2023) [15] and Akcay and Oguz (2020) [16] "
-        "similarly emphasized that only speaker-disjoint evaluation protocols reflect genuine clinical or real-world capability."
+        "Goel, Hira, and Gupta (2024) [21] examined the challenge of unseen speaker generalization in SER, demonstrating that standard random train/test splits "
+        "cause neural models to overfit speaker identity rather than true affective cues. Hashem, Arif, and Alghamdi (2023) [15] and Akçay and Oğuz (2020) [16] "
+        "conducted systematic reviews detailing how cross-corpus evaluation protocols reveal severe performance degradation when models encounter novel recording environments. "
+        "Wagner et al. (2018) [25] and Latif et al. (2023) [26] surveyed deep representation learning paradigms, showing that disentangling speaker identity "
+        "from affective prosody remains essential for robust real-world deployment."
     )
 
     # --- Section 3: Dataset Ecosystem ---
     add_sec_heading("3. Dataset Ecosystem & Partitioning Protocols")
     add_body_p(
-        "To ensure rigorous evaluation, five distinct corpora comprising 12,180 audio files were curated, preprocessed, and partitioned. "
+        "To ensure rigorous evaluation, five distinct corpora comprising 12,180 audio files were curated, preprocessed, and partitioned: "
+        "CREMA-D [17] (7,442 utterances, 91 actors), RAVDESS [18] (1,440 utterances, 24 actors), SAVEE [19] (480 utterances, 4 actors), "
+        "TESS [20] (2,800 utterances, 2 actresses), and Hindi SER [1], [2], [3] (862 utterances, 25 native speakers). "
         "Audio files were resampled to a standardized format: 16,000 Hz sampling rate, single-channel (mono), 16-bit PCM WAV, with Voice Activity "
         "Detection (VAD) silence trimming and amplitude normalization. Table 1 summarizes the dataset ecosystem."
     )
@@ -1001,7 +1009,7 @@ def build_clean_word_report():
 
     add_subsec_heading("6.3 Technical Analysis of Wav2Vec2-XLS-R-300M Failure")
     add_body_p(
-        "Across all evaluated corpora, Wav2Vec2-XLS-R-300M performed near random chance (13.33% on RAVDESS, 24.43% on CREMA-D, 12.50% on SAVEE, "
+        "Across all evaluated corpora, Wav2Vec2-XLS-R-300M [10] performed near random chance (13.33% on RAVDESS, 24.43% on CREMA-D, 12.50% on SAVEE, "
         "and 19.76% on TESS), underperforming even shallow MFCC baselines. Three primary technical factors explain this behavior:"
     )
 
@@ -1155,36 +1163,36 @@ def build_clean_word_report():
     add_sec_heading("References")
 
     references = [
-        '[1] A. Kotian and S. Singh, "Evaluating the impact of behavioural features on Hindi speech emotion recognition: A multimodal deep learning approach," Journal of Tianjin University Science and Technology, vol. 59, no. 2, pp. 1–10, 2026.',
-        '[2] A. Kotian and S. Singh, "Benchmarking classical, deep learning, and transformer architectures for Hindi speech emotion recognition," Interdisciplinary Journal of AI, Machine Learning & Data Science, vol. 1, no. 1, art. e001, pp. 1–24, 2026. doi: 10.66261/fetdj998.',
-        '[3] H. Chauhan and N. Sharma, "MNITJ-SEHSD: Hindi speech emotion dataset," in Proc. 2023 IEEE 4th International Conference on Computing, Communication and Security (IC3S), Bengaluru, India, 2023, pp. 1–6. doi: 10.1109/IC3S57698.2023.10169497.',
-        '[4] N. Mehra, S. K. Mittal, and S. Kumar, "BERIS: A speech database for Indian languages," ACM Transactions on Asian and Low-Resource Language Information Processing, vol. 21, no. 5, pp. 1–21, 2022. doi: 10.1145/3517195.',
-        '[5] K. B. Kawade and V. S. Jagtap, "Evaluating speech emotion recognition in Indian languages through deep learning," Revue d\'Intelligence Artificielle, vol. 38, no. 3, pp. 883–890, 2024. doi: 10.18280/ria.380318.',
-        '[6] Z. Ma et al., "emotion2vec: Self-supervised pre-training for speech emotion representation," in Findings of the Association for Computational Linguistics: ACL 2024, Bangkok, Thailand, 2024, pp. 15747–15760.',
-        '[7] S. Chen et al., "BEATs: Audio pre-training with acoustic tokenizers," in Proc. 40th International Conference on Machine Learning (ICML), vol. 202, 2023, pp. 5178–5193.',
-        '[8] W.-N. Hsu et al., "HuBERT: Self-supervised speech representation learning by masked prediction of hidden units," IEEE/ACM Transactions on Audio, Speech, and Language Processing, vol. 29, pp. 3451–3460, 2021.',
-        '[9] A. Baevski et al., "wav2vec 2.0: A framework for self-supervised learning of speech representations," in Advances in Neural Information Processing Systems (NeurIPS), vol. 33, 2020, pp. 12449–12460.',
-        '[10] A. Babu et al., "XLS-R: Self-supervised cross-lingual speech representation learning at scale," in Proc. Interspeech 2022, Incheon, Korea, 2022, pp. 2278–2282.',
-        '[11] S. Chowdhury et al., "Speech emotion recognition using acoustic prosody and deep neural architectures," IEEE Access, vol. 13, pp. 11204–11218, 2025.',
-        '[12] F. Eyben et al., "The Geneva Minimalistic Acoustic Parameter Set (GeMAPS) for voice research and affective computing," IEEE Transactions on Affective Computing, vol. 7, no. 2, pp. 190–202, 2016.',
-        '[13] B. W. Schuller et al., "The INTERSPEECH 2020 Computational Paralinguistics Challenge," in Proc. Interspeech 2020, Shanghai, China, 2020, pp. 2017–2021.',
-        '[14] X. Wang and Y. Yang, "Speaker identity leakage and evaluation protocols in speech emotion recognition," IEEE Transactions on Affective Computing, vol. 16, no. 1, pp. 412–425, 2025.',
-        '[15] A. Hashem et al., "Cross-corpus speech emotion recognition: A review and benchmark," Speech Communication, vol. 148, pp. 1–17, 2023.',
-        '[16] M. B. Akcay and K. Oguz, "Speech emotion recognition: Emotional models, databases, features, and classification," Speech Communication, vol. 116, pp. 56–76, 2020.',
-        '[17] H. Cao et al., "CREMA-D: Crowd-sourced emotional multimodal actors dataset," IEEE Transactions on Affective Computing, vol. 5, no. 4, pp. 377–390, 2014.',
-        '[18] S. R. Livingstone and F. A. Russo, "The Ryerson Audio-Visual Database of Emotional Speech and Song (RAVDESS)," PLoS ONE, vol. 13, no. 5, p. e0196391, 2018.',
-        '[19] S. Haq and P. J. B. Jackson, "Multimodal emotion recognition," in Machine Audition: Principles, Algorithms and Systems. IGI Global, 2010, pp. 398–423.',
-        '[20] M. K. Pichora-Fuller and K. Dupuis, "Toronto Emotional Speech Set (TESS)," Scholars Portal Dataverse, vol. 1, 2020.',
-        '[21] A. Vaswani et al., "Attention is all you need," in Advances in Neural Information Processing Systems (NeurIPS), vol. 30, 2017, pp. 5998–6008.',
-        '[22] S. Hochreiter and J. Schmidhuber, "Long short-term memory," Neural Computation, vol. 9, no. 8, pp. 1735–1780, 1997.',
-        '[23] K. He et al., "Deep residual learning for image recognition," in Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2016, pp. 770–778.',
-        '[24] A. Pasad, J.-C. Chou, and K. Livescu, "Layer-wise analysis of a self-supervised speech representation model," in Proc. IEEE Automatic Speech Recognition and Understanding Workshop (ASRU), 2021, pp. 914–921.',
-        '[25] D. P. Kingma and J. Ba, "Adam: A method for stochastic optimization," in Proc. 3rd International Conference on Learning Representations (ICLR), San Diego, CA, 2015.',
-        '[26] I. Loshchilov and F. Hutter, "Decoupled weight decay regularization," in Proc. 7th International Conference on Learning Representations (ICLR), New Orleans, LA, 2019.',
-        '[27] N. Srivastava et al., "Dropout: A simple way to prevent neural networks from overfitting," Journal of Machine Learning Research, vol. 15, no. 1, pp. 1929–1958, 2014.',
-        '[28] C. Busso et al., "IEMOCAP: Interactive emotional dyadic motion capture database," Language Resources and Evaluation, vol. 42, no. 4, pp. 335–359, 2008.',
-        '[29] M. Mauch and S. Dixon, "pYIN: A fundamental frequency estimator using probabilistic threshold distributions," in Proc. IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP), 2014, pp. 659–663.',
-        '[30] L. Sun et al., "Combining acoustic and linguistic features with cross-corpus evaluation for speech emotion recognition," Computer Speech & Language, vol. 84, p. 101569, 2024.'
+        '[1] S. Kotian and S. Singh, "Evaluating the Impact of Behavioural Features on Hindi Speech Emotion Recognition: A Multimodal Deep Learning Approach," Journal of Tianjin University Science and Technology, vol. 59, no. 2, pp. 1–10, 2026. [Online]. Available: https://ijaic.org/',
+        '[2] S. Kotian and S. Singh, "Benchmarking Classical, Deep Learning, and Transformer Models for Hindi Speech Emotion Recognition: A Multimodal Analysis," Interdisciplinary Journal of AI, Machine Learning & Data Science, vol. 1, no. 1, art. e001, pp. 1–24, Feb. 2026, doi: 10.66261/fetdj998.',
+        '[3] K. Chauhan, K. K. Sharma, and T. Varma, "MNITJ-SEHSD: A Hindi Emotional Speech Database," in Proc. 2023 International Conference on Communication, Circuits, and Systems (IC3S), Bhubaneswar, India, 2023, pp. 1–6, doi: 10.1109/IC3S57698.2023.10169497.',
+        '[4] P. Mehra and S. K. Verma, "BERIS: An mBERT-based Emotion Recognition Algorithm from Indian Speech," ACM Transactions on Asian and Low-Resource Language Information Processing, vol. 21, no. 5, art. 106, pp. 1–19, Apr. 2022, doi: 10.1145/3517195.',
+        '[5] R. Kawade and S. Jagtap, "Indian Cross Corpus Speech Emotion Recognition Using Multiple Spectral-Temporal-Voice Quality Acoustic Features and Deep Convolution Neural Network," Revue d\'Intelligence Artificielle, vol. 38, no. 3, pp. 913–927, Jun. 2024, doi: 10.18280/ria.380318.',
+        '[6] Z. Ma, Z. Zheng, J. Ye, J. Li, Z. Gao, S. Zhang, and X. Chen, "emotion2vec: Self-Supervised Pre-Training for Speech Emotion Representation," in Findings of the Association for Computational Linguistics: ACL 2024, Bangkok, Thailand, 2024, pp. 15747–15760, doi: 10.18653/v1/2024.findings-acl.931.',
+        '[7] S. Chen, Y. Wu, C. Wang, S. Liu, D. Tompkins, Z. Chen, and F. Wei, "BEATs: Audio Pre-Training with Acoustic Tokenizers," in Proc. 40th International Conference on Machine Learning (ICML), vol. 202, 2023, pp. 5178–5193.',
+        '[8] W.-N. Hsu, B. Bolte, Y.-H. H. Tsai, K. Lakhotia, R. Salakhutdinov, and A. Mohamed, "HuBERT: Self-Supervised Speech Representation Learning by Masked Prediction of Hidden Units," IEEE/ACM Transactions on Audio, Speech, and Language Processing, vol. 29, pp. 3451–3460, 2021, doi: 10.1109/TASLP.2021.3122291.',
+        '[9] A. Baevski, Y. Zhou, A. Mohamed, and M. Auli, "wav2vec 2.0: A Framework for Self-Supervised Learning of Speech Representations," in Advances in Neural Information Processing Systems (NeurIPS), vol. 33, 2020, pp. 12449–12460.',
+        '[10] A. Babu, C. Wang, A. Tjandra, K. Lakhotia, Q. Xu, N. Goyal, K. Singh, P. von Platen, Y. Saraf, J. Pino, A. Baevski, A. Conneau, and M. Auli, "XLS-R: Self-supervised Cross-lingual Speech Representation Learning at Scale," in Proc. Interspeech 2022, Incheon, Korea, 2022, pp. 2278–2282, doi: 10.21437/Interspeech.2022-143.',
+        '[11] J. H. Chowdhury, S. Ramanna, and K. Kotecha, "Speech emotion recognition with light weight deep neural ensemble model using hand crafted features," Scientific Reports, vol. 15, no. 1, art. 11824, pp. 1–14, 2025, doi: 10.1038/s41598-025-95734-z.',
+        '[12] F. Eyben, K. R. Scherer, B. W. Schuller, J. Sundberg, E. André, C. Busso, L. Y. Devillers, J. Epps, P. Laukka, S. S. Narayanan, and K. P. Truong, "The Geneva Minimalistic Acoustic Parameter Set (GeMAPS) for Voice Research and Affective Computing," IEEE Transactions on Affective Computing, vol. 7, no. 2, pp. 190–202, Apr.–Jun. 2016, doi: 10.1109/TAFFC.2015.2457417.',
+        '[13] B. W. Schuller, A. Batliner, C. Bergler, C. Mascolo, J. Han, I. Lefter, H. Kaya, S. Amiriparian et al., "The INTERSPEECH 2020 Computational Paralinguistics Challenge: Elderly Emotion, Breathing & Masks," in Proc. Interspeech 2020, Shanghai, China, 2020, pp. 2017–2021, doi: 10.21437/Interspeech.2020-32.',
+        '[14] N. Wang and D. Yang, "Speech emotion recognition using fine-tuned Wav2vec2.0 and neural controlled differential equations classifier," PLoS ONE, vol. 20, no. 2, art. e0318297, pp. 1–13, Feb. 2025, doi: 10.1371/journal.pone.0318297.',
+        '[15] A. Hashem, M. Arif, and M. Alghamdi, "Speech emotion recognition approaches: A systematic review," Speech Communication, vol. 154, art. 102974, pp. 1–29, Oct. 2023, doi: 10.1016/j.specom.2023.102974.',
+        '[16] M. B. Akçay and K. Oğuz, "Speech emotion recognition: Emotional models, databases, features, preprocessing methods, supporting modalities, and classifiers," Speech Communication, vol. 116, pp. 56–76, Jan. 2020, doi: 10.1016/j.specom.2019.12.001.',
+        '[17] H. Cao, D. G. Cooper, M. K. Keutmann, R. C. Gur, A. Nenkova, and R. Verma, "CREMA-D: Crowd-Sourced Emotional Multimodal Actors Dataset," IEEE Transactions on Affective Computing, vol. 5, no. 4, pp. 377–390, Oct.–Dec. 2014, doi: 10.1109/TAFFC.2014.2336244.',
+        '[18] S. R. Livingstone and F. A. Russo, "The Ryerson Audio-Visual Database of Emotional Speech and Song (RAVDESS): A dynamic, multimodal set of facial and vocal expressions in North American English," PLoS ONE, vol. 13, no. 5, art. e0196391, pp. 1–33, May 2018, doi: 10.1371/journal.pone.0196391.',
+        '[19] S. Haq and P. J. B. Jackson, "Multimodal Emotion Recognition," in Machine Audition: Principles, Algorithms and Systems, W. Wang, Ed., Hershey, PA: IGI Global, 2010, pp. 398–423, doi: 10.4018/978-1-61520-919-4.ch017.',
+        '[20] M. K. Pichora-Fuller and K. Dupuis, "Toronto Emotional Speech Set (TESS)," Scholars Portal Dataverse, vol. 1, 2020, doi: 10.5683/SP2/E8H2MF.',
+        '[21] A. Goel, M. Hira, and A. Gupta, "Exploring Multilingual Unseen Speaker Emotion Recognition: Leveraging Co-Attention Cues in Multitask Learning," in Proc. Interspeech 2024, Kos Island, Greece, 2024, pp. 4888–4892, doi: 10.21437/Interspeech.2024-1820.',
+        '[22] H. Rathnayake, J. James, G. Leoni, A. Nicholas, C. Watson, and P. Keegan, "A review on speech emotion recognition for low-resource and Indigenous languages," Speech Communication, vol. 176, art. 103342, pp. 1–25, Jan. 2026, doi: 10.1016/j.specom.2025.103342.',
+        '[23] S. T. Alam Monisha and S. Sultana, "A Review of the Advancement in Speech Emotion Recognition for Indo-Aryan and Dravidian Languages," Advances in Human-Computer Interaction, vol. 2022, art. 9602429, pp. 1–11, Dec. 2022, doi: 10.1155/2022/9602429.',
+        '[24] A. Pasad, J.-C. Chou, and K. Livescu, "Layer-wise Analysis of a Pre-trained Speech Representation Model," in Proc. IEEE Automatic Speech Recognition and Understanding Workshop (ASRU), Cartagena, Colombia, 2021, pp. 914–921, doi: 10.1109/ASRU51503.2021.9688093.',
+        '[25] J. Wagner, D. Schiller, A. Seiderer, and E. André, "Deep learning in paralinguistic recognition tasks: Are hand-crafted features still relevant?," in Proc. Interspeech 2018, Hyderabad, India, 2018, pp. 147–151, doi: 10.21437/Interspeech.2018-1238.',
+        '[26] S. Latif, R. Rana, S. Khalifa, R. Jurdak, J. Qadir, and B. W. Schuller, "Survey of Deep Representation Learning for Speech Emotion Recognition," IEEE Transactions on Affective Computing, vol. 14, no. 2, pp. 1634–1654, Apr.–Jun. 2023, doi: 10.1109/TAFFC.2021.3114365.',
+        '[27] L. Pepino, P. Riera, and L. Ferrer, "Emotion Recognition from Speech Using wav2vec 2.0 Embeddings," in Proc. Interspeech 2021, Brno, Czech Republic, 2021, pp. 3400–3404, doi: 10.21437/Interspeech.2021-703.',
+        '[28] C. Busso, M. Bulut, C.-C. Lee, A. Kazemzadeh, E. Mower, S. Kim, J. N. Chang, S. Lee, and S. S. Narayanan, "IEMOCAP: Interactive emotional dyadic motion capture database," Language Resources and Evaluation, vol. 42, no. 4, pp. 335–359, Dec. 2008, doi: 10.1007/s10579-008-9076-6.',
+        '[29] M. Mauch and S. Dixon, "pYIN: A Fundamental Frequency Estimator Using Probabilistic Threshold Distributions," in Proc. IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP), Florence, Italy, 2014, pp. 659–663, doi: 10.1109/ICASSP.2014.6853678.',
+        '[30] C. Sun, Y. Zhou, X. Huang, J. Yang, and X. Hou, "Combining wav2vec 2.0 Fine-Tuning and ConLearnNet for Speech Emotion Recognition," Electronics, vol. 13, no. 6, art. 1103, pp. 1–19, Mar. 2024, doi: 10.3390/electronics13061103.'
     ]
 
     for ref in references:
