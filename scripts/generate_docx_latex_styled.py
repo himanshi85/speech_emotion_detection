@@ -168,7 +168,7 @@ def build_clean_word_report():
     p_affil.paragraph_format.space_after = Pt(16)
     run_affil = p_affil.add_run(
         "Department of Computer Science and Engineering\n"
-        "Project Repository: speech_emotion_detection (Branch: develop-v3)  •  E-mail: himanshipatel@academic.edu"
+        "Project Repository: speech_emotion_detection (Branch: develop-v3)"
     )
     run_affil.font.name = 'Times New Roman'
     run_affil.font.size = Pt(9.5)
@@ -1163,8 +1163,8 @@ def build_clean_word_report():
     add_sec_heading("References")
 
     references = [
-        '[1] S. Kotian and S. Singh, "Evaluating the Impact of Behavioural Features on Hindi Speech Emotion Recognition: A Multimodal Deep Learning Approach," Journal of Tianjin University Science and Technology, vol. 59, no. 2, pp. 1–10, 2026. [Online]. Available: https://ijaic.org/',
-        '[2] S. Kotian and S. Singh, "Benchmarking Classical, Deep Learning, and Transformer Models for Hindi Speech Emotion Recognition: A Multimodal Analysis," Interdisciplinary Journal of AI, Machine Learning & Data Science, vol. 1, no. 1, art. e001, pp. 1–24, Feb. 2026, doi: 10.66261/fetdj998.',
+        '[1] S. Kotian and S. Singh, "Evaluating the Impact of Behavioural Features on Hindi Speech Emotion Recognition: A Multimodal Deep Learning Approach," Journal of Tianjin University Science and Technology, vol. 59, no. 2, pp. 1–10, Feb. 2026, doi: 10.5281/zenodo.18797014.',
+        '[2] S. Kotian and S. Singh, "Benchmarking Classical, Deep Learning, and Transformer Models for Hindi Speech Emotion Recognition: A Multimodal Analysis," Interdisciplinary Journal of AI, Machine Learning & Data Science, vol. 1, no. 1, art. e001, pp. 1–24, Feb. 2026, doi: 10.66261/fetdj998. [Online]. Available: https://ijaimlds.com/ijaimlds/article/view/9.',
         '[3] K. Chauhan, K. K. Sharma, and T. Varma, "MNITJ-SEHSD: A Hindi Emotional Speech Database," in Proc. 2023 International Conference on Communication, Circuits, and Systems (IC3S), Bhubaneswar, India, 2023, pp. 1–6, doi: 10.1109/IC3S57698.2023.10169497.',
         '[4] P. Mehra and S. K. Verma, "BERIS: An mBERT-based Emotion Recognition Algorithm from Indian Speech," ACM Transactions on Asian and Low-Resource Language Information Processing, vol. 21, no. 5, art. 106, pp. 1–19, Apr. 2022, doi: 10.1145/3517195.',
         '[5] R. Kawade and S. Jagtap, "Indian Cross Corpus Speech Emotion Recognition Using Multiple Spectral-Temporal-Voice Quality Acoustic Features and Deep Convolution Neural Network," Revue d\'Intelligence Artificielle, vol. 38, no. 3, pp. 913–927, Jun. 2024, doi: 10.18280/ria.380318.',
@@ -1183,10 +1183,10 @@ def build_clean_word_report():
         '[18] S. R. Livingstone and F. A. Russo, "The Ryerson Audio-Visual Database of Emotional Speech and Song (RAVDESS): A dynamic, multimodal set of facial and vocal expressions in North American English," PLoS ONE, vol. 13, no. 5, art. e0196391, pp. 1–33, May 2018, doi: 10.1371/journal.pone.0196391.',
         '[19] S. Haq and P. J. B. Jackson, "Multimodal Emotion Recognition," in Machine Audition: Principles, Algorithms and Systems, W. Wang, Ed., Hershey, PA: IGI Global, 2010, pp. 398–423, doi: 10.4018/978-1-61520-919-4.ch017.',
         '[20] M. K. Pichora-Fuller and K. Dupuis, "Toronto Emotional Speech Set (TESS)," Scholars Portal Dataverse, vol. 1, 2020, doi: 10.5683/SP2/E8H2MF.',
-        '[21] A. Goel, M. Hira, and A. Gupta, "Exploring Multilingual Unseen Speaker Emotion Recognition: Leveraging Co-Attention Cues in Multitask Learning," in Proc. Interspeech 2024, Kos Island, Greece, 2024, pp. 4888–4892, doi: 10.21437/Interspeech.2024-1820.',
+        '[21] A. Goel, M. Hira, and A. Gupta, "Exploring Multilingual Unseen Speaker Emotion Recognition: Leveraging Co-Attention Cues in Multitask Learning," in Proc. Interspeech 2024, Kos Island, Greece, 2024, pp. 2340–2344, doi: 10.21437/Interspeech.2024-1820.',
         '[22] H. Rathnayake, J. James, G. Leoni, A. Nicholas, C. Watson, and P. Keegan, "A review on speech emotion recognition for low-resource and Indigenous languages," Speech Communication, vol. 176, art. 103342, pp. 1–25, Jan. 2026, doi: 10.1016/j.specom.2025.103342.',
         '[23] S. T. Alam Monisha and S. Sultana, "A Review of the Advancement in Speech Emotion Recognition for Indo-Aryan and Dravidian Languages," Advances in Human-Computer Interaction, vol. 2022, art. 9602429, pp. 1–11, Dec. 2022, doi: 10.1155/2022/9602429.',
-        '[24] A. Pasad, J.-C. Chou, and K. Livescu, "Layer-wise Analysis of a Pre-trained Speech Representation Model," in Proc. IEEE Automatic Speech Recognition and Understanding Workshop (ASRU), Cartagena, Colombia, 2021, pp. 914–921, doi: 10.1109/ASRU51503.2021.9688093.',
+        '[24] A. Pasad, J.-C. Chou, and K. Livescu, "Layer-wise Analysis of a Self-supervised Speech Representation Model," in Proc. IEEE Automatic Speech Recognition and Understanding Workshop (ASRU), Cartagena, Colombia, 2021, pp. 914–921, doi: 10.1109/ASRU51503.2021.9688093.',
         '[25] J. Wagner, D. Schiller, A. Seiderer, and E. André, "Deep learning in paralinguistic recognition tasks: Are hand-crafted features still relevant?," in Proc. Interspeech 2018, Hyderabad, India, 2018, pp. 147–151, doi: 10.21437/Interspeech.2018-1238.',
         '[26] S. Latif, R. Rana, S. Khalifa, R. Jurdak, J. Qadir, and B. W. Schuller, "Survey of Deep Representation Learning for Speech Emotion Recognition," IEEE Transactions on Affective Computing, vol. 14, no. 2, pp. 1634–1654, Apr.–Jun. 2023, doi: 10.1109/TAFFC.2021.3114365.',
         '[27] L. Pepino, P. Riera, and L. Ferrer, "Emotion Recognition from Speech Using wav2vec 2.0 Embeddings," in Proc. Interspeech 2021, Brno, Czech Republic, 2021, pp. 3400–3404, doi: 10.21437/Interspeech.2021-703.',
